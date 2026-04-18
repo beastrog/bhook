@@ -30,59 +30,66 @@ export default function MenuClient({ products }: { products: Product[] }) {
     const oos = filtered.filter((p) => p.stock_quantity === 0);
 
     return (
-        <div className="min-h-dvh flex flex-col pb-48">
+        <div className="min-h-dvh flex flex-col pb-48 relative z-10">
             <Navbar />
 
-            {/* Expansive Header */}
-            <div className="w-full max-w-[2560px] mx-auto px-8 md:px-16 xl:px-32 pt-16 md:pt-32">
-                <div className="flex flex-col lg:flex-row justify-between lg:items-end mb-16 md:mb-24 gap-12">
+            <div className="max-w-7xl mx-auto px-6 pt-12 md:pt-20 w-full">
+
+                {/* Header & Search */}
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                     <div>
-                        <p className="text-label mb-6 text-[var(--accent)] tracking-[0.2em]">DATABASE SEARCH</p>
-                        <h1 className="title-massive text-[80px] lg:text-[120px]">THE VAULT.</h1>
+                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-2">Vault Inventory</h1>
+                        <p className="text-zinc-400">Select your items to reserve them.</p>
                     </div>
 
-                    <div className="relative w-full lg:w-[500px]">
+                    <div className="relative w-full md:w-[350px]">
+                        <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
                         <input
                             type="text"
-                            placeholder="Query inventory..."
+                            placeholder="Search snacks..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="input pl-12 placeholder:opacity-50 font-mono text-xl"
+                            className="input-glass pl-12 w-full"
                         />
-                        <Search size={22} className="absolute left-2 top-[22px] text-[var(--text-tertiary)]" strokeWidth={2.5} />
                     </div>
                 </div>
 
-                {/* Minimal text-based filters */}
-                <div className="flex gap-8 overflow-x-auto scrollbar-hide mb-16 pb-4 border-b-2 border-[rgba(71,71,71,0.2)]">
+                {/* Glass Filter Pills */}
+                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-4 mb-8 mask-edges">
                     {CATS.map((c) => (
                         <button
                             key={c}
                             onClick={() => setCat(c)}
-                            className={`text-label transition-colors pb-4 -mb-[18px] ${cat === c ? 'text-[var(--primary)] border-b-2 border-[var(--primary)]' : 'text-[var(--text-tertiary)] hover:text-white'}`}
+                            className={`flex-shrink-0 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 border
+                ${cat === c
+                                    ? 'bg-white text-black border-transparent shadow-[0_4px_20px_rgba(255,255,255,0.2)]'
+                                    : 'bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white'}`}
                         >
                             {c}
                         </button>
                     ))}
                 </div>
 
-                {/* True Grid Setup */}
+                {/* Product Grid */}
                 <div className="w-full">
                     {available.length === 0 && oos.length === 0 ? (
-                        <div className="h-[40vh] flex items-center justify-center">
-                            <p className="text-body font-mono opacity-50">0 RESULTS FOUND</p>
+                        <div className="h-[30vh] flex flex-col items-center justify-center text-zinc-500">
+                            <p className="text-xl font-bold">Nothing matches your search.</p>
                         </div>
                     ) : (
                         <>
-                            {/* Massive masonry-style grid gaps */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-[2px] bg-[rgba(71,71,71,0.2)]">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                 {available.map((p) => <ProductCard key={p.id} product={p} />)}
                             </div>
 
                             {oos.length > 0 && (
-                                <div className="mt-32">
-                                    <p className="text-label mb-8 tracking-[0.2em] text-[var(--error)]">DEPLETED INVENTORY</p>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-[2px] bg-[rgba(71,71,71,0.2)]">
+                                <div className="mt-20">
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <div className="h-px bg-white/10 flex-1" />
+                                        <p className="text-xs font-bold tracking-widest uppercase text-zinc-600">Depleted items</p>
+                                        <div className="h-px bg-white/10 flex-1" />
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                         {oos.map((p) => <ProductCard key={p.id} product={p} />)}
                                     </div>
                                 </div>
@@ -92,27 +99,32 @@ export default function MenuClient({ products }: { products: Product[] }) {
                 </div>
             </div>
 
-            {/* Slide-out persistent brutalist cart module */}
+            {/* Floating Glass Cart */}
             <AnimatePresence>
                 {totalItems > 0 && (
                     <motion.div
-                        initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+                        initial={{ y: 150, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 150, opacity: 0 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                        className="fixed bottom-0 lg:bottom-12 right-0 lg:right-12 z-50 w-full lg:w-[480px]"
+                        className="fixed bottom-6 left-6 right-6 lg:left-1/2 lg:-translate-x-1/2 lg:w-[600px] z-50 mx-auto"
                     >
-                        <div className="bg-[var(--surface-high)] lg:border-[2px] lg:border-[rgba(71,71,71,0.2)] p-1">
-                            <div className="bg-[var(--accent)] text-black p-6 pl-8 flex justify-between items-center group cursor-pointer hover:bg-white transition-colors">
-                                <Link href="/cart" className="absolute inset-0 z-10" />
-                                <div>
-                                    <p className="text-label text-black tracking-[0.1em] opacity-80 mb-1">RESERVATION STATUS</p>
-                                    <p className="font-black text-3xl font-mono tracking-tighter">{totalItems} UNITS</p>
-                                </div>
-                                <div className="flex items-center gap-6">
-                                    <p className="font-black text-2xl font-mono">{formatCurrency(total)}</p>
-                                    <ArrowRight strokeWidth={4} size={28} className="transform group-hover:translate-x-2 transition-transform" />
+                        <Link href="/cart" className="block w-full">
+                            <div className="bg-white/10 backdrop-blur-2xl border border-white/20 p-2 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] group hover:bg-white/15 transition-all">
+                                <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full px-8 py-5 flex items-center justify-between shadow-inner">
+                                    <div className="flex items-center gap-4">
+                                        <span className="flex items-center justify-center bg-white/20 text-white font-black w-10 h-10 rounded-full text-lg">
+                                            {totalItems}
+                                        </span>
+                                        <span className="font-bold text-lg hidden sm:block">Items selected</span>
+                                    </div>
+                                    <div className="flex items-center gap-6">
+                                        <p className="font-black text-2xl drop-shadow-md">{formatCurrency(total)}</p>
+                                        <div className="bg-white text-orange-600 w-10 h-10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
+                                            <ArrowRight strokeWidth={3} size={20} />
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </Link>
                     </motion.div>
                 )}
             </AnimatePresence>

@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Plus, Minus } from 'lucide-react';
+import { Plus, Minus, Check } from 'lucide-react';
 import { useState } from 'react';
 import { Product } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils';
@@ -23,55 +23,60 @@ export default function ProductCard({ product }: { product: Product }) {
         if (isOOS || qty >= product.stock_quantity) return;
         addItem(product);
         setJustAdded(true);
-        toast.success('System reserved: ' + product.name);
-        setTimeout(() => setJustAdded(false), 800);
+        toast.success('Added to tray');
+        setTimeout(() => setJustAdded(false), 1000);
     };
 
     return (
         <motion.div
             layout
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className={`relative flex flex-col p-8 md:p-12 transition-all duration-300 layer-1 hover:bg-[var(--surface-container)] w-full h-full justify-between group ${isOOS ? 'opacity-30 grayscale' : ''}`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`glass-panel p-6 flex flex-col justify-between group transition-all duration-300 hover:border-white/20 ${isOOS ? 'opacity-50 grayscale' : 'hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)]'}`}
         >
-            <div>
-                <div className="flex justify-between items-start mb-16">
-                    <span className="text-4xl lg:text-5xl drop-shadow-2xl">{emoji(product.category)}</span>
-                    <span className="text-label" style={{ color: isOOS ? 'var(--error)' : 'var(--text-tertiary)' }}>
-                        {isOOS ? 'DEPLETED' : `QTY ${product.stock_quantity}`}
-                    </span>
+            <div className="flex justify-between items-start mb-6">
+                <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-center text-4xl shadow-inner">
+                    {emoji(product.category)}
                 </div>
-
-                <h3 className="title-section text-2xl lg:text-3xl mb-4 truncate group-hover:text-[var(--primary)] transition-colors">{product.name}</h3>
-                <p className="font-bold text-xl text-[var(--accent)] tracking-tight font-mono">{formatCurrency(product.selling_price)}</p>
+                <div className={`px-3 py-1 rounded-full text-xs font-bold border ${isOOS ? 'bg-red-500/10 text-red-500 border-red-500/20' : 'bg-white/5 text-zinc-400 border-white/10'}`}>
+                    {isOOS ? 'Out of stock' : `${product.stock_quantity} remaining`}
+                </div>
             </div>
 
-            <div className="mt-16 w-full opacity-100 lg:opacity-0 lg:translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+            <div className="mb-6">
+                <h3 className="text-xl font-bold mb-1 leading-tight">{product.name}</h3>
+                <p className="font-bold text-orange-500 text-lg">{formatCurrency(product.selling_price)}</p>
+            </div>
+
+            <div className="mt-auto h-12">
                 {qty > 0 ? (
-                    <div className="flex items-center justify-between w-full layer-float border-[2px] border-[rgba(71,71,71,0.2)] p-2">
+                    <div className="bg-white/5 border border-white/10 rounded-full h-full p-1 max-w-[160px] flex items-center justify-between shadow-inner">
                         <button
                             onClick={() => updateQuantity(product.id, qty - 1)}
-                            className="w-12 h-12 flex items-center justify-center hover:bg-[var(--surface-high)] transition-colors"
+                            className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
                         >
-                            <Minus size={18} color="white" />
+                            <Minus size={16} />
                         </button>
-                        <span className="font-bold text-lg font-mono">{qty}</span>
+                        <span className="font-bold w-8 text-center">{qty}</span>
                         <button
                             onClick={handleAdd}
                             disabled={qty >= product.stock_quantity}
-                            className="w-12 h-12 flex items-center justify-center hover:bg-[var(--surface-high)] disabled:opacity-30 transition-colors"
+                            className="w-10 h-10 rounded-full bg-white hover:bg-zinc-200 text-black flex items-center justify-center disabled:opacity-30 transition-colors"
                         >
-                            <Plus size={18} color="white" />
+                            <Plus size={16} />
                         </button>
                     </div>
                 ) : (
                     <button
                         onClick={handleAdd}
                         disabled={isOOS}
-                        className="w-full btn btn-primary flex justify-between items-center bg-[var(--primary)] text-black"
+                        className={`h-full rounded-full font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2 px-6
+              ${justAdded
+                                ? 'bg-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.3)]'
+                                : 'bg-white/10 hover:bg-white/20 text-white border border-white/10 hover:border-white/30'}`}
                     >
-                        <span>{justAdded ? 'LOCKED' : 'ACQUIRE'}</span>
-                        <Plus size={18} strokeWidth={3} />
+                        {justAdded ? <Check size={16} strokeWidth={3} /> : <Plus size={16} strokeWidth={2.5} />}
+                        {justAdded ? 'Added' : 'Add to Tray'}
                     </button>
                 )}
             </div>

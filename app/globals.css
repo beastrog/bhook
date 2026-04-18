@@ -1,25 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-/* ─── The Obsidian Monolith Design System ─── */
 :root {
-  --surface: #131313;
-  --surface-low: #1b1b1b;
-  --surface-container: #1f1f1f;
-  --surface-high: #2a2a2a;
-  --surface-highest: #353535;
-  --surface-bright: #393939;
+  --background: #09090b;
+  /* zinc-950 */
+  --foreground: #fafafa;
 
-  --primary: #ffffff;
-  --primary-container: #d4d4d4;
-  --on-primary: #1a1c1c;
+  --card: rgba(24, 24, 27, 0.6);
+  /* zinc-900 with opacity for glass */
+  --card-border: rgba(255, 255, 255, 0.08);
 
-  --text-primary: #e2e2e2;
-  --text-secondary: #c6c6c6;
-  --text-tertiary: #919191;
+  --primary: #f97316;
+  /* orange-500 */
+  --primary-foreground: #ffffff;
+  --primary-hover: #ea580c;
+  /* orange-600 */
 
-  --accent: #E2FE53;
-  --error: #ffb4ab;
+  --muted: #27272a;
+  /* zinc-800 */
+  --muted-foreground: #a1a1aa;
+  /* zinc-400 */
 }
 
 * {
@@ -28,19 +28,137 @@
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-tap-highlight-color: transparent;
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+  position: relative;
+  overflow-x: hidden;
 }
 
-body {
-  font-family: 'Inter', system-ui, sans-serif;
-  background-color: var(--surface);
-  color: var(--text-primary);
-  min-height: 100dvh;
-  overflow-x: hidden;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Eye-catching glowing background orbs */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(140px);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+body::before {
+  top: -10%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: #f97316;
+  /* orange glow */
+}
+
+body::after {
+  bottom: -20%;
+  right: -10%;
+  width: 60vw;
+  height: 60vw;
+  background: #7c3aed;
+  /* violet glow */
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: var(--card);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+}
+
+.glass-nav {
+  background: rgba(9, 9, 11, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100px;
+  /* Full pill shape */
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  border: none;
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: var(--primary-foreground);
+  padding: 16px 32px;
+  box-shadow: 0 8px 30px rgba(249, 115, 22, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+  box-shadow: 0 12px 40px rgba(249, 115, 22, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: var(--muted);
+  color: var(--foreground);
+  padding: 16px 32px;
+  border: 1px solid var(--card-border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Typography */
+.text-gradient {
+  background: linear-gradient(to right, #ffffff, #a1a1aa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-orange {
+  background: linear-gradient(to right, #fb923c, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Standard Inputs */
+.input-glass {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  color: var(--foreground);
+  font-weight: 500;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.input-glass:focus {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.1);
 }
 
 ::-webkit-scrollbar {
@@ -50,143 +168,4 @@ body {
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
-}
-
-/* ─── Architectural Elements (No borders!) ─── */
-.layer-base {
-  background: var(--surface);
-}
-
-.layer-1 {
-  background: var(--surface-low);
-}
-
-.layer-2 {
-  background: var(--surface-container);
-}
-
-.layer-3 {
-  background: var(--surface-high);
-}
-
-.layer-float {
-  background: var(--surface-highest);
-}
-
-.nav-glass {
-  background: rgba(57, 57, 57, 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  /* Ghost border allowed */
-  border-bottom: 2px solid rgba(71, 71, 71, 0.2);
-}
-
-/* ─── Brutalist Components (0px radius) ─── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: inherit;
-  font-weight: 800;
-  border: none;
-  border-radius: 0px;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  letter-spacing: -0.01em;
-  text-transform: uppercase;
-}
-
-.btn:active {
-  transform: scale(0.98);
-}
-
-.btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-primary {
-  background: var(--primary);
-  color: var(--on-primary);
-  padding: 24px 48px;
-  font-size: 16px;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: var(--primary-container);
-}
-
-.btn-secondary {
-  background: var(--surface-highest);
-  color: var(--text-primary);
-  padding: 16px 32px;
-  font-size: 14px;
-}
-
-.btn-secondary:hover:not(:disabled) {
-  background: var(--surface-bright);
-}
-
-/* ─── Typography ─── */
-.title-massive {
-  font-size: clamp(64px, 8vw, 140px);
-  font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: -0.04em;
-  color: var(--primary);
-}
-
-.title-section {
-  font-size: clamp(32px, 4vw, 64px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1;
-}
-
-.text-body {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-}
-
-.text-label {
-  font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-}
-
-/* ─── Inputs (Ghost border only) ─── */
-.input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 2px solid rgba(71, 71, 71, 0.2);
-  border-radius: 0px;
-  padding: 16px 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--primary);
-  outline: none;
-  transition: border-color 0.2s;
-  letter-spacing: -0.02em;
-}
-
-.input:focus {
-  border-color: var(--primary);
-}
-
-.input::placeholder {
-  color: var(--surface-high);
-}
-
-/* The Precision List Item */
-.list-item-hover {
-  transition: background 0.2s ease;
-}
-
-.list-item-hover:hover {
-  background: var(--surface-low);
 }
