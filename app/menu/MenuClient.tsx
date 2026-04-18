@@ -38,32 +38,32 @@ export default function MenuClient({ products }: { products: Product[] }) {
                 {/* Header & Search */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                     <div>
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight mb-2">Vault Inventory</h1>
-                        <p className="text-zinc-400">Select your items to reserve them.</p>
+                        <h1 className="text-4xl md:text-5xl lg:text-7xl font-black tracking-tighter mb-4 text-gradient">Data Vault</h1>
+                        <p className="text-zinc-500 font-mono text-sm uppercase tracking-widest">Select blocks to reserve.</p>
                     </div>
 
                     <div className="relative w-full md:w-[350px]">
                         <Search size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" />
                         <input
                             type="text"
-                            placeholder="Search snacks..."
+                            placeholder="Query database..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="input-glass pl-12 w-full"
+                            className="input-minimal pl-12 w-full font-mono text-sm lg:text-base"
                         />
                     </div>
                 </div>
 
-                {/* Glass Filter Pills */}
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-4 mb-8 mask-edges">
+                {/* Minimal Filters */}
+                <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-4 mb-12">
                     {CATS.map((c) => (
                         <button
                             key={c}
                             onClick={() => setCat(c)}
-                            className={`flex-shrink-0 px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300 border
+                            className={`flex-shrink-0 px-5 py-2 uppercase tracking-widest text-xs font-bold transition-all duration-300 border-b-2
                 ${cat === c
-                                    ? 'bg-white text-black border-transparent shadow-[0_4px_20px_rgba(255,255,255,0.2)]'
-                                    : 'bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10 hover:text-white'}`}
+                                    ? 'text-white border-white'
+                                    : 'text-zinc-600 border-transparent hover:text-zinc-300'}`}
                         >
                             {c}
                         </button>
@@ -73,8 +73,8 @@ export default function MenuClient({ products }: { products: Product[] }) {
                 {/* Product Grid */}
                 <div className="w-full">
                     {available.length === 0 && oos.length === 0 ? (
-                        <div className="h-[30vh] flex flex-col items-center justify-center text-zinc-500">
-                            <p className="text-xl font-bold">Nothing matches your search.</p>
+                        <div className="h-[30vh] flex flex-col items-center justify-center text-zinc-600 font-mono">
+                            <p>NO DATA MATCHES QUERY.</p>
                         </div>
                     ) : (
                         <>
@@ -83,11 +83,10 @@ export default function MenuClient({ products }: { products: Product[] }) {
                             </div>
 
                             {oos.length > 0 && (
-                                <div className="mt-20">
+                                <div className="mt-32">
                                     <div className="flex items-center gap-4 mb-8">
-                                        <div className="h-px bg-white/10 flex-1" />
-                                        <p className="text-xs font-bold tracking-widest uppercase text-zinc-600">Depleted items</p>
-                                        <div className="h-px bg-white/10 flex-1" />
+                                        <p className="text-[10px] font-bold tracking-widest uppercase text-red-500/70 border border-red-500/20 bg-red-500/5 px-3 py-1 rounded-sm">Depleted Nodes</p>
+                                        <div className="h-px bg-white/5 flex-1" />
                                     </div>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                                         {oos.map((p) => <ProductCard key={p.id} product={p} />)}
@@ -99,7 +98,7 @@ export default function MenuClient({ products }: { products: Product[] }) {
                 </div>
             </div>
 
-            {/* Floating Glass Cart */}
+            {/* Floating Architectural Cart */}
             <AnimatePresence>
                 {totalItems > 0 && (
                     <motion.div
@@ -108,17 +107,17 @@ export default function MenuClient({ products }: { products: Product[] }) {
                         className="fixed bottom-6 left-6 right-6 lg:left-1/2 lg:-translate-x-1/2 lg:w-[600px] z-50 mx-auto"
                     >
                         <Link href="/cart" className="block w-full">
-                            <div className="bg-white/10 backdrop-blur-2xl border border-white/20 p-2 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] group hover:bg-white/15 transition-all">
-                                <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full px-8 py-5 flex items-center justify-between shadow-inner">
+                            <div className="bg-black/80 backdrop-blur-3xl border border-white/20 p-2 rounded-[24px] group transition-all hover:border-[var(--accent)]">
+                                <div className="bg-white text-black rounded-[18px] px-8 py-5 flex items-center justify-between">
                                     <div className="flex items-center gap-4">
-                                        <span className="flex items-center justify-center bg-white/20 text-white font-black w-10 h-10 rounded-full text-lg">
+                                        <span className="flex items-center justify-center bg-black text-white font-mono font-bold w-10 h-10 rounded-xl text-lg">
                                             {totalItems}
                                         </span>
-                                        <span className="font-bold text-lg hidden sm:block">Items selected</span>
+                                        <span className="font-bold text-lg hidden sm:block uppercase tracking-tight">Blocks Indexed</span>
                                     </div>
                                     <div className="flex items-center gap-6">
-                                        <p className="font-black text-2xl drop-shadow-md">{formatCurrency(total)}</p>
-                                        <div className="bg-white text-orange-600 w-10 h-10 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-md">
+                                        <p className="font-black text-2xl font-mono">{formatCurrency(total)}</p>
+                                        <div className="bg-black text-[var(--accent)] w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform shadow-md">
                                             <ArrowRight strokeWidth={3} size={20} />
                                         </div>
                                     </div>

@@ -5,9 +5,16 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
-export async function adminLogin(email: string, password: string) {
+export async function adminLoginOTP(email: string) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await supabase.auth.signInWithOtp({ email });
+    if (error) return { error: error.message };
+    return { error: null };
+}
+
+export async function adminVerifyOTP(email: string, token: string) {
+    const supabase = await createClient();
+    const { error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
     if (error) return { error: error.message };
     return { error: null };
 }

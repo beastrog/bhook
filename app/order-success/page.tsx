@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { formatCurrency } from '@/lib/utils';
 import Navbar from '@/components/Navbar';
-import { CheckCircle2 } from 'lucide-react';
+import { Check } from 'lucide-react';
 
 function SuccessContent() {
     const params = useSearchParams();
@@ -23,35 +23,31 @@ function SuccessContent() {
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className="w-full max-w-md"
                 >
-                    <div className="glass-panel p-8 md:p-12 text-center relative overflow-hidden">
-                        {/* Soft background glow internal */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-500/10 blur-[60px] -z-10" />
+                    <div className="structural-panel p-10 md:p-14 text-center relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--accent)] opacity-[0.03] rounded-full blur-[60px] pointer-events-none" />
 
-                        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-500/10 text-green-500 mb-8 border border-green-500/20 shadow-[0_0_40px_rgba(34,197,94,0.2)]">
-                            <CheckCircle2 size={40} strokeWidth={2.5} />
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white text-black mb-10 border border-white/20">
+                            <Check size={32} strokeWidth={3} />
                         </div>
 
-                        <h1 className="text-3xl font-black mb-3">Reservation Locked</h1>
-                        <p className="text-zinc-400 leading-relaxed mb-10">
-                            Your snacks are secured. Please drop by the admin room and hand over the cash to collect.
+                        <h1 className="text-3xl lg:text-4xl font-black mb-4 tracking-tighter uppercase text-white">Transmission <br />Successful</h1>
+                        <p className="text-zinc-500 leading-relaxed mb-12 text-sm">
+                            Your inventory blocks are secured. Proceed to the root admin room for physical cash exchange and extraction.
                         </p>
 
-                        <div className="bg-black/40 rounded-2xl p-6 mb-8 border border-white/5 space-y-4">
-                            <div className="flex justify-between items-center text-sm">
-                                <span className="text-zinc-400 font-medium">Order Number</span>
-                                <span className="font-mono font-bold text-lg">{orderNum}</span>
+                        <div className="bg-white/5 rounded-xl p-6 mb-10 text-left border border-white/10">
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Order Hash</span>
+                                <span className="font-mono font-bold text-white">{orderNum}</span>
                             </div>
-
-                            <div className="h-px w-full bg-white/5" />
-
                             <div className="flex justify-between items-center">
-                                <span className="text-zinc-400 font-medium text-sm">Amount Due</span>
-                                <span className="font-black text-2xl text-orange-500 drop-shadow-md">{formatCurrency(total)}</span>
+                                <span className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Sum Due</span>
+                                <span className="font-black text-xl text-[var(--accent)] font-mono">{formatCurrency(total)}</span>
                             </div>
                         </div>
 
-                        <Link href="/menu" className="btn btn-secondary w-full">
-                            Back to Inventory
+                        <Link href="/menu" className="btn btn-secondary w-full text-xs tracking-widest uppercase">
+                            Terminate Session
                         </Link>
                     </div>
                 </motion.div>

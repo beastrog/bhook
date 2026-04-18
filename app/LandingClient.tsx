@@ -2,71 +2,67 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Flame } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function LandingClient() {
-    return (
-        <div className="w-full relative z-10 pt-12 md:pt-24 pb-32 px-6">
-            <div className="max-w-7xl mx-auto">
+  return (
+    <div className="w-full relative z-10 flex flex-col items-center pt-24 md:pt-40 pb-32 px-6 overflow-hidden">
 
-                {/* Hero Section */}
-                <div className="flex flex-col items-center text-center space-y-8 mb-24 md:mb-40">
+      {/* Background optical illusion element */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white opacity-[0.02] rounded-full blur-[100px] pointer-events-none" />
 
-                    <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.5 }}>
-                        <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-4 py-2 rounded-full text-sm font-semibold text-orange-400">
-                            <Flame size={16} className="text-orange-500 animate-pulse" />
-                            <span>Midnight reservations now active</span>
-                        </div>
-                    </motion.div>
+      <div className="w-full max-w-7xl mx-auto relative z-10">
 
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-                        className="text-5xl md:text-7xl lg:text-[100px] font-black tracking-tight leading-[1.05]"
-                    >
-                        Cravings <br />
-                        <span className="text-gradient">Handled.</span>
-                    </motion.h1>
-
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
-                        className="max-w-2xl text-lg md:text-xl text-zinc-400 font-medium"
-                    >
-                        The exclusive hostel snack vault. Reserve your favorites instantly, collect from the room, and pay with zero friction.
-                    </motion.p>
-
-                    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="pt-4">
-                        <Link href="/menu" className="btn btn-primary text-lg px-8 py-5 flex items-center justify-center gap-3 w-full sm:w-auto">
-                            <span>Enter The Vault</span>
-                            <ArrowRight size={20} strokeWidth={3} />
-                        </Link>
-                    </motion.div>
-                </div>
-
-                {/* Feature Grid - Adaptive Layout */}
-                <motion.div
-                    initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.5 }}
-                    className="grid grid-cols-1 md:grid-cols-3 gap-6"
-                >
-                    <div className="glass-panel p-8 md:p-10 flex flex-col gap-4 hover:border-orange-500/30 transition-colors">
-                        <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 text-xl font-black">1</div>
-                        <h3 className="text-2xl font-bold">Browse</h3>
-                        <p className="text-zinc-400 leading-relaxed">Explore our curated selection of late-night snacks. Stock is synced in real-time so you never miss out.</p>
-                    </div>
-
-                    <div className="glass-panel p-8 md:p-10 flex flex-col gap-4 hover:border-orange-500/30 transition-colors transform md:-translate-y-4">
-                        <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 text-xl font-black">2</div>
-                        <h3 className="text-2xl font-bold">Reserve</h3>
-                        <p className="text-zinc-400 leading-relaxed">Add items to your tray and lock them in instantly. No account required—just pure speed.</p>
-                    </div>
-
-                    <div className="glass-panel p-8 md:p-10 flex flex-col gap-4 hover:border-orange-500/30 transition-colors md:-translate-y-8">
-                        <div className="w-12 h-12 rounded-full bg-orange-500/10 flex items-center justify-center text-orange-500 text-xl font-black">3</div>
-                        <h3 className="text-2xl font-bold">Collect</h3>
-                        <p className="text-zinc-400 leading-relaxed">Drop by the admin room to collect your haul. Hand over cash and you're good to go.</p>
-                    </div>
-                </motion.div>
-
+        {/* Sleek Minimal Hero */}
+        <div className="flex flex-col items-center text-center max-w-4xl mx-auto mb-32">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}>
+            <div className="inline-flex items-center gap-2 border border-white/10 px-4 py-2 rounded-full text-xs font-bold text-zinc-400 tracking-widest uppercase mb-10 w-fit mx-auto relative group overflow-hidden">
+              <div className="absolute inset-0 bg-white/5 -translate-x-full group-hover:translate-x-0 transition-transform duration-500 ease-out" />
+              <span className="w-2 h-2 rounded-full bg-white relative z-10 animate-pulse" />
+              <span className="relative z-10">Snack Booking Engine V2</span>
             </div>
+
+            <h1 className="text-6xl md:text-8xl lg:text-[110px] font-black tracking-tighter leading-[1.05] mb-10">
+              Frictionless <br />
+              <span className="text-gradient">Consumption.</span>
+            </h1>
+
+            <p className="text-lg md:text-2xl text-zinc-400 font-medium leading-relaxed mb-12 max-w-2xl mx-auto">
+              The high-performance platform for hostel snack reservations. Instant atomic locks, zero digital payments.
+            </p>
+
+            <Link href="/menu" className="btn btn-primary text-sm md:text-lg w-full sm:w-auto overflow-hidden group">
+              <span className="relative z-10 flex items-center gap-3">
+                Initialize System <ArrowRight size={20} strokeWidth={2.5} className="group-hover:translate-x-1 transition-transform" />
+              </span>
+            </Link>
+          </motion.div>
         </div>
-    );
+
+        {/* Structural Mind-Bending Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+          {[
+            { tag: "01 // Browse", title: "Live Inventory", desc: "Access the decentralized database of available items, updated in real-time to prevent out-of-stock frustrating." },
+            { tag: "02 // Reserve", title: "Atomic Locks", desc: "Adding to cart instantly removes the item from global circulation. Your snacks are guaranteed." },
+            { tag: "03 // Collect", title: "Cash Settlement", desc: "Offline transactions only. Walk to the admin node, hand over the physical currency, and extract your goods." }
+          ].map((feature, idx) => (
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 + (idx * 0.1), ease: [0.16, 1, 0.3, 1] }}
+              className="structural-panel p-8 md:p-12 relative overflow-hidden group"
+            >
+              {/* Abstract hover shape */}
+              <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/5 rounded-full blur-[40px] group-hover:scale-150 group-hover:bg-white/10 transition-all duration-700 pointer-events-none" />
+
+              <p className="text-xs font-bold text-zinc-500 tracking-widest uppercase mb-4">{feature.tag}</p>
+              <h3 className="text-2xl font-black mb-4 text-white uppercase tracking-tight">{feature.title}</h3>
+              <p className="text-zinc-400 font-medium leading-relaxed">{feature.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+
+      </div>
+    </div>
+  );
 }

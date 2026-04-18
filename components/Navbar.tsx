@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { ShoppingBag, LayoutGrid } from 'lucide-react';
+import { ShoppingBag, Component } from 'lucide-react';
 import { useCartStore } from '@/lib/store/cart';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -12,20 +12,20 @@ export default function Navbar() {
         <nav className="glass-nav sticky top-0 z-50">
             <div className="max-w-7xl mx-auto px-6 h-[72px] flex items-center justify-between">
 
-                <Link href="/" className="flex items-center gap-2 group">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-orange-700 flex items-center justify-center text-white shadow-lg shadow-orange-500/20 group-hover:shadow-orange-500/40 transition-shadow">
-                        <span className="font-black italic pr-0.5">b</span>
+                <Link href="/" className="flex items-center gap-3 group">
+                    <div className="w-8 h-8 rounded-md bg-white text-black flex items-center justify-center shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                        <span className="font-black">b</span>
                     </div>
-                    <span className="font-black text-xl tracking-tight">bhook.</span>
+                    <span className="font-black text-xl tracking-tight uppercase">bhook<span className="text-[var(--accent)]">.</span></span>
                 </Link>
 
                 {/* Desktop Links */}
-                <div className="hidden md:flex items-center space-x-8 font-semibold text-sm text-zinc-400">
+                <div className="hidden md:flex items-center space-x-10 font-bold text-xs uppercase tracking-widest text-zinc-400">
                     <Link href="/menu" className="hover:text-white transition-colors flex items-center gap-2">
-                        <LayoutGrid size={16} /> Inventory
+                        <Component size={14} /> Database
                     </Link>
                     <Link href="/admin/login" className="hover:text-white transition-colors opacity-50 hover:opacity-100">
-                        Admin Access
+                        SysAdmin
                     </Link>
                 </div>
 
@@ -35,11 +35,9 @@ export default function Navbar() {
                         {totalItems > 0 && (
                             <motion.div
                                 key="badge"
-                                initial={{ scale: 0, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0, opacity: 0 }}
+                                initial={{ scale: 0, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0, opacity: 0 }}
                                 className="absolute -top-1 -right-1 w-[22px] h-[22px] flex items-center justify-center font-bold"
-                                style={{ background: 'var(--primary)', color: 'white', fontSize: '11px', borderRadius: '50%' }}
+                                style={{ background: 'var(--accent)', color: 'black', fontSize: '11px', borderRadius: '50%' }}
                             >
                                 {totalItems > 9 ? '9+' : totalItems}
                             </motion.div>

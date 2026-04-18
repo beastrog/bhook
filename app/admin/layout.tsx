@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import AdminNav from '@/components/AdminNav';
 
@@ -6,12 +5,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) redirect('/admin/login');
-
     return (
-        <div className="min-h-dvh pb-20" style={{ background: 'var(--bg)' }}>
+        <div className="min-h-dvh pb-20 bg-[var(--background)]">
             {children}
-            <AdminNav />
+            {user && <AdminNav />}
         </div>
     );
 }
