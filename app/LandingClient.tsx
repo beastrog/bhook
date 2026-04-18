@@ -29,7 +29,8 @@ export default function LandingClient() {
           </p>
 
           <Link href="/menu"
-            className="inline-flex items-center gap-3 bg-lime text-[#000000] font-extrabold text-[15px] px-8 py-4 rounded-full hover:shadow-[0_4px_20px_rgba(200,255,0,0.25)] transition-all active:scale-[0.97]">
+            style={{ color: '#000000' }}
+            className="inline-flex items-center gap-3 bg-lime font-extrabold text-[15px] px-8 py-4 rounded-full hover:shadow-[0_4px_20px_rgba(200,255,0,0.25)] transition-all active:scale-[0.97]">
             Shop Now <ArrowRight size={18} strokeWidth={2.5} />
           </Link>
         </motion.div>

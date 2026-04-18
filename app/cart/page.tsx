@@ -125,7 +125,8 @@ export default function CartPage() {
                                 <span className="font-display font-bold text-2xl text-lime">{formatCurrency(total)}</span>
                             </div>
                             <Link href="/checkout"
-                                className="mt-4 w-full flex items-center justify-center gap-2 bg-lime text-[#000000] font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
+                                style={{ color: '#000000' }}
+                                className="mt-4 w-full flex items-center justify-center gap-2 bg-lime font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
                                 Checkout <ArrowRight size={16} strokeWidth={2.5} />
                             </Link>
                         </div>

@@ -90,3 +90,8 @@ img {
 .anim-d3 {
   animation-delay: 0.3s;
 }
+
+/* Force text visibility on lime buttons no matter what tailwind v4 does */
+.bg-lime {
+  color: #000000 !important;
+}
