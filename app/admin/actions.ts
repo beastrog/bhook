@@ -21,16 +21,18 @@ export async function adminLoginEmail(email: string) {
         return { error: 'Unauthorized email address' };
     }
 
-    const cookieStore = await cookies();
-    cookieStore.set('bhook_admin_auth', 'true', {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        path: '/',
-        maxAge: 60 * 60 * 24 * 30 // 30 days
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim(),
+        options: {
+            emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback?next=/admin/dashboard`
+        }
     });
 
-    return { error: null };
+    if (error) return { error: error.message };
+    return { error: null, success: true };
 }
+
 
 export async function adminLogout() {
     const cookieStore = await cookies();
