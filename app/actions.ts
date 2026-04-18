@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { PlaceOrderResponse } from '@/lib/types';
 
+import { headers } from 'next/headers';
+
 // ─── Place an order (calls DB stored procedure) ───────────────────────────────
 export async function placeOrder(formData: {
     customer_name: string;
@@ -12,12 +14,16 @@ export async function placeOrder(formData: {
     items: { product_id: string; quantity: number }[];
 }): Promise<{ data: PlaceOrderResponse | null; error: string | null }> {
     const supabase = await createClient();
+    const headersList = await headers();
+    const forwarded = headersList.get('x-forwarded-for');
+    const ip = forwarded ? forwarded.split(',')[0] : '127.0.0.1';
 
     const { data, error } = await supabase.rpc('place_order', {
         p_customer_name: formData.customer_name,
         p_room_number: formData.room_number,
         p_phone_number: formData.phone_number || null,
         p_items: formData.items,
+        p_ip_address: ip,
     });
 
     if (error) {

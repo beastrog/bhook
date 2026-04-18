@@ -84,6 +84,19 @@ create table if not exists settings (
 -- FUNCTIONS & TRIGGERS
 -- ============================================================
 
+-- ============================================================
+-- SECURITY: BANNED IPS & RATE LIMITING
+-- ============================================================
+create table if not exists banned_ips (
+  ip_address text primary key,
+  reason text,
+  created_at timestamptz not null default now()
+);
+
+-- ============================================================
+-- FUNCTIONS & TRIGGERS
+-- ============================================================
+
 -- Auto-update updated_at
 create or replace function update_updated_at_column()
 returns trigger as $$
@@ -102,6 +115,25 @@ create trigger update_orders_updated_at before update on orders
 create trigger update_profit_splits_updated_at before update on profit_splits
   for each row execute function update_updated_at_column();
 
+-- Restore stock when order is cancelled
+create or replace function restore_stock_on_cancel()
+returns trigger as $$
+begin
+  if new.status = 'cancelled' and old.status != 'cancelled' then
+    update products p
+    set stock_quantity = p.stock_quantity + oi.quantity
+    from order_items oi
+    where oi.product_id = p.id and oi.order_id = new.id;
+  end if;
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger restore_stock_trigger
+after update on orders
+for each row
+execute function restore_stock_on_cancel();
+
 -- Generate order number (e.g., BHK-240418-001)
 create or replace function generate_order_number()
 returns text as $$
@@ -118,12 +150,13 @@ begin
 end;
 $$ language plpgsql;
 
--- Reserve stock with concurrency protection (RPC)
+-- Reserve stock with concurrency protection, IP checking, and rate limiting
 create or replace function place_order(
   p_customer_name text,
   p_room_number text,
   p_phone_number text,
-  p_items jsonb -- [{product_id, quantity}]
+  p_items jsonb, -- [{product_id, quantity}]
+  p_ip_address text -- New parameter for rate limiting
 )
 returns jsonb as $$
 declare
@@ -134,11 +167,33 @@ declare
   v_total_profit numeric := 0;
   v_item jsonb;
   v_product products%rowtype;
+  v_recent_order_count integer;
   v_line_total numeric;
   v_line_cost numeric;
   v_line_profit numeric;
 begin
-  -- Lock and validate each product
+  -- 1. Check if IP is banned
+  if exists (select 1 from banned_ips where ip_address = p_ip_address) then
+    raise exception 'Your IP address (%) has been banned for suspicious activity.', p_ip_address;
+  end if;
+
+  -- 2. Rate limiting (max 3 orders per 5 minutes per IP)
+  select count(*) into v_recent_order_count 
+  from orders 
+  where notes like 'IP:%' 
+  and substr(notes, 4) = p_ip_address 
+  and created_at > now() - interval '5 minutes';
+
+  if v_recent_order_count >= 3 then
+    -- Auto-ban the IP
+    insert into banned_ips (ip_address, reason) 
+    values (p_ip_address, 'Automated ban: Order spamming (>3 orders/5m)')
+    on conflict (ip_address) do nothing;
+    
+    raise exception 'Rate limit exceeded. Your IP has been banned due to spamming.';
+  end if;
+
+  -- 3. Lock and validate each product
   for v_item in select * from jsonb_array_elements(p_items) loop
     select * into v_product from products 
     where id = (v_item->>'product_id')::uuid
@@ -172,9 +227,9 @@ begin
   -- Generate order number
   v_order_number := generate_order_number();
   
-  -- Create order
-  insert into orders (order_number, customer_name, room_number, phone_number, total_amount, total_cost, total_profit, status)
-  values (v_order_number, p_customer_name, p_room_number, p_phone_number, v_total_amount, v_total_cost, v_total_profit, 'reserved')
+  -- Create order (note we store IP in 'notes' for simple rate limiting)
+  insert into orders (order_number, customer_name, room_number, phone_number, total_amount, total_cost, total_profit, status, notes)
+  values (v_order_number, p_customer_name, p_room_number, p_phone_number, v_total_amount, v_total_cost, v_total_profit, 'reserved', 'IP:' || p_ip_address)
   returning id into v_order_id;
   
   -- Create order items
@@ -203,6 +258,7 @@ alter table orders enable row level security;
 alter table order_items enable row level security;
 alter table profit_splits enable row level security;
 alter table settings enable row level security;
+alter table banned_ips enable row level security;
 
 -- Products: public read for active products, full access via service role
 create policy "Public can view active products"
@@ -237,22 +293,27 @@ create policy "Anyone can read settings"
   on settings for select to anon, authenticated
   using (true);
 
+-- Banned IPs: read by nobody publicly
+create policy "Nobody can read banned IPs"
+  on banned_ips for select to authenticated
+  using (true);
+
 -- ============================================================
 -- SEED DATA
 -- ============================================================
 
 -- Default settings
 insert into settings (key, value) values
-  ('store_name', 'Bhook'),
-  ('admin_room', '204'),
-  ('store_open', 'true'),
+  ('store_name', 'Bhookh'),
+  ('admin_room', '405 C'),
+  ('store_status', 'open'),
   ('announcement', 'Fresh stock available tonight! 🔥')
 on conflict (key) do nothing;
 
 -- Default profit splits (adjust percentages as needed)
 insert into profit_splits (person_name, percentage, active) values
-  ('You', 60, true),
-  ('Partner', 40, true)
+  ('Partner A', 50, true),
+  ('Partner B', 50, true)
 on conflict do nothing;
 
 -- Sample products
@@ -268,3 +329,4 @@ insert into products (name, description, image_url, cost_price, selling_price, s
   ('Good Day Cashew Biscuits', 'Rich cashew cookies', null, 15, 25, 18, 'Biscuits'),
   ('Oreo Original', 'Classic cream cookies', null, 20, 35, 15, 'Biscuits')
 on conflict do nothing;
+
