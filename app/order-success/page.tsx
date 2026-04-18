@@ -26,7 +26,7 @@ function SuccessContent() {
                         </div>
                         <h1 className="font-display font-bold text-2xl mb-2">Order Placed!</h1>
                         <p className="text-sm text-t2 leading-relaxed mb-6">
-                            Your snacks are reserved. Come to the admin room, pay cash, and collect your order.
+                            Your snacks are reserved. Collect your order from <strong>405 C room</strong> and pay cash.
                         </p>
                         <div className="bg-card-hi rounded-xl p-4 mb-6 text-left space-y-3">
                             <div className="flex justify-between text-sm">

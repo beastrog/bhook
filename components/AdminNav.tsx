@@ -8,7 +8,7 @@ const LINKS = [
     { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Home' },
     { href: '/admin/products', icon: Package, label: 'Stock' },
     { href: '/admin/orders', icon: ClipboardList, label: 'Orders' },
-    { href: '/admin/analytics', icon: BarChart2, label: 'Stats' },
+    { href: '/admin/profit-split', icon: BarChart2, label: 'Profit' },
     { href: '/admin/settings', icon: Settings, label: 'Config' },
 ];
 

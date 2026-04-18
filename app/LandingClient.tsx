@@ -2,7 +2,9 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { ArrowRight, Zap, Package, CreditCard, MapPin } from 'lucide-react';
+import { ArrowRight, Zap, Package, CreditCard, MapPin, Flame } from 'lucide-react';
+import ProductCard from '@/components/ProductCard';
+import { Product } from '@/lib/types';
 
 const features = [
   { icon: Package, n: '01', t: 'Browse', d: 'Check real-time stock of every snack available tonight.' },
@@ -10,7 +12,9 @@ const features = [
   { icon: MapPin, n: '03', t: 'Collect', d: 'Walk to the room, pay in cash, grab your haul.' },
 ];
 
-export default function LandingClient() {
+export default function LandingClient({ products = [] }: { products?: Product[] }) {
+  const hotItems = products.slice(0, 3); // Top 3 as hot selling
+
   return (
     <div className="max-w-5xl mx-auto px-5 pb-28 md:pb-16">
       {/* Hero */}
@@ -35,6 +39,19 @@ export default function LandingClient() {
           </Link>
         </motion.div>
       </section>
+
+      {/* Hot Selling */}
+      {hotItems.length > 0 && (
+        <section className="mb-20">
+          <div className="flex items-center gap-2 mb-5">
+            <Flame className="text-err" size={18} />
+            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-t3">Hot Selling</p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {hotItems.map(p => <ProductCard key={p.id} product={p} />)}
+          </div>
+        </section>
+      )}
 
       {/* How it works */}
       <section>
