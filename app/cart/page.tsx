@@ -7,10 +7,12 @@ import { useCartStore } from '@/lib/store/cart';
 import { formatCurrency, formatDateShort } from '@/lib/utils';
 import Navbar from '@/components/Navbar';
 import BottomNav from '@/components/BottomNav';
+import { useStoreStatus } from '@/components/StoreStatusProvider';
 
 export default function CartPage() {
     const { items, recentOrders, removeItem, updateQuantity, getTotal } = useCartStore();
     const total = getTotal();
+    const isClosed = useStoreStatus();
 
     const RecentOrdersSection = () => {
         if (!recentOrders?.length) return null;
@@ -124,11 +126,17 @@ export default function CartPage() {
                                 <span className="font-display font-bold">Total</span>
                                 <span className="font-display font-bold text-2xl text-lime">{formatCurrency(total)}</span>
                             </div>
-                            <Link href="/checkout"
-                                style={{ color: '#000000' }}
-                                className="mt-4 w-full flex items-center justify-center gap-2 bg-lime font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
-                                Checkout <ArrowRight size={16} strokeWidth={2.5} />
-                            </Link>
+                            {isClosed ? (
+                                <button disabled className="mt-4 w-full flex items-center justify-center gap-2 bg-err/20 text-err font-extrabold py-3.5 rounded-xl transition-all cursor-not-allowed">
+                                    Store is Closed
+                                </button>
+                            ) : (
+                                <Link href="/checkout"
+                                    style={{ color: '#000000' }}
+                                    className="mt-4 w-full flex items-center justify-center gap-2 bg-lime font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
+                                    Checkout <ArrowRight size={16} strokeWidth={2.5} />
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>

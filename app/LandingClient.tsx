@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, Zap, Package, CreditCard, MapPin, Flame } from 'lucide-react';
 import ProductCard from '@/components/ProductCard';
 import { Product } from '@/lib/types';
+import { useStoreStatus } from '@/components/StoreStatusProvider';
 
 const features = [
   { icon: Package, n: '01', t: 'Browse', d: 'Check real-time stock of every snack available tonight.' },
@@ -13,13 +14,16 @@ const features = [
 ];
 
 export default function LandingClient({ hotItems = [] }: { hotItems?: Product[] }) {
+  const isClosed = useStoreStatus();
+
   return (
     <div className="max-w-5xl mx-auto px-5 pb-28 md:pb-16">
       {/* Hero */}
       <section className="pt-16 sm:pt-24 md:pt-32 lg:pt-40 pb-20 md:pb-28 max-w-2xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-7 text-[10px] font-extrabold tracking-widest uppercase bg-lime/8 text-lime border border-lime/15">
-            <div className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" /> Open Now
+            <div className={`w-1.5 h-1.5 rounded-full ${isClosed ? 'bg-err' : 'bg-lime animate-pulse'}`} />
+            {isClosed ? 'Closed Now' : 'Open Now'}
           </div>
 
           <h1 className="font-display font-bold text-[clamp(2.5rem,8vw,5rem)] leading-[1.02] tracking-tighter mb-6">
@@ -27,13 +31,16 @@ export default function LandingClient({ hotItems = [] }: { hotItems?: Product[] 
           </h1>
 
           <p className="text-base sm:text-lg text-t2 max-w-md mb-10 leading-relaxed">
-            Midnight fuel for the restless. High-voltage snacks reserved before the neon fades.
+            {isClosed
+              ? 'Our vault is currently locked. We reopen for the midnight rush at 9:30 PM. Stay tuned!'
+              : 'Midnight fuel for the restless. High-voltage snacks reserved before the neon fades.'}
           </p>
 
           <Link href="/menu"
             style={{ color: '#000000' }}
-            className="inline-flex items-center gap-3 bg-lime font-extrabold text-[15px] px-8 py-4 rounded-full hover:shadow-[0_4px_20px_rgba(200,255,0,0.25)] transition-all active:scale-[0.97]">
-            Shop Now <ArrowRight size={18} strokeWidth={2.5} />
+            className={`inline-flex items-center gap-3 bg-lime font-extrabold text-[15px] px-8 py-4 rounded-full transition-all active:scale-[0.97] ${isClosed ? 'opacity-50' : 'hover:shadow-[0_4px_20px_rgba(200,255,0,0.25)]'
+              }`}>
+            {isClosed ? 'Browse Menu' : 'Shop Now'} <ArrowRight size={18} strokeWidth={2.5} />
           </Link>
         </motion.div>
       </section>

@@ -258,7 +258,10 @@ export async function updateSetting(key: string, value: string) {
     try {
         const adminClient = await verifyAdmin();
         const { error } = await adminClient.from('settings').upsert({ key, value, updated_at: new Date().toISOString() });
-        if (!error) revalidatePath('/admin/settings');
+        if (!error) {
+            revalidatePath('/admin/settings');
+            revalidatePath('/', 'layout'); // Revalidate everything to reflect store status
+        }
         return { error: error?.message || null };
     } catch (e: any) { return { error: e.message }; }
 }

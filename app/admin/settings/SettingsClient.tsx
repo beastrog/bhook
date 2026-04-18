@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { Save, Loader2 } from 'lucide-react';
 
 const SETTINGS = [
+    { key: 'store_status', label: 'Store Status', placeholder: 'open or closed' },
     { key: 'store_name', label: 'Store Name', placeholder: 'Bhookh' },
     { key: 'store_tagline', label: 'Tagline', placeholder: 'Midnight Snack Store' },
     { key: 'upi_id', label: 'UPI ID', placeholder: 'someone@upi' },

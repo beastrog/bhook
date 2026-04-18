@@ -1,4 +1,4 @@
-import { getProducts } from '@/app/actions';
+import { getProducts, getSettings } from '@/app/actions';
 import MenuClient from './MenuClient';
 import Navbar from '@/components/Navbar';
 import BottomNav from '@/components/BottomNav';
@@ -6,7 +6,8 @@ import BottomNav from '@/components/BottomNav';
 export const revalidate = 30;
 
 export default async function MenuPage() {
-    const { data: products } = await getProducts();
+    const [{ data: products }] = await Promise.all([getProducts(), getSettings()]);
+
     return (
         <div className="min-h-dvh bg-deep">
             <Navbar />
