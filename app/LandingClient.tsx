@@ -12,9 +12,7 @@ const features = [
   { icon: MapPin, n: '03', t: 'Collect', d: 'Walk to the room, pay in cash, grab your haul.' },
 ];
 
-export default function LandingClient({ products = [] }: { products?: Product[] }) {
-  const hotItems = products.slice(0, 3); // Top 3 as hot selling
-
+export default function LandingClient({ hotItems = [] }: { hotItems?: Product[] }) {
   return (
     <div className="max-w-5xl mx-auto px-5 pb-28 md:pb-16">
       {/* Hero */}
@@ -43,12 +41,32 @@ export default function LandingClient({ products = [] }: { products?: Product[] 
       {/* Hot Selling */}
       {hotItems.length > 0 && (
         <section className="mb-20">
-          <div className="flex items-center gap-2 mb-5">
-            <Flame className="text-err" size={18} />
-            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-t3">Hot Selling</p>
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <Flame className="text-err" size={18} />
+              <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-t3">Hot Selling</p>
+            </div>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {hotItems.map(p => <ProductCard key={p.id} product={p} />)}
+          <div className="flex flex-col gap-2">
+            {hotItems.map((p, idx) => (
+              <Link href="/menu" key={p.id} className="group bg-card border border-bdr hover:border-bdr-hi transition-colors rounded-2xl p-4 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-xl bg-elev flex items-center justify-center font-display font-bold text-lg text-t2">
+                    {idx + 1}
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-t1">{p.name}</h3>
+                    <p className="text-xs text-t3">{p.category}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-lime">₹{p.selling_price}</span>
+                  <div className="w-8 h-8 rounded-full bg-lime/10 flex items-center justify-center text-lime group-hover:bg-lime group-hover:text-black transition-colors">
+                    <ArrowRight size={14} strokeWidth={2.5} />
+                  </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
       )}

@@ -45,6 +45,18 @@ export async function getProducts() {
     return { data, error };
 }
 
+export async function getHotProducts() {
+    const supabase = await createClient();
+    const { data: items } = await supabase.from('order_items').select('product_id, quantity, orders!inner(status)').eq('orders.status', 'completed');
+    const counts: Record<string, number> = {};
+    if (items) {
+        items.forEach(i => counts[i.product_id] = (counts[i.product_id] || 0) + i.quantity);
+    }
+    const { data: all } = await supabase.from('products').select('*').eq('active', true);
+    if (!all) return { data: [] };
+    return { data: all.sort((a, b) => (counts[b.id] || 0) - (counts[a.id] || 0)).slice(0, 3) };
+}
+
 // ─── Get single order with items ──────────────────────────────────────────────
 export async function getOrder(orderId: string) {
     const supabase = await createClient();
