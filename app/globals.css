@@ -1,0 +1,319 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+/* ─── Design Tokens ─────────────────────────────────────────── */
+:root {
+  --bg: #0c0c0c;
+  --bg-1: #141414;
+  --bg-2: #1c1c1c;
+  --bg-3: #242424;
+  --border: #2a2a2a;
+  --border-subtle: #1f1f1f;
+
+  --text-primary: #f5f5f5;
+  --text-secondary: #888888;
+  --text-tertiary: #555555;
+
+  --accent: #f97316;
+  /* orange — used sparingly */
+  --accent-dim: #c2580f;
+  --accent-bg: rgba(249, 115, 22, 0.08);
+  --accent-border: rgba(249, 115, 22, 0.2);
+
+  --green: #22c55e;
+  --green-bg: rgba(34, 197, 94, 0.08);
+  --red: #ef4444;
+  --red-bg: rgba(239, 68, 68, 0.08);
+  --amber: #f59e0b;
+  --amber-bg: rgba(245, 158, 11, 0.08);
+}
+
+/* ─── Reset ──────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Card utility ───────────────────────────────────────────── */
+.card {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+
+.card-sm {
+  border-radius: 12px;
+}
+
+.card-lg {
+  border-radius: 20px;
+}
+
+/* ─── Hover lift ─────────────────────────────────────────────── */
+.hover-lift {
+  transition: transform 0.18s ease, border-color 0.18s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  border-color: var(--bg-3);
+}
+
+/* ─── Buttons ────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  text-decoration: none;
+  border-radius: 10px;
+  letter-spacing: -0.01em;
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-orange {
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 22px;
+  font-size: 14px;
+}
+
+.btn-orange:hover:not(:disabled) {
+  background: #ea6b0e;
+}
+
+.btn-orange:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.btn-orange-pill {
+  background: var(--accent);
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.btn-orange-pill:hover:not(:disabled) {
+  background: #ea6b0e;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  padding: 10px 18px;
+  font-size: 13px;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--bg-3);
+  color: var(--text-primary);
+  background: var(--bg-1);
+}
+
+.btn-icon {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.btn-icon:hover {
+  color: var(--text-primary);
+  background: var(--bg-3);
+}
+
+/* ─── Typography ─────────────────────────────────────────────── */
+.text-display {
+  font-size: clamp(36px, 10vw, 52px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--text-primary);
+}
+
+.text-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ─── Badge ──────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-green {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.badge-red {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.badge-amber {
+  background: var(--amber-bg);
+  color: var(--amber);
+}
+
+.badge-orange {
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.badge-grey {
+  background: var(--bg-2);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* ─── Input ──────────────────────────────────────────────────── */
+.input {
+  width: 100%;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.15s;
+  -webkit-appearance: none;
+}
+
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.input:focus {
+  border-color: var(--accent);
+}
+
+.input-error {
+  border-color: var(--red) !important;
+}
+
+/* ─── Separator ──────────────────────────────────────────────── */
+.sep {
+  width: 100%;
+  height: 1px;
+  background: var(--border-subtle);
+}
+
+/* ─── Nav ────────────────────────────────────────────────────── */
+.nav-blur {
+  background: rgba(12, 12, 12, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* ─── Safe area ──────────────────────────────────────────────── */
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 16px);
+}
+
+/* ─── Animations ─────────────────────────────────────────────── */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-1) 25%, var(--bg-2) 50%, var(--bg-1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 8px;
+}
+
+/* ─── Status colors ──────────────────────────────────────────── */
+.status-reserved {
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.status-pending {
+  color: var(--amber);
+  background: var(--amber-bg);
+}
+
+.status-completed {
+  color: var(--green);
+  background: var(--green-bg);
+}
+
+.status-cancelled {
+  color: var(--red);
+  background: var(--red-bg);
+}
