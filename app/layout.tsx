@@ -3,11 +3,11 @@ import './globals.css';
 import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
-  title: 'BHOOK – Midnight Snack Store',
+  title: 'BHOOKH – Midnight Snack Store',
   description: 'Browse, reserve, and collect snacks from your hostel. No app needed – just pay cash.',
-  keywords: ['hostel snacks', 'midnight munchies', 'bhook', 'snack delivery hostel'],
+  keywords: ['hostel snacks', 'midnight munchies', 'bhookh', 'snack delivery hostel'],
   openGraph: {
-    title: 'BHOOK 🔥',
+    title: 'BHOOKH 🔥',
     description: "Tonight's hunger stops here.",
     type: 'website',
   },

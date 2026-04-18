@@ -175,18 +175,18 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                                 <div className="grid grid-cols-2 gap-2.5">
                                     <div>
                                         <label className="text-[10px] text-t3 mb-1 block">Cost (₹)</label>
-                                        <input type="number" value={form.cost_price} onChange={(e) => setForm({ ...form, cost_price: +e.target.value })}
+                                        <input type="number" value={form.cost_price || ''} onChange={(e) => setForm({ ...form, cost_price: e.target.value ? +e.target.value : 0 })}
                                             className="w-full bg-deep border border-bdr rounded-xl px-4 py-3 text-sm outline-none focus:border-lime/40 transition-colors" />
                                     </div>
                                     <div>
-                                        <label className="text-[10px] text-lime mb-1 block">Sell (₹)</label>
-                                        <input type="number" value={form.selling_price} onChange={(e) => setForm({ ...form, selling_price: +e.target.value })}
+                                        <label className="text-[10px] text-t3 mb-1 block">Sell (₹)</label>
+                                        <input type="number" value={form.selling_price || ''} onChange={(e) => setForm({ ...form, selling_price: e.target.value ? +e.target.value : 0 })}
                                             className="w-full bg-deep border border-bdr rounded-xl px-4 py-3 text-sm outline-none focus:border-lime/40 transition-colors" />
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="text-[10px] text-t3 mb-1 block">Stock</label>
-                                    <input type="number" value={form.stock_quantity} onChange={(e) => setForm({ ...form, stock_quantity: +e.target.value })}
+                                    <label className="text-[10px] text-t3 mb-1 block">Initial Stock</label>
+                                    <input type="number" value={form.stock_quantity || ''} onChange={(e) => setForm({ ...form, stock_quantity: e.target.value ? +e.target.value : 0 })}
                                         className="w-full bg-deep border border-bdr rounded-xl px-4 py-3 text-sm outline-none focus:border-lime/40 transition-colors" />
                                 </div>
                                 <div>

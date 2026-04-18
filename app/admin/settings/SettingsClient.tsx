@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Save, Loader2 } from 'lucide-react';
 
 const SETTINGS = [
-    { key: 'store_name', label: 'Store Name', placeholder: 'Bhook' },
+    { key: 'store_name', label: 'Store Name', placeholder: 'Bhookh' },
     { key: 'store_tagline', label: 'Tagline', placeholder: 'Midnight Snack Store' },
     { key: 'upi_id', label: 'UPI ID', placeholder: 'someone@upi' },
     { key: 'contact_phone', label: 'Contact Phone', placeholder: '+91 98765 43210' },
@@ -43,6 +43,30 @@ export default function SettingsClient({ settings }: { settings: Record<string, 
                         </div>
                     </div>
                 ))}
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-bdr">
+                <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-err mb-3">Danger Zone</p>
+                <div className="bg-err/5 border border-err/20 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 className="font-semibold text-sm text-err">Reset All Data</h3>
+                        <p className="text-xs text-t3 mt-1">This will delete all orders, resetting profit calculations and analytics permanently.</p>
+                    </div>
+                    <button
+                        onClick={async () => {
+                            if (!confirm('Are you absolutely sure? This cannot be undone.')) return;
+                            startTransition(async () => {
+                                const { resetAppData } = await import('@/app/admin/actions');
+                                const { error } = await resetAppData();
+                                if (error) toast.error(error);
+                                else toast.success('All app data has been reset.');
+                            });
+                        }}
+                        disabled={isPending}
+                        className="bg-err text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:bg-err/80 transition-colors active:scale-[0.97] whitespace-nowrap">
+                        {isPending ? 'Resetting...' : 'Reset Profit & Orders'}
+                    </button>
+                </div>
             </div>
         </div>
     );

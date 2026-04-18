@@ -62,12 +62,28 @@ export async function upsertProduct(product: any) {
 }
 
 export async function deleteProduct(id: string) {
-    try {
-        const adminClient = await verifyAdmin();
-        const { error } = await adminClient.from('products').delete().eq('id', id);
-        if (!error) revalidatePath('/admin/products');
-        return { error: error?.message || null };
-    } catch (e: any) { return { error: e.message }; }
+    const supabase = await verifyAdmin();
+    const { error } = await supabase.from('products').delete().eq('id', id);
+    if (error) return { error: error.message };
+    revalidatePath('/admin/products');
+    return { error: null };
+}
+
+export async function resetAppData() {
+    const supabase = await verifyAdmin();
+
+    // Delete all orders to reset profit and analytics
+    const { error } = await supabase.from('orders').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    if (error) return { error: error.message };
+
+    // Optionally also restore products to 0 or leave stock alone. Let's just delete orders.
+    // Deleting orders triggers CASCADE to order_items.
+
+    revalidatePath('/admin/dashboard');
+    revalidatePath('/admin/orders');
+    revalidatePath('/admin/analytics');
+    revalidatePath('/admin/profit-split');
+    return { error: null };
 }
 
 export async function updateStock(productId: string, delta: number) {

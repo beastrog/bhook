@@ -17,7 +17,7 @@ export default function LandingClient() {
       <section className="pt-16 sm:pt-24 md:pt-32 lg:pt-40 pb-20 md:pb-28 max-w-2xl">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-7 text-[10px] font-extrabold tracking-widest uppercase bg-lime/8 text-lime border border-lime/15">
-            <Zap size={11} /> Open Now
+            <div className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse" /> Open Now
           </div>
 
           <h1 className="font-display font-bold text-[clamp(2.5rem,8vw,5rem)] leading-[1.02] tracking-tighter mb-6">
@@ -59,12 +59,12 @@ export default function LandingClient() {
 
       {/* Footer */}
       <footer className="mt-24 pt-8 border-t border-bdr text-center flex flex-col items-center">
-        <img src="/logo.png" alt="BHOOK Logo" className="w-12 h-12 rounded-xl mb-3 object-cover" />
-        <p className="font-display font-bold text-lg text-lime tracking-tight mb-2">BHOOK</p>
+        <img src="/logo.png" alt="BHOOKH Logo" className="w-12 h-12 rounded-xl mb-3 object-cover" />
+        <p className="font-display font-bold text-lg text-lime tracking-tight mb-2">BHOOKH</p>
         <div className="flex justify-center gap-4 text-[11px] text-t3 mb-3">
           <Link href="/menu" className="hover:text-t2 transition-colors">Menu</Link>
         </div>
-        <p className="text-[11px] text-t3">© {new Date().getFullYear()} Bhook. Midnight Snack Store.</p>
+        <p className="text-[11px] text-t3">© {new Date().getFullYear()} Bhookh. Midnight Snack Store.</p>
       </footer>
     </div>
   );

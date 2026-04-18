@@ -12,8 +12,8 @@ export default function Navbar() {
         <nav className="sticky top-0 z-50 bg-deep/90 backdrop-blur-xl border-b border-bdr">
             <div className="max-w-5xl mx-auto px-5 flex items-center justify-between h-14">
                 <Link href="/" className="flex items-center gap-2 group">
-                    <img src="/logo.png" alt="BHOOK Logo" className="w-8 h-8 rounded-lg object-cover group-hover:scale-105 transition-transform" />
-                    <span className="font-display font-bold text-xl tracking-tight text-lime hidden sm:inline-block">BHOOK</span>
+                    <img src="/logo.png" alt="BHOOKH Logo" className="w-8 h-8 rounded-lg object-cover group-hover:scale-105 transition-transform" />
+                    <span className="font-display font-bold text-xl tracking-tight text-lime hidden sm:inline-block">BHOOKH</span>
                 </Link>
 
                 <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-t2">
