@@ -4,10 +4,28 @@ import { createClient, createServiceClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
-export async function adminLoginOTP(email: string) {
+// Helper to verify admin
+async function verifyAdmin() {
     const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithOtp({ email });
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Unauthorized');
+    // Using service client because we haven't defined RLS policies for admin writes.
+    // The service client bypasses RLS, but we protected the Server Action with the user check above.
+    return createServiceClient();
+}
+
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+export async function adminLoginOTP(email: string, redirectUrl: string) {
+    const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
+    if (adminEmails.length > 0 && !adminEmails.includes(email.trim())) {
+        return { error: 'Unauthorized email address' };
+    }
+
+    const supabase = await createClient();
+    const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: { emailRedirectTo: redirectUrl }
+    });
     if (error) return { error: error.message };
     return { error: null };
 }
@@ -27,8 +45,9 @@ export async function adminLogout() {
 
 // ─── Products CRUD ────────────────────────────────────────────────────────────
 export async function getAllProducts() {
-    const supabase = await createClient();
-    const { data, error } = await supabase
+    // Reads don't necessarily bypass RLS, but for admin we might want to see inactive products too
+    const adminClient = await verifyAdmin();
+    const { data, error } = await adminClient
         .from('products')
         .select('*')
         .order('category')
@@ -36,45 +55,43 @@ export async function getAllProducts() {
     return { data, error };
 }
 
-export async function upsertProduct(product: {
-    id?: string;
-    name: string;
-    description?: string;
-    cost_price: number;
-    selling_price: number;
-    stock_quantity: number;
-    category: string;
-    active: boolean;
-}) {
-    const supabase = await createClient();
-    const { error } = product.id
-        ? await supabase.from('products').update(product).eq('id', product.id)
-        : await supabase.from('products').insert(product);
-    if (!error) revalidatePath('/admin/products');
-    return { error: error?.message || null };
+export async function upsertProduct(product: any) {
+    try {
+        const adminClient = await verifyAdmin();
+        const { error } = product.id
+            ? await adminClient.from('products').update(product).eq('id', product.id)
+            : await adminClient.from('products').insert(product);
+        if (!error) revalidatePath('/admin/products');
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
 }
 
 export async function deleteProduct(id: string) {
-    const supabase = await createClient();
-    const { error } = await supabase.from('products').delete().eq('id', id);
-    if (!error) revalidatePath('/admin/products');
-    return { error: error?.message || null };
+    try {
+        const adminClient = await verifyAdmin();
+        const { error } = await adminClient.from('products').delete().eq('id', id);
+        if (!error) revalidatePath('/admin/products');
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
 }
 
 export async function updateStock(productId: string, delta: number) {
-    const supabase = await createClient();
-    const { data: prod } = await supabase.from('products').select('stock_quantity').eq('id', productId).single();
-    if (!prod) return { error: 'Product not found' };
-    const newQty = Math.max(0, prod.stock_quantity + delta);
-    const { error } = await supabase.from('products').update({ stock_quantity: newQty }).eq('id', productId);
-    if (!error) revalidatePath('/admin/products');
-    return { error: error?.message || null };
+    try {
+        const adminClient = await verifyAdmin();
+        const { data: prod } = await adminClient.from('products').select('stock_quantity').eq('id', productId).single();
+        if (!prod) return { error: 'Product not found' };
+
+        const newQty = Math.max(0, prod.stock_quantity + delta);
+        const { error } = await adminClient.from('products').update({ stock_quantity: newQty }).eq('id', productId);
+        if (!error) revalidatePath('/admin/products');
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
 }
 
 // ─── Orders ───────────────────────────────────────────────────────────────────
 export async function getAllOrders(dateFilter?: string) {
-    const supabase = await createClient();
-    let query = supabase
+    const adminClient = await verifyAdmin();
+    let query = adminClient
         .from('orders')
         .select('*, order_items(*)')
         .order('created_at', { ascending: false });
@@ -92,32 +109,34 @@ export async function getAllOrders(dateFilter?: string) {
 }
 
 export async function updateOrderStatus(orderId: string, status: string) {
-    const supabase = await createClient();
-    const { error } = await supabase.from('orders').update({ status }).eq('id', orderId);
-    if (!error) {
-        revalidatePath('/admin/orders');
-        revalidatePath('/admin/dashboard');
-        revalidatePath('/admin/analytics');
-    }
-    return { error: error?.message || null };
+    try {
+        const adminClient = await verifyAdmin();
+        const { error } = await adminClient.from('orders').update({ status }).eq('id', orderId);
+        if (!error) {
+            revalidatePath('/admin/orders');
+            revalidatePath('/admin/dashboard');
+            revalidatePath('/admin/analytics');
+        }
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
 }
 
 // ─── Analytics ────────────────────────────────────────────────────────────────
 export async function getDashboardStats() {
-    const supabase = await createClient();
+    const adminClient = await verifyAdmin();
     const today = new Date();
     const start = new Date(today); start.setHours(0, 0, 0, 0);
     const end = new Date(today); end.setHours(23, 59, 59, 999);
 
-    const { data: todayOrders } = await supabase
+    const { data: todayOrders } = await adminClient
         .from('orders')
         .select('*')
         .gte('created_at', start.toISOString())
         .lte('created_at', end.toISOString());
 
-    const { data: allProducts } = await supabase.from('products').select('*').order('stock_quantity');
+    const { data: allProducts } = await adminClient.from('products').select('*').order('stock_quantity');
 
-    const { data: topItems } = await supabase
+    const { data: topItems } = await adminClient
         .from('order_items')
         .select('product_name, quantity, line_total')
         .gte('created_at', start.toISOString())
@@ -130,7 +149,6 @@ export async function getDashboardStats() {
     const totalProfit = completed.reduce((s, o) => s + Number(o.total_profit), 0);
     const totalCost = completed.reduce((s, o) => s + Number(o.total_cost), 0);
 
-    // Aggregate best sellers
     const sellerMap: Record<string, { name: string; qty: number; revenue: number }> = {};
     (topItems || []).forEach((item) => {
         if (!sellerMap[item.product_name]) sellerMap[item.product_name] = { name: item.product_name, qty: 0, revenue: 0 };
@@ -153,12 +171,12 @@ export async function getDashboardStats() {
 }
 
 export async function getAnalytics(days = 7) {
-    const supabase = await createClient();
+    const adminClient = await verifyAdmin();
     const start = new Date();
     start.setDate(start.getDate() - days);
     start.setHours(0, 0, 0, 0);
 
-    const { data } = await supabase
+    const { data } = await adminClient
         .from('orders')
         .select('*')
         .eq('status', 'completed')
@@ -170,31 +188,66 @@ export async function getAnalytics(days = 7) {
 
 // ─── Profit splits ────────────────────────────────────────────────────────────
 export async function getProfitSplits() {
-    const supabase = await createClient();
-    const { data } = await supabase.from('profit_splits').select('*').eq('active', true).order('percentage', { ascending: false });
+    const adminClient = await verifyAdmin();
+    const { data } = await adminClient.from('profit_splits').select('*').eq('active', true).order('percentage', { ascending: false });
     return data || [];
 }
 
-export async function upsertProfitSplit(split: { id?: string; person_name: string; percentage: number }) {
-    const supabase = await createClient();
-    const { error } = split.id
-        ? await supabase.from('profit_splits').update(split).eq('id', split.id)
-        : await supabase.from('profit_splits').insert({ ...split, active: true });
-    if (!error) revalidatePath('/admin/profit-split');
-    return { error: error?.message || null };
+export async function upsertProfitSplit(split: any) {
+    try {
+        const adminClient = await verifyAdmin();
+        const { error } = split.id
+            ? await adminClient.from('profit_splits').update(split).eq('id', split.id)
+            : await adminClient.from('profit_splits').insert({ ...split, active: true });
+        if (!error) revalidatePath('/admin/profit-split');
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
 }
 
 export async function deleteProfitSplit(id: string) {
-    const supabase = await createClient();
-    const { error } = await supabase.from('profit_splits').delete().eq('id', id);
-    if (!error) revalidatePath('/admin/profit-split');
-    return { error: error?.message || null };
+    try {
+        const adminClient = await verifyAdmin();
+        const { error } = await adminClient.from('profit_splits').delete().eq('id', id);
+        if (!error) revalidatePath('/admin/profit-split');
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
+}
+
+// ─── Image Upload ─────────────────────────────────────────────────────────────
+export async function uploadProductImage(formData: FormData): Promise<{ url: string | null; error: string | null }> {
+    try {
+        const adminClient = await verifyAdmin();
+        const file = formData.get('file') as File;
+        if (!file) return { url: null, error: 'No file provided' };
+
+        const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg';
+        const allowed = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        if (!allowed.includes(ext)) return { url: null, error: 'Invalid file type' };
+
+        const fileName = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        const filePath = `products/${fileName}`;
+
+        const arrayBuffer = await file.arrayBuffer();
+        const { error: uploadError } = await adminClient.storage
+            .from('product-images')
+            .upload(filePath, arrayBuffer, {
+                contentType: file.type,
+                upsert: false,
+            });
+
+        if (uploadError) return { url: null, error: uploadError.message };
+
+        const { data: { publicUrl } } = adminClient.storage.from('product-images').getPublicUrl(filePath);
+        return { url: publicUrl, error: null };
+    } catch (e: any) { return { url: null, error: e.message }; }
 }
 
 // ─── Settings ─────────────────────────────────────────────────────────────────
 export async function updateSetting(key: string, value: string) {
-    const supabase = await createClient();
-    const { error } = await supabase.from('settings').upsert({ key, value, updated_at: new Date().toISOString() });
-    if (!error) revalidatePath('/admin/settings');
-    return { error: error?.message || null };
+    try {
+        const adminClient = await verifyAdmin();
+        const { error } = await adminClient.from('settings').upsert({ key, value, updated_at: new Date().toISOString() });
+        if (!error) revalidatePath('/admin/settings');
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
 }

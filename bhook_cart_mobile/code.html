@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bhook - Cart</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Space+Grotesk:wght@400;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#badd0e",
+                      "tertiary-dim": "#eecd34",
+                      "background": "#100f00",
+                      "secondary-fixed-dim": "#e2d946",
+                      "surface-container-low": "#161400",
+                      "primary-fixed-dim": "#c5e822",
+                      "tertiary-container": "#fddb42",
+                      "surface-dim": "#100f00",
+                      "on-tertiary-fixed-variant": "#685700",
+                      "on-primary-fixed-variant": "#556600",
+                      "inverse-surface": "#fffade",
+                      "outline": "#7c773e",
+                      "on-surface": "#fdf6b0",
+                      "surface-bright": "#302d00",
+                      "secondary-dim": "#e2d946",
+                      "secondary-container": "#666000",
+                      "error-container": "#b92902",
+                      "on-background": "#fdf6b0",
+                      "primary-dim": "#c5e822",
+                      "on-error": "#450900",
+                      "on-primary": "#4c5b00",
+                      "on-secondary": "#585400",
+                      "secondary-fixed": "#f0e753",
+                      "on-tertiary-container": "#5c4d00",
+                      "surface-container-lowest": "#000000",
+                      "primary": "#d3f734",
+                      "secondary": "#f0e753",
+                      "outline-variant": "#4d4915",
+                      "tertiary": "#ffeba0",
+                      "on-primary-fixed": "#3b4800",
+                      "surface-container": "#1c1a00",
+                      "on-secondary-fixed": "#444100",
+                      "tertiary-fixed-dim": "#eecd34",
+                      "on-primary-container": "#3e4b00",
+                      "on-surface-variant": "#b2ad6e",
+                      "surface-container-high": "#232000",
+                      "surface-variant": "#292700",
+                      "on-tertiary-fixed": "#473b00",
+                      "primary-fixed": "#d3f734",
+                      "on-tertiary": "#665600",
+                      "surface": "#100f00",
+                      "tertiary-fixed": "#fddb42",
+                      "on-secondary-fixed-variant": "#625e00",
+                      "on-secondary-container": "#fff9ca",
+                      "surface-tint": "#d3f734",
+                      "inverse-primary": "#556600",
+                      "surface-container-highest": "#292700",
+                      "error-dim": "#d53d18",
+                      "error": "#ff7351",
+                      "on-error-container": "#ffd2c8",
+                      "inverse-on-surface": "#5a5721"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {},
+              "fontFamily": {
+                      "headline": [
+                              "Space Grotesk"
+                      ],
+                      "body": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label": [
+                              "Plus Jakarta Sans"
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body min-h-screen flex flex-col pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#100f00]/80 backdrop-blur-2xl shadow-[0px_10px_30px_rgba(211,247,52,0.05)]">
+<button class="text-neutral-400 hover:text-[#d3f734] transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined text-2xl">menu</span>
+</button>
+<h1 class="text-2xl font-black text-[#d3f734] tracking-tighter uppercase font-headline">Bhook</h1>
+<button class="text-[#d3f734] font-bold hover:text-[#d3f734] transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined text-2xl">shopping_bag</span>
+</button>
+</header>
+<main class="flex-grow pt-24 px-6 md:px-12 max-w-5xl mx-auto w-full">
+<h2 class="text-[3.5rem] font-headline font-bold text-on-surface tracking-[-0.02em] leading-none mb-12">Your Stash</h2>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<!-- Cart Items -->
+<div class="lg:col-span-2 flex flex-col gap-8">
+<!-- Item 1 -->
+<div class="flex items-center gap-6 bg-surface-container-low rounded-lg p-6 relative overflow-hidden group">
+<div class="w-24 h-24 rounded-DEFAULT overflow-hidden shrink-0 bg-surface-container">
+<img alt="Spicy Chips" class="w-full h-full object-cover" data-alt="vibrant neon-lit packet of spicy chips on dark background with high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyCdqmh-xE7sIvogBpgS-zf5bWem_26fk6Gi5aR0RwMGAlItaFPP8lj29tcPpBV6_A0-v3BkqgvMW2xkcxW_C7FU3Mu8lqV-9Y_tINrXPwH2MTvsoRz_ZJgY8aAG8nei6s0LQLftORnPZEQZbxAW50Xrq1DJG3efjlf-5fmwY9EDN2R25d5BYK6glEJ9fRjC35OoI9TX5YhODSHFFHCFsmBeMwjuIDR1eZG0_sQYzlarrC5l99ONVOmtqcJbzywdr3NdszvLSpbeRQ"/>
+</div>
+<div class="flex-grow">
+<h3 class="text-[1.375rem] font-headline font-bold text-on-surface mb-1">Neon Doritos</h3>
+<p class="text-[0.75rem] font-label text-on-surface-variant uppercase tracking-widest mb-3">Spicy Nacho</p>
+<div class="flex items-center gap-4">
+<span class="text-[1rem] font-body text-primary font-bold">$4.50</span>
+<div class="flex items-center bg-surface-container-high rounded-full px-3 py-1">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-[1rem] font-body text-on-surface w-8 text-center">2</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<button class="absolute top-4 right-4 text-outline hover:text-error transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-6 bg-surface-container-low rounded-lg p-6 relative overflow-hidden group">
+<div class="w-24 h-24 rounded-DEFAULT overflow-hidden shrink-0 bg-surface-container">
+<img alt="Energy Drink" class="w-full h-full object-cover" data-alt="glowing green matcha energy drink can surrounded by dark shadows and vibrant neon light accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ-iGFefj75qtdAy755XK6BPT2BNVCC4WOzr4eDUDjrfSbgjt4KM7QvmHf-HsHf_w5r43GDUI9vPDyhh9QYPTUZIdVEZe7PS7mchEtLDE0M4_VnodTszpLIL8bhRXi-GnHxLFrEOuLs35YH087tsX3CX6Cg-l2QNuwuLdMD2nP9ZIgMuDqP2CJYxsKNbPzwguWisKFEB_4aAUeZY5tbcUiPEIw7JVcjpr4xP4iQYJsQg90bQBFVKO0ns4GOb58rIGAXhSEeDzaK_Qm"/>
+</div>
+<div class="flex-grow">
+<h3 class="text-[1.375rem] font-headline font-bold text-on-surface mb-1">Pulse Energy</h3>
+<p class="text-[0.75rem] font-label text-on-surface-variant uppercase tracking-widest mb-3">Matcha Voltage</p>
+<div class="flex items-center gap-4">
+<span class="text-[1rem] font-body text-primary font-bold">$3.00</span>
+<div class="flex items-center bg-surface-container-high rounded-full px-3 py-1">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-[1rem] font-body text-on-surface w-8 text-center">1</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<button class="absolute top-4 right-4 text-outline hover:text-error transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-6 bg-surface-container-low rounded-lg p-6 relative overflow-hidden group">
+<div class="w-24 h-24 rounded-DEFAULT overflow-hidden shrink-0 bg-surface-container">
+<img alt="Chocolate Bar" class="w-full h-full object-cover" data-alt="dark chocolate bar with scattered almonds illuminated by a sharp, electric yellow spotlight on a black surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdj_EQrUD2j5PBJBSK5F1yjS6ZR5TVFWbop9FdSDIP54BpwrsTPUrdmGUtYSt0u_3EpB85veCKdC3-W5LWPO2mi0meMZKUPGrBdZkBbBc24KcO1-43hkledq_mzEubJ5rV3xxWhJcuo_-zv1zmrwSKZ8SOXGOF4Ey1710fXhq4G8muGidK-pIWjuY19BF9ysdXDvLmnXXvnmWX_IL53p_ElnzjyqUQaGigcVsu4j7WPY8mRKmtZh2CEKwVCwyyurdNKnuNKqY8ozl-"/>
+</div>
+<div class="flex-grow">
+<h3 class="text-[1.375rem] font-headline font-bold text-on-surface mb-1">Midnight Cocoa</h3>
+<p class="text-[0.75rem] font-label text-on-surface-variant uppercase tracking-widest mb-3">Almond Crunch</p>
+<div class="flex items-center gap-4">
+<span class="text-[1rem] font-body text-primary font-bold">$5.50</span>
+<div class="flex items-center bg-surface-container-high rounded-full px-3 py-1">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-[1rem] font-body text-on-surface w-8 text-center">1</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+<button class="absolute top-4 right-4 text-outline hover:text-error transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<!-- Summary -->
+<div class="lg:col-span-1">
+<div class="bg-surface-container rounded-lg p-8 sticky top-32 shadow-[0px_20px_40px_rgba(211,247,52,0.08)] border border-outline-variant/15">
+<h3 class="text-[2rem] font-headline font-bold text-on-surface mb-6">Summary</h3>
+<div class="flex justify-between items-center mb-4">
+<span class="text-[1rem] font-body text-on-surface-variant">Subtotal</span>
+<span class="text-[1rem] font-body text-on-surface">$17.50</span>
+</div>
+<div class="flex justify-between items-center mb-4">
+<span class="text-[1rem] font-body text-on-surface-variant">Taxes</span>
+<span class="text-[1rem] font-body text-on-surface">$1.40</span>
+</div>
+<div class="flex justify-between items-center mb-8">
+<span class="text-[1rem] font-body text-on-surface-variant">Delivery</span>
+<span class="text-[1rem] font-body text-primary">Free</span>
+</div>
+<div class="flex justify-between items-center mb-8 pt-6 border-t border-surface-container-high">
+<span class="text-[1.375rem] font-headline font-bold text-on-surface">Total</span>
+<span class="text-[2rem] font-headline font-bold text-primary">$18.90</span>
+</div>
+<button class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary font-headline font-bold text-[1.375rem] py-4 rounded-full hover:opacity-90 transition-opacity flex justify-center items-center gap-2">
+                        Checkout
+                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#1c1a00]/90 backdrop-blur-xl rounded-t-[2.5rem] shadow-[0px_-10px_40px_rgba(0,0,0,0.5)] md:hidden">
+<button class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200 group">
+<span class="material-symbols-outlined text-2xl mb-1">bolt</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Feed</span>
+</button>
+<button class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200 group">
+<span class="material-symbols-outlined text-2xl mb-1">restaurant_menu</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Menu</span>
+</button>
+<button class="flex flex-col items-center justify-center bg-[#d3f734] text-[#100f00] rounded-full px-6 py-2 scale-110 active:scale-90 duration-200">
+<span class="material-symbols-outlined text-2xl mb-1" style="font-variation-settings: 'FILL' 1;">local_mall</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Cart</span>
+</button>
+<button class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200 group">
+<span class="material-symbols-outlined text-2xl mb-1">dashboard</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest">Admin</span>
+</button>
+</nav>
+</body></html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bhook - Menu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Space+Grotesk:wght@400;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#badd0e",
+                      "tertiary-dim": "#eecd34",
+                      "background": "#100f00",
+                      "secondary-fixed-dim": "#e2d946",
+                      "surface-container-low": "#161400",
+                      "primary-fixed-dim": "#c5e822",
+                      "tertiary-container": "#fddb42",
+                      "surface-dim": "#100f00",
+                      "on-tertiary-fixed-variant": "#685700",
+                      "on-primary-fixed-variant": "#556600",
+                      "inverse-surface": "#fffade",
+                      "outline": "#7c773e",
+                      "on-surface": "#fdf6b0",
+                      "surface-bright": "#302d00",
+                      "secondary-dim": "#e2d946",
+                      "secondary-container": "#666000",
+                      "error-container": "#b92902",
+                      "on-background": "#fdf6b0",
+                      "primary-dim": "#c5e822",
+                      "on-error": "#450900",
+                      "on-primary": "#4c5b00",
+                      "on-secondary": "#585400",
+                      "secondary-fixed": "#f0e753",
+                      "on-tertiary-container": "#5c4d00",
+                      "surface-container-lowest": "#000000",
+                      "primary": "#d3f734",
+                      "secondary": "#f0e753",
+                      "outline-variant": "#4d4915",
+                      "tertiary": "#ffeba0",
+                      "on-primary-fixed": "#3b4800",
+                      "surface-container": "#1c1a00",
+                      "on-secondary-fixed": "#444100",
+                      "tertiary-fixed-dim": "#eecd34",
+                      "on-primary-container": "#3e4b00",
+                      "on-surface-variant": "#b2ad6e",
+                      "surface-container-high": "#232000",
+                      "surface-variant": "#292700",
+                      "on-tertiary-fixed": "#473b00",
+                      "primary-fixed": "#d3f734",
+                      "on-tertiary": "#665600",
+                      "surface": "#100f00",
+                      "tertiary-fixed": "#fddb42",
+                      "on-secondary-fixed-variant": "#625e00",
+                      "on-secondary-container": "#fff9ca",
+                      "surface-tint": "#d3f734",
+                      "inverse-primary": "#556600",
+                      "surface-container-highest": "#292700",
+                      "error-dim": "#d53d18",
+                      "error": "#ff7351",
+                      "on-error-container": "#ffd2c8",
+                      "inverse-on-surface": "#5a5721"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {},
+              "fontFamily": {
+                      "headline": [
+                              "Space Grotesk", "sans-serif"
+                      ],
+                      "body": [
+                              "Plus Jakarta Sans", "sans-serif"
+                      ],
+                      "label": [
+                              "Plus Jakarta Sans", "sans-serif"
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            font-family: theme('fontFamily.body');
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: theme('fontFamily.headline');
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col pt-24 pb-32 md:pb-0">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#100f00]/80 backdrop-blur-2xl shadow-[0px_10px_30px_rgba(211,247,52,0.05)] text-[#d3f734] font-['Space_Grotesk'] font-bold tracking-tight">
+<button class="hover:text-[#d3f734] transition-all duration-300 active:scale-95 transition-transform text-neutral-400">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="text-2xl font-black text-[#d3f734] tracking-tighter uppercase">Bhook</div>
+<button class="hover:text-[#d3f734] transition-all duration-300 active:scale-95 transition-transform text-neutral-400 relative">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="absolute -top-1 -right-1 bg-primary text-on-primary text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">2</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow container mx-auto px-6 max-w-7xl">
+<!-- Hero Title -->
+<section class="py-12 md:py-20 flex flex-col items-start gap-4">
+<h1 class="text-display-lg text-primary font-black tracking-[-0.02em] uppercase leading-none">The Neon<br/>Pulse.</h1>
+<p class="text-title-lg text-on-surface-variant max-w-xl">Curated cravings. High-voltage flavor. Select your fuel.</p>
+</section>
+<!-- Category Filters -->
+<section class="mb-16 overflow-x-auto pb-4 no-scrollbar">
+<div class="flex gap-4 min-w-max">
+<button class="bg-primary text-on-primary rounded-sm px-6 py-3 text-label-md font-bold uppercase tracking-[0.05em] transition-transform active:scale-95">All</button>
+<button class="bg-surface-variant text-on-surface-variant hover:bg-surface-container-high rounded-sm px-6 py-3 text-label-md font-bold uppercase tracking-[0.05em] transition-all active:scale-95">Sweet</button>
+<button class="bg-surface-variant text-on-surface-variant hover:bg-surface-container-high rounded-sm px-6 py-3 text-label-md font-bold uppercase tracking-[0.05em] transition-all active:scale-95">Savory</button>
+<button class="bg-surface-variant text-on-surface-variant hover:bg-surface-container-high rounded-sm px-6 py-3 text-label-md font-bold uppercase tracking-[0.05em] transition-all active:scale-95">Healthy</button>
+<button class="bg-surface-variant text-on-surface-variant hover:bg-surface-container-high rounded-sm px-6 py-3 text-label-md font-bold uppercase tracking-[0.05em] transition-all active:scale-95">Night Owl</button>
+</div>
+</section>
+<!-- Menu Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-8">
+<!-- Product Card 1 -->
+<article class="flex flex-col gap-6 relative group">
+<div class="bg-surface-container-low rounded-lg p-6 relative h-80 flex items-center justify-center overflow-visible transition-transform duration-500 group-hover:-translate-y-2">
+<img alt="Gourmet neon-dusted potato chips" class="w-full h-full object-cover rounded-lg absolute inset-0 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500" data-alt="Close up of artisanal potato chips with a vibrant, almost radioactive green dust, dramatically lit against a pure black background, high contrast editorial style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDODRM_BPXrwkOttOyn-7b7AE66u2jGoyJ2FYsW-M1YH9dIMvBcEAjHhPdwmAfi5YxgGB9B17IkUNWWP8z37eunGYT0QTTKFQkv_hc5zAKUcpSDylPASaT7pzEXRumX54vVn6tHu7sUBi_xmQGe4LCSOqGymJxxJYIHXs55kysRPA37VeIKnwRIkGfWHNFfHn0Oyymz64FcRW-lM4ttQphkoUt-xrHrItUfbE5v1y4fPMrBD-rzz_13saebDmCV07qarYfmO_tvMq3Z"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent rounded-lg"></div>
+<button class="absolute bottom-6 right-6 bg-surface-container-highest text-primary rounded-md p-3 shadow-[0px_10px_30px_rgba(211,247,52,0.05)] hover:bg-primary hover:text-on-primary transition-colors z-10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<h3 class="text-headline-lg text-on-surface font-bold leading-tight">Radioactive Crunch</h3>
+<p class="text-body-lg text-on-surface-variant">Jalapeño &amp; Lime kettle chips.</p>
+<span class="text-primary font-bold text-lg mt-2">$4.50</span>
+</div>
+</article>
+<!-- Product Card 2 -->
+<article class="flex flex-col gap-6 relative group">
+<div class="bg-surface-container-low rounded-lg p-6 relative h-80 flex items-center justify-center overflow-visible transition-transform duration-500 group-hover:-translate-y-2">
+<img alt="Dark chocolate spheres" class="w-full h-full object-cover rounded-lg absolute inset-0 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500" data-alt="Perfectly round dark chocolate truffles scattered asymmetrically on a dark, textured slate surface, moody rim lighting highlighting the glossy finish" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPgJG4sShCSrPXqEcjIMhBbziVoJI_p578f3rCLWbhA0_VHO6jLwSTHwve0qFJHRsXKYGUEWpINRHcoBDFEUMd5B0eSaZH0bbEiK8sioAS056tC8Nk0lpKAfi1Vx1JJkHhr0D7sgpmziTRC9tvpwhv0o01ILNYnsTo706kDmfaJ5ilp0H8PnxIBdUadMSq-zTHBxBT_o17zKh82i2pVCKaZ_SfnAL_-jR-Dr6t_-3-UD9NtgQjPeV7j2jbQlN4gVqP0elJmw1ITXUz"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent rounded-lg"></div>
+<button class="absolute bottom-6 right-6 bg-surface-container-highest text-primary rounded-md p-3 shadow-[0px_10px_30px_rgba(211,247,52,0.05)] hover:bg-primary hover:text-on-primary transition-colors z-10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<h3 class="text-headline-lg text-on-surface font-bold leading-tight">Void Truffles</h3>
+<p class="text-body-lg text-on-surface-variant">80% cacao with espresso dust.</p>
+<span class="text-primary font-bold text-lg mt-2">$7.00</span>
+</div>
+</article>
+<!-- Product Card 3 -->
+<article class="flex flex-col gap-6 relative group">
+<div class="bg-surface-container-low rounded-lg p-6 relative h-80 flex items-center justify-center overflow-visible transition-transform duration-500 group-hover:-translate-y-2">
+<img alt="Gummy candies" class="w-full h-full object-cover rounded-lg absolute inset-0 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500" data-alt="Vibrant, translucent gummy worms glowing slightly under UV light against a deep void background, sharp macro focus, cyberpunk food aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAYjdstbVHa4L3Iu90WdBKtwNm1Hmdww-SSrGOj7Uo4w4Q85fuTDjk0G-L49ahkUbuAPMASZ3r5c75XaHLV1sEj-SRVNSuqIcA50-jMtvuopeUgNYiyRrfRNtHuJaKw2hFF4RF84J_9mwMegEUJDQa7_uMlrspAyaXAMm9N3Ho6xcZyjNhXaJARGhY4Pl5uWh7K7WbgfOnbFoWC-aY8le6oYAABkmTgPjmB-4jWgdGIaOvF9FBx62hKKjyXo6xR5Cy3usX9h3v9AFS"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent rounded-lg"></div>
+<button class="absolute bottom-6 right-6 bg-surface-container-highest text-primary rounded-md p-3 shadow-[0px_10px_30px_rgba(211,247,52,0.05)] hover:bg-primary hover:text-on-primary transition-colors z-10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<h3 class="text-headline-lg text-on-surface font-bold leading-tight">Neon Worms</h3>
+<p class="text-body-lg text-on-surface-variant">Sour electric apple gummies.</p>
+<span class="text-primary font-bold text-lg mt-2">$3.50</span>
+</div>
+</article>
+<!-- Product Card 4 -->
+<article class="flex flex-col gap-6 relative group">
+<div class="bg-surface-container-low rounded-lg p-6 relative h-80 flex items-center justify-center overflow-visible transition-transform duration-500 group-hover:-translate-y-2">
+<img alt="Spicy almonds" class="w-full h-full object-cover rounded-lg absolute inset-0 opacity-80 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500" data-alt="Pile of roasted almonds coated in dark red spice mix, resting on matte black concrete, sharp side light creating dramatic shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGKbUIk_QnRuTjkNR-_RgzozUc4KTXQYHz20_pPgD1i40u7q5yrl9baeZ_Jc6003cc2KXEXjsL97fqOv9SgADAibt1rMUXWEM6Gr-3FfPYNAOAb-TrDG5j2yQJ2GLtEhp3fK5SrzufIB8LLbLjgQ1auWTkJGuUhPZOrmc4i1ty4nUGutAgdGnNA_6cKSuf-NexFc5HigHkAddWQeVgs8ZEBkLMIybeppU1TnexJ62fFuIy6iXs_rGXl0-6Gt_YgWQfqyzRy5E5FX_5"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent rounded-lg"></div>
+<button class="absolute bottom-6 right-6 bg-surface-container-highest text-primary rounded-md p-3 shadow-[0px_10px_30px_rgba(211,247,52,0.05)] hover:bg-primary hover:text-on-primary transition-colors z-10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<h3 class="text-headline-lg text-on-surface font-bold leading-tight">Inferno Nuts</h3>
+<p class="text-body-lg text-on-surface-variant">Ghost pepper roasted almonds.</p>
+<span class="text-primary font-bold text-lg mt-2">$6.00</span>
+</div>
+</article>
+<!-- Product Card 5 (Banner Style) -->
+<article class="md:col-span-2 lg:col-span-2 flex flex-col md:flex-row bg-surface-container-high rounded-lg overflow-hidden group">
+<div class="md:w-1/2 p-10 flex flex-col justify-center gap-6 relative z-10">
+<span class="text-label-md text-primary font-bold uppercase tracking-[0.05em]">Limited Drop</span>
+<h3 class="text-display-lg text-on-surface font-black leading-none">Midnight<br/>Matcha</h3>
+<p class="text-body-lg text-on-surface-variant">Ceremonial grade matcha infused white chocolate shards. Energy for the night owl.</p>
+<div class="mt-4">
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary rounded-full px-8 py-4 font-bold text-label-md uppercase tracking-widest hover:opacity-90 transition-opacity flex items-center gap-2">
+<span>Add to Cart - $9.00</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="md:w-1/2 relative h-64 md:h-auto">
+<img alt="Matcha chocolate" class="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-700 group-hover:scale-105" data-alt="Abstract shards of bright green matcha chocolate overlapping against a deep void background, dynamic composition, cinematic studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdlpbU32wfj7FmLyhjyt8tIuyetrJAZZ85hlVuZp9HnqDvJ2jfTzukqbQuQUTl1IdHO2gy3X23TtzqMrQKeikofvRnREFsID5I3SHBJU6tlhqUKFN7CqKWJ-8YWCcAoEPnCgOWuy9jIODMzp9yqCz6_YOpKtVLCq_-YmpSmdjUa5xxGHDs4dPyAPEkIui5X8ALk-SHydEntA3dU2j7QUCL7rcH00bgDOv7MQCoZSloF_whm6rJdbKedYCDY9dg6lS0LIWMIn_daSup"/>
+<div class="absolute inset-0 bg-gradient-to-r from-surface-container-high via-surface-container-high/50 to-transparent hidden md:block"></div>
+</div>
+</article>
+</section>
+<div class="py-24 flex justify-center">
+<button class="text-on-surface bg-transparent border-b-2 border-primary pb-1 font-bold tracking-wide hover:text-primary transition-colors flex items-center gap-2">
+<span>Load More Fuel</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#1c1a00]/90 backdrop-blur-xl shadow-[0px_-10px_40px_rgba(0,0,0,0.5)] md:hidden rounded-t-[2.5rem] font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest text-[#d3f734]">
+<a class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1 text-xl">bolt</span>
+<span>Feed</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#d3f734] text-[#100f00] rounded-full px-6 py-2 scale-110 active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1 text-xl" style="font-variation-settings: 'FILL' 1;">restaurant_menu</span>
+<span>Menu</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1 text-xl">local_mall</span>
+<span>Cart</span>
+</a>
+<a class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1 text-xl">dashboard</span>
+<span>Admin</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full flex flex-col items-center gap-6 bg-[#161400] text-[#d3f734] font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.2em] pt-20 pb-10 mt-auto md:mb-0 mb-24">
+<div class="text-xl font-bold font-['Space_Grotesk']">Bhook</div>
+<div class="flex gap-8">
+<a class="text-neutral-600 hover:text-white transition-colors" href="#">Terms</a>
+<a class="text-neutral-600 hover:text-white transition-colors" href="#">Privacy</a>
+<a class="text-neutral-600 hover:text-white transition-colors" href="#">Support</a>
+</div>
+<div class="text-neutral-600 mt-4">© 2024 BHOOK. THE NEON PULSE.</div>
+</footer>
+</body></html>

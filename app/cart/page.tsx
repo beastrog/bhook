@@ -1,11 +1,12 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { Minus, Plus, X, ArrowRight } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Minus, Plus, X, ArrowRight, ShoppingBag } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/store/cart';
 import { formatCurrency } from '@/lib/utils';
 import Navbar from '@/components/Navbar';
+import BottomNav from '@/components/BottomNav';
 
 export default function CartPage() {
     const { items, removeItem, updateQuantity, getTotal } = useCartStore();
@@ -13,73 +14,62 @@ export default function CartPage() {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-dvh flex flex-col relative z-10">
+            <div className="min-h-dvh flex flex-col bg-deep">
                 <Navbar />
-                <div className="flex-1 flex flex-col items-center justify-center px-6">
-                    <div className="structural-panel p-16 flex flex-col items-center text-center max-w-md w-full">
-                        <div className="w-16 h-16 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center mb-8 text-2xl">
-                            [ ]
-                        </div>
-                        <h2 className="text-2xl font-black mb-3 text-white uppercase tracking-tighter">Buffer is Empty</h2>
-                        <p className="text-zinc-500 font-mono text-sm mb-10">NO BLOCKS RESERVED</p>
-                        <Link href="/menu" className="btn btn-primary w-full">
-                            Access Database
-                        </Link>
+                <div className="flex-1 flex flex-col items-center justify-center px-5 text-center">
+                    <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 bg-card border border-bdr">
+                        <ShoppingBag size={28} className="text-t3" />
                     </div>
+                    <h2 className="font-display font-bold text-2xl mb-2">Your Stash is Empty</h2>
+                    <p className="text-sm text-t2 mb-8 max-w-xs">Add some midnight fuel from the menu.</p>
+                    <Link href="/menu" className="bg-lime text-deep font-extrabold px-8 py-3 rounded-full hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
+                        Browse Menu
+                    </Link>
                 </div>
+                <BottomNav />
             </div>
         );
     }
 
     return (
-        <div className="min-h-dvh pb-40 relative z-10">
+        <div className="min-h-dvh bg-deep pb-28 md:pb-12">
             <Navbar />
-            <div className="max-w-4xl mx-auto px-6 lg:px-12 pt-16 md:pt-24">
+            <div className="max-w-5xl mx-auto px-5 pt-6 sm:pt-8 md:pt-10">
+                <h1 className="font-display font-bold text-2xl sm:text-3xl tracking-tight mb-1">Your Stash</h1>
+                <p className="text-xs text-t3 mb-5">{items.length} item{items.length !== 1 ? 's' : ''} reserved</p>
 
-                <div className="flex items-baseline justify-between mb-12">
-                    <h1 className="text-5xl md:text-6xl font-black tracking-tighter text-gradient">Data Array</h1>
-                    <p className="text-zinc-500 font-mono text-sm uppercase tracking-widest">{items.length} nodes</p>
-                </div>
-
-                <div className="structural-panel overflow-hidden">
-                    <div className="flex flex-col">
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+                    {/* Items */}
+                    <div className="lg:col-span-3 bg-card border border-bdr rounded-2xl overflow-hidden">
                         <AnimatePresence>
                             {items.map((item, i) => (
-                                <motion.div
-                                    key={item.product.id}
-                                    layout
+                                <motion.div key={item.product.id} layout
                                     initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, height: 0 }}
-                                    className={`p-6 md:p-8 flex items-center gap-6 ${i !== items.length - 1 ? 'border-b border-white/5' : ''}`}
-                                >
-                                    <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-xl font-black text-zinc-400 flex-shrink-0">
-                                        {item.product.name[0].toUpperCase()}
-                                    </div>
-
-                                    <div className="flex-1 min-w-0">
-                                        <p className="font-bold text-lg md:text-xl leading-tight truncate mb-1 text-white">{item.product.name}</p>
-                                        <p className="font-mono text-zinc-400 text-sm">
-                                            {formatCurrency(item.product.selling_price * item.quantity)}
-                                        </p>
-                                    </div>
-
-                                    <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4 sm:gap-8">
-
-                                        <div className="bg-white/5 border border-white/10 rounded-full p-1 flex items-center gap-1">
-                                            <button onClick={() => updateQuantity(item.product.id, item.quantity - 1)} className="w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors">
-                                                <Minus size={14} />
-                                            </button>
-                                            <span className="font-bold font-mono text-sm w-8 text-center text-white">{item.quantity}</span>
-                                            <button
-                                                onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                                disabled={item.quantity >= item.product.stock_quantity}
-                                                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${item.quantity < item.product.stock_quantity ? 'bg-white text-black hover:bg-zinc-200' : 'opacity-20'}`}
-                                            >
-                                                <Plus size={14} strokeWidth={2.5} />
-                                            </button>
+                                    className={`p-3.5 flex items-center gap-3 ${i < items.length - 1 ? 'border-b border-bdr' : ''}`}>
+                                    {item.product.image_url ? (
+                                        <img src={item.product.image_url} alt="" className="w-12 h-12 rounded-xl object-cover flex-shrink-0 bg-elev" />
+                                    ) : (
+                                        <div className="w-12 h-12 rounded-xl flex items-center justify-center text-lg flex-shrink-0 bg-card-hi">
+                                            {item.product.name[0]}
                                         </div>
-
-                                        <button onClick={() => removeItem(item.product.id)} className="w-10 h-10 rounded-full flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-red-500/10 transition-colors">
-                                            <X size={18} />
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-semibold text-sm truncate">{item.product.name}</p>
+                                        <p className="text-[11px] text-t3">{item.product.category}</p>
+                                        <p className="text-sm font-bold text-lime mt-0.5">{formatCurrency(item.product.selling_price * item.quantity)}</p>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                                        <div className="flex items-center bg-card-hi rounded-lg">
+                                            <button onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                                                className="w-7 h-7 flex items-center justify-center text-t2"><Minus size={12} strokeWidth={2.5} /></button>
+                                            <span className="font-bold text-xs w-5 text-center">{item.quantity}</span>
+                                            <button onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                                                disabled={item.quantity >= item.product.stock_quantity}
+                                                className="w-7 h-7 flex items-center justify-center bg-lime text-deep rounded-r-lg disabled:opacity-30">
+                                                <Plus size={12} strokeWidth={2.5} /></button>
+                                        </div>
+                                        <button onClick={() => removeItem(item.product.id)} className="w-7 h-7 flex items-center justify-center text-t3 hover:text-err transition-colors">
+                                            <X size={14} />
                                         </button>
                                     </div>
                                 </motion.div>
@@ -87,27 +77,33 @@ export default function CartPage() {
                         </AnimatePresence>
                     </div>
 
-                    <div className="bg-white/2 p-6 md:p-8 border-t border-white/10 flex sm:items-center justify-between flex-col sm:flex-row gap-6">
-                        <div className="text-zinc-500 text-xs font-mono uppercase tracking-widest max-w-[200px]">
-                            Offline physical cash transaction required at collection node.
-                        </div>
-                        <div className="text-right">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600 mb-2">Total Compute</p>
-                            <p className="text-4xl md:text-5xl font-black font-mono tracking-tighter text-white">{formatCurrency(total)}</p>
+                    {/* Summary */}
+                    <div className="lg:col-span-2">
+                        <div className="bg-card border border-bdr rounded-2xl p-5 lg:sticky lg:top-20">
+                            <h3 className="font-display font-bold text-lg mb-4">Summary</h3>
+                            <div className="space-y-2 mb-4 text-sm">
+                                <div className="flex justify-between">
+                                    <span className="text-t2">Subtotal</span>
+                                    <span className="font-semibold">{formatCurrency(total)}</span>
+                                </div>
+                                <div className="flex justify-between">
+                                    <span className="text-t2">Delivery</span>
+                                    <span className="font-semibold text-ok">Free</span>
+                                </div>
+                            </div>
+                            <div className="pt-3 border-t border-bdr flex justify-between items-baseline">
+                                <span className="font-display font-bold">Total</span>
+                                <span className="font-display font-bold text-2xl text-lime">{formatCurrency(total)}</span>
+                            </div>
+                            <Link href="/checkout"
+                                className="mt-4 w-full flex items-center justify-center gap-2 bg-lime text-deep font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
+                                Checkout <ArrowRight size={16} strokeWidth={2.5} />
+                            </Link>
                         </div>
                     </div>
                 </div>
-
             </div>
-
-            <div className="fixed bottom-6 left-6 right-6 lg:left-1/2 lg:-translate-x-1/2 lg:w-[600px] z-50">
-                <Link href="/checkout" className="btn btn-primary w-full text-lg shadow-[0_0_40px_rgba(255,255,255,0.1)]">
-                    <span className="flex-1 text-center font-bold tracking-tight">EXECUTE RESERVATION</span>
-                    <div className="bg-black/10 w-10 h-10 rounded-full flex items-center justify-center -mr-3">
-                        <ArrowRight size={20} strokeWidth={2.5} />
-                    </div>
-                </Link>
-            </div>
+            <BottomNav />
         </div>
     );
 }

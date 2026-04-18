@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bhook - The Neon Pulse</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Space+Grotesk:wght@400;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-container": "#badd0e",
+                        "tertiary-dim": "#eecd34",
+                        "background": "#100f00",
+                        "secondary-fixed-dim": "#e2d946",
+                        "surface-container-low": "#161400",
+                        "primary-fixed-dim": "#c5e822",
+                        "tertiary-container": "#fddb42",
+                        "surface-dim": "#100f00",
+                        "on-tertiary-fixed-variant": "#685700",
+                        "on-primary-fixed-variant": "#556600",
+                        "inverse-surface": "#fffade",
+                        "outline": "#7c773e",
+                        "on-surface": "#fdf6b0",
+                        "surface-bright": "#302d00",
+                        "secondary-dim": "#e2d946",
+                        "secondary-container": "#666000",
+                        "error-container": "#b92902",
+                        "on-background": "#fdf6b0",
+                        "primary-dim": "#c5e822",
+                        "on-error": "#450900",
+                        "on-primary": "#4c5b00",
+                        "on-secondary": "#585400",
+                        "secondary-fixed": "#f0e753",
+                        "on-tertiary-container": "#5c4d00",
+                        "surface-container-lowest": "#000000",
+                        "primary": "#d3f734",
+                        "secondary": "#f0e753",
+                        "outline-variant": "#4d4915",
+                        "tertiary": "#ffeba0",
+                        "on-primary-fixed": "#3b4800",
+                        "surface-container": "#1c1a00",
+                        "on-secondary-fixed": "#444100",
+                        "tertiary-fixed-dim": "#eecd34",
+                        "on-primary-container": "#3e4b00",
+                        "on-surface-variant": "#b2ad6e",
+                        "surface-container-high": "#232000",
+                        "surface-variant": "#292700",
+                        "on-tertiary-fixed": "#473b00",
+                        "primary-fixed": "#d3f734",
+                        "on-tertiary": "#665600",
+                        "surface": "#100f00",
+                        "tertiary-fixed": "#fddb42",
+                        "on-secondary-fixed-variant": "#625e00",
+                        "on-secondary-container": "#fff9ca",
+                        "surface-tint": "#d3f734",
+                        "inverse-primary": "#556600",
+                        "surface-container-highest": "#292700",
+                        "error-dim": "#d53d18",
+                        "error": "#ff7351",
+                        "on-error-container": "#ffd2c8",
+                        "inverse-on-surface": "#5a5721"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Plus Jakarta Sans"],
+                        "label": ["Plus Jakarta Sans"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-background'); }
+        .glass-gradient { background: linear-gradient(135deg, theme('colors.primary'), theme('colors.primary-container')); }
+        .electric-glow { box-shadow: 0px 20px 40px rgba(211, 247, 52, 0.08); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body antialiased selection:bg-primary selection:text-on-primary min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="hidden md:flex fixed top-0 left-0 w-full z-50 justify-between items-center px-6 py-4 bg-[#100f00]/80 backdrop-blur-2xl shadow-[0px_10px_30px_rgba(211,247,52,0.05)]">
+<button class="text-[#d3f734] hover:text-[#d3f734] transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+<div class="text-2xl font-black text-[#d3f734] tracking-tighter uppercase font-headline">Bhook</div>
+<button class="text-[#d3f734] hover:text-[#d3f734] transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined text-3xl">shopping_bag</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-24 md:pt-32 pb-32 md:pb-16 flex flex-col">
+<!-- Hero Section -->
+<section class="relative w-full min-h-[707px] flex items-center justify-center overflow-hidden px-4 md:px-12 bg-surface">
+<!-- Background Asymmetry Element -->
+<div class="absolute top-[-10%] right-[-5%] w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] rounded-full bg-surface-container-high blur-3xl opacity-50 pointer-events-none"></div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full max-w-7xl z-10">
+<!-- Text Column -->
+<div class="flex flex-col items-start gap-6">
+<h1 class="font-headline text-5xl md:text-[5rem] font-bold leading-[0.9] tracking-[-0.02em] text-on-surface">
+                        CRUSH<br/>THE<br/><span class="text-primary">CRAVING.</span>
+</h1>
+<p class="font-body text-lg text-on-surface-variant max-w-md leading-relaxed">
+                        Midnight fuel for the restless. High-voltage snacks delivered before the neon fades.
+                    </p>
+<button class="glass-gradient text-on-primary rounded-full px-10 py-4 font-headline text-xl font-bold tracking-tight hover:scale-105 transition-transform active:scale-95 mt-4">
+                        Shop Now
+                    </button>
+</div>
+<!-- Image Column -->
+<div class="relative w-full aspect-square flex items-center justify-center">
+<div class="absolute inset-0 bg-primary/10 rounded-full blur-3xl electric-glow"></div>
+<img alt="Hero Snack" class="relative z-10 w-full h-full object-cover rounded-[3rem] shadow-2xl mix-blend-luminosity hover:mix-blend-normal transition-all duration-500 scale-95 hover:scale-100" data-alt="A highly stylized, vibrant macro shot of electric-lime green gummy snacks suspended in a dark, neon-lit void." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBrJxCOH2lkqonwazl629MtKCB8nYpOy867e6rEEF--J7B05G1sZjlQqVo0A3VRGCwAA6R6DKDjVwUwqDgJWciuGV5bUe7XztV4mo7XblCaWf-vOXgg1NYylTt4rWCxKdR5xhSAlqdqZ5Vk8cIXuWDImUl524645bAxyKdLS3R8ha1Q3sk7tekoOABJHdw0m0GM62sZl5-T66YgnpC9R7YMjaOSsQFwjPKlKJnvBOvCDrmn82xEti8uZOwDilXy-r51dJT0D3_VYSv"/>
+</div>
+</div>
+</section>
+<!-- New Arrivals Bento -->
+<section class="w-full py-24 px-4 md:px-12 bg-surface-container-low transition-colors duration-700">
+<div class="max-w-7xl mx-auto flex flex-col gap-12">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary text-4xl">auto_awesome</span>
+<h2 class="font-headline text-3xl md:text-5xl font-bold text-on-surface tracking-tight">New Arrivals</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Bento Card 1 -->
+<div class="col-span-1 md:col-span-2 bg-surface-container-high rounded-[2rem] p-8 flex flex-col justify-end min-h-[400px] relative overflow-hidden group hover:bg-surface-container-highest transition-colors">
+<img alt="Spicy Chips" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500 mix-blend-overlay" data-alt="Dark, moody photography of spicy tortilla chips scattered on a black slate surface with dramatic red neon side lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc6cvRh16YnrV8tdia9qOFS82k2YhJX3ErjkJcTKp7EoyZF7WSpzo56YLitEVXLDI9cmk2AknC9DS8CPGa_vVBvc26vxAqn08WHjpSsLDvHIKAB8W0rUfhCScdLaRrFJdfJtzrqlbF5ssCnCTIf1NwCzOPcoPnrkSaCn47nKke3gqc2fDBlV2-vGZioSjybKFjeYUKXYqEHm_m_uZElcrQWJZ44kXtqXnwceU-IgZhHS6ipCy4DGlKeLQeb8FVQFCmBB9760mKx_cY"/>
+<div class="relative z-10 flex flex-col gap-2">
+<span class="font-label text-xs uppercase tracking-[0.05em] text-primary">Limited Drop</span>
+<h3 class="font-headline text-3xl font-bold text-on-surface">Inferno Bites</h3>
+<button class="self-start mt-4 px-6 py-2 bg-surface-container-highest text-primary rounded-md font-body font-semibold border border-outline-variant/30 hover:border-primary/50 transition-colors">Grab Em</button>
+</div>
+</div>
+<!-- Bento Card 2 -->
+<div class="col-span-1 bg-surface-container-high rounded-[2rem] p-8 flex flex-col justify-end min-h-[400px] relative overflow-hidden group hover:bg-surface-container-highest transition-colors">
+<img alt="Energy Drink" class="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500 mix-blend-overlay" data-alt="Close up of a vibrant, electric blue energy drink can covered in condensation droplets against a stark black background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM4GvER7RZkzxtppLZ3csvlVyj_r3MTbnaWv5nVgzHNWcgPsU4IVyw57lEwXvupB_JWYayct74KXljf0VniSago_hGhlmmmqz_Rx4kjy8IMMWTPGPVboYA9mWdQ-PvuXh0s4clSus6rkd_Qf9yN6_RZHuhxyAavO_N8Ggt2dEVv5ga2T4l4Ishe8mg7nJ9jcL296qe83hUebMVnL-2Rahz-DahDX-TMrE_SV1YV38knG6aWP1uBQL2SOubDJxz780S_z1zD9Bx5iS1"/>
+<div class="relative z-10 flex flex-col gap-2">
+<span class="font-label text-xs uppercase tracking-[0.05em] text-primary">Liquid Fuel</span>
+<h3 class="font-headline text-2xl font-bold text-on-surface">Neon Nectar</h3>
+<button class="self-start mt-4 px-6 py-2 bg-surface-container-highest text-primary rounded-md font-body font-semibold border border-outline-variant/30 hover:border-primary/50 transition-colors">Drink Up</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#1c1a00]/90 backdrop-blur-xl rounded-t-[2.5rem] shadow-[0px_-10px_40px_rgba(0,0,0,0.5)]">
+<button class="flex flex-col items-center justify-center bg-[#d3f734] text-[#100f00] rounded-full px-6 py-2 scale-110 transition-transform active:scale-90 duration-200">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Feed</span>
+</button>
+<button class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200">
+<span class="material-symbols-outlined text-2xl">restaurant_menu</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Menu</span>
+</button>
+<button class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200">
+<span class="material-symbols-outlined text-2xl">local_mall</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Cart</span>
+</button>
+<button class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200">
+<span class="material-symbols-outlined text-2xl">dashboard</span>
+<span class="font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest mt-1">Admin</span>
+</button>
+</nav>
+<!-- Footer -->
+<footer class="w-full flex flex-col items-center gap-6 bg-[#161400] pt-20 pb-10">
+<div class="text-xl font-bold font-headline text-[#d3f734]">BHOOK</div>
+<div class="flex gap-8">
+<a class="text-neutral-600 hover:text-white transition-colors font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.2em]" href="#">Terms</a>
+<a class="text-neutral-600 hover:text-white transition-colors font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.2em]" href="#">Privacy</a>
+<a class="text-neutral-600 hover:text-white transition-colors font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.2em]" href="#">Support</a>
+</div>
+<p class="font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.2em] text-[#d3f734]">© 2024 BHOOK. THE NEON PULSE.</p>
+</footer>
+</body></html>

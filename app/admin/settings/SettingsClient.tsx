@@ -1,98 +1,48 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { Save, LogOut } from 'lucide-react';
 import { updateSetting } from '@/app/admin/actions';
-import { adminLogout } from '@/app/admin/actions';
 import { toast } from 'sonner';
-import Link from 'next/link';
+import { Save, Loader2 } from 'lucide-react';
+
+const SETTINGS = [
+    { key: 'store_name', label: 'Store Name', placeholder: 'Bhook' },
+    { key: 'store_tagline', label: 'Tagline', placeholder: 'Midnight Snack Store' },
+    { key: 'upi_id', label: 'UPI ID', placeholder: 'someone@upi' },
+    { key: 'contact_phone', label: 'Contact Phone', placeholder: '+91 98765 43210' },
+];
 
 export default function SettingsClient({ settings }: { settings: Record<string, string> }) {
-    const [form, setForm] = useState({
-        store_name: settings.store_name || 'Bhook',
-        admin_room: settings.admin_room || '',
-        announcement: settings.announcement || '',
-        store_open: settings.store_open || 'true',
-    });
+    const [form, setForm] = useState(settings);
     const [isPending, startTransition] = useTransition();
 
-    const handleSave = async () => {
+    const handleSave = async (key: string) => {
         startTransition(async () => {
-            for (const [key, value] of Object.entries(form)) {
-                await updateSetting(key, value);
-            }
-            toast.success('Settings saved!');
+            const { error } = await updateSetting(key, form[key] || '');
+            if (error) { toast.error(error); return; }
+            toast.success('Saved');
         });
     };
 
     return (
-        <div className="px-5 pt-5">
-            <h1 className="text-xl font-black mb-5" style={{ color: 'var(--on-surface)' }}>Settings</h1>
+        <div className="max-w-5xl mx-auto px-5 pt-5 pb-24">
+            <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-t3 mb-0.5">Configuration</p>
+            <h1 className="font-display font-bold text-xl sm:text-2xl tracking-tight mb-5">Settings</h1>
 
-            <div className="space-y-4 mb-6">
-                <div>
-                    <label className="text-xs font-semibold mb-2 block" style={{ color: 'var(--on-surface-muted)' }}>Store Name</label>
-                    <input value={form.store_name} onChange={(e) => setForm({ ...form, store_name: e.target.value })}
-                        className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                        style={{ background: 'var(--bg-card)', color: 'var(--on-surface)', border: '1px solid rgba(69,72,82,0.4)' }} />
-                </div>
-
-                <div>
-                    <label className="text-xs font-semibold mb-2 block" style={{ color: 'var(--on-surface-muted)' }}>Your Room Number (for pickup instructions)</label>
-                    <input value={form.admin_room} onChange={(e) => setForm({ ...form, admin_room: e.target.value })}
-                        placeholder="e.g. G-204"
-                        className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                        style={{ background: 'var(--bg-card)', color: 'var(--on-surface)', border: '1px solid rgba(69,72,82,0.4)' }} />
-                </div>
-
-                <div>
-                    <label className="text-xs font-semibold mb-2 block" style={{ color: 'var(--on-surface-muted)' }}>Announcement (shown on homepage)</label>
-                    <input value={form.announcement} onChange={(e) => setForm({ ...form, announcement: e.target.value })}
-                        placeholder="e.g. Fresh stock tonight! 🔥"
-                        className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                        style={{ background: 'var(--bg-card)', color: 'var(--on-surface)', border: '1px solid rgba(69,72,82,0.4)' }} />
-                </div>
-
-                <div>
-                    <label className="text-xs font-semibold mb-2 block" style={{ color: 'var(--on-surface-muted)' }}>Store Status</label>
-                    <div className="flex gap-2">
-                        {['true', 'false'].map((v) => (
-                            <button key={v}
-                                onClick={() => setForm({ ...form, store_open: v })}
-                                className="flex-1 py-3 rounded-xl text-sm font-bold transition-all"
-                                style={form.store_open === v
-                                    ? { background: v === 'true' ? 'rgba(91,240,131,0.2)' : 'rgba(255,110,132,0.1)', color: v === 'true' ? '#5bf083' : '#ff6e84' }
-                                    : { background: 'var(--bg-card)', color: 'var(--on-surface-muted)' }}
-                            >
-                                {v === 'true' ? '🟢 Open' : '🔴 Closed'}
+            <div className="bg-card border border-bdr rounded-2xl divide-y divide-bdr overflow-hidden">
+                {SETTINGS.map(({ key, label, placeholder }) => (
+                    <div key={key} className="p-4 flex flex-col sm:flex-row sm:items-center gap-2.5">
+                        <label className="w-full sm:w-36 text-sm font-semibold flex-shrink-0">{label}</label>
+                        <div className="flex gap-2 flex-1">
+                            <input className="flex-1 bg-deep border border-bdr rounded-xl px-4 py-2.5 text-sm outline-none placeholder:text-t3 focus:border-lime/40 transition-colors"
+                                placeholder={placeholder} value={form[key] || ''} onChange={(e) => setForm({ ...form, [key]: e.target.value })} />
+                            <button onClick={() => handleSave(key)} disabled={isPending}
+                                className="w-10 h-10 flex items-center justify-center bg-lime text-deep rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40 flex-shrink-0">
+                                {isPending ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                             </button>
-                        ))}
+                        </div>
                     </div>
-                </div>
-
-                <button onClick={handleSave} disabled={isPending}
-                    className="btn-primary w-full py-3.5 rounded-xl font-bold flex items-center justify-center gap-2">
-                    <Save size={16} /> {isPending ? 'Saving...' : 'Save Settings'}
-                </button>
-            </div>
-
-            {/* Danger zone */}
-            <div className="rounded-2xl p-4 mb-4" style={{ border: '1px solid rgba(255,110,132,0.2)' }}>
-                <h3 className="font-bold text-sm mb-3" style={{ color: '#ff6e84' }}>Account</h3>
-                <button
-                    onClick={() => adminLogout()}
-                    className="flex items-center gap-2 text-sm font-semibold"
-                    style={{ color: '#ff6e84' }}
-                >
-                    <LogOut size={14} /> Sign out of admin
-                </button>
-            </div>
-
-            <div className="rounded-2xl p-4" style={{ background: 'var(--bg-low)', border: '1px solid rgba(69,72,82,0.3)' }}>
-                <h3 className="font-bold text-sm mb-2" style={{ color: 'var(--on-surface)' }}>Profit Split Config</h3>
-                <Link href="/admin/profit-split" className="text-sm" style={{ color: 'var(--primary)' }}>
-                    Manage profit splits →
-                </Link>
+                ))}
             </div>
         </div>
     );

@@ -6,7 +6,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     const { data: { user } } = await supabase.auth.getUser();
 
     return (
-        <div className="min-h-dvh pb-20 bg-[var(--background)]">
+        <div className="min-h-dvh bg-deep pb-20">
             {children}
             {user && <AdminNav />}
         </div>

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bhook - Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary-container": "#badd0e",
+                      "tertiary-dim": "#eecd34",
+                      "background": "#100f00",
+                      "secondary-fixed-dim": "#e2d946",
+                      "surface-container-low": "#161400",
+                      "primary-fixed-dim": "#c5e822",
+                      "tertiary-container": "#fddb42",
+                      "surface-dim": "#100f00",
+                      "on-tertiary-fixed-variant": "#685700",
+                      "on-primary-fixed-variant": "#556600",
+                      "inverse-surface": "#fffade",
+                      "outline": "#7c773e",
+                      "on-surface": "#fdf6b0",
+                      "surface-bright": "#302d00",
+                      "secondary-dim": "#e2d946",
+                      "secondary-container": "#666000",
+                      "error-container": "#b92902",
+                      "on-background": "#fdf6b0",
+                      "primary-dim": "#c5e822",
+                      "on-error": "#450900",
+                      "on-primary": "#4c5b00",
+                      "on-secondary": "#585400",
+                      "secondary-fixed": "#f0e753",
+                      "on-tertiary-container": "#5c4d00",
+                      "surface-container-lowest": "#000000",
+                      "primary": "#d3f734",
+                      "secondary": "#f0e753",
+                      "outline-variant": "#4d4915",
+                      "tertiary": "#ffeba0",
+                      "on-primary-fixed": "#3b4800",
+                      "surface-container": "#1c1a00",
+                      "on-secondary-fixed": "#444100",
+                      "tertiary-fixed-dim": "#eecd34",
+                      "on-primary-container": "#3e4b00",
+                      "on-surface-variant": "#b2ad6e",
+                      "surface-container-high": "#232000",
+                      "surface-variant": "#292700",
+                      "on-tertiary-fixed": "#473b00",
+                      "primary-fixed": "#d3f734",
+                      "on-tertiary": "#665600",
+                      "surface": "#100f00",
+                      "tertiary-fixed": "#fddb42",
+                      "on-secondary-fixed-variant": "#625e00",
+                      "on-secondary-container": "#fff9ca",
+                      "surface-tint": "#d3f734",
+                      "inverse-primary": "#556600",
+                      "surface-container-highest": "#292700",
+                      "error-dim": "#d53d18",
+                      "error": "#ff7351",
+                      "on-error-container": "#ffd2c8",
+                      "inverse-on-surface": "#5a5721"
+              },
+              "borderRadius": {
+                      "DEFAULT": "1rem",
+                      "lg": "2rem",
+                      "xl": "3rem",
+                      "full": "9999px"
+              },
+              "spacing": {},
+              "fontFamily": {
+                      "headline": [
+                              "Space Grotesk"
+                      ],
+                      "body": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label": [
+                              "Plus Jakarta Sans"
+                      ]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.surface'); color: theme('colors.on-surface'); font-family: theme('fontFamily.body'); }
+        h1, h2, h3, h4, h5, h6, .font-headline { font-family: theme('fontFamily.headline'); }
+        /* Hide scrollbar for clean look */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+<!-- Navigation Drawer (Desktop) -->
+<aside class="hidden md:flex flex-col bg-[#100f00] text-[#d3f734] font-['Space_Grotesk'] text-lg h-screen w-80 rounded-r-[3rem] shadow-[20px_0px_60px_rgba(0,0,0,0.8)] sticky top-0 z-[60] p-8 flex-shrink-0">
+<div class="flex items-center gap-4 mb-12">
+<div class="w-12 h-12 rounded-full bg-surface-container-high overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="portrait of a confident person with neon lighting accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWswuRV29rsfUl6S7_zAAQuJuLOzXx81WAVemlj5QeSpeV9E8EFEehooSWWGJGwYo9rTByhkSNxEHwYd33HpDlw58aYe1Y9E3kmjRVDJetrA4JDDm0xAZ08CkMFaXb9fUcUmoTAjbRxzf1D6hTag-kQmHAej4AYolClJnkO60NVGKS4YtfAFh010R7CqCQAI0hcFVdpokLCu_yMmN92u4ybOK4Y89dYaWmPN3zFM4HbNyUbkwR4QQ1F7of86wLERN0OqB_a7HL02so"/>
+</div>
+<div class="flex flex-col">
+<span class="font-bold text-[#d3f734] tracking-tight">Hungry Human</span>
+<span class="text-sm text-neutral-400 font-body">Snack Enthusiast</span>
+<span class="text-xs text-primary/70 font-body uppercase tracking-wider mt-1">Level 12</span>
+</div>
+</div>
+<nav class="flex flex-col gap-6 flex-grow">
+<!-- None strictly match Admin dashboard, leaving all inactive to prioritize canvas -->
+<a class="flex items-center gap-4 text-neutral-500 hover:text-neutral-200 pl-4 hover:bg-[#1c1a00] transition-colors rounded-lg py-2" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span>New Arrivals</span>
+</a>
+<a class="flex items-center gap-4 text-neutral-500 hover:text-neutral-200 pl-4 hover:bg-[#1c1a00] transition-colors rounded-lg py-2" href="#">
+<span class="material-symbols-outlined">local_fire_department</span>
+<span>Best Sellers</span>
+</a>
+<a class="flex items-center gap-4 text-neutral-500 hover:text-neutral-200 pl-4 hover:bg-[#1c1a00] transition-colors rounded-lg py-2" href="#">
+<span class="material-symbols-outlined">eco</span>
+<span>Healthy Bites</span>
+</a>
+<a class="flex items-center gap-4 text-neutral-500 hover:text-neutral-200 pl-4 hover:bg-[#1c1a00] transition-colors rounded-lg py-2" href="#">
+<span class="material-symbols-outlined">dark_mode</span>
+<span>Night Owl</span>
+</a>
+<a class="flex items-center gap-4 text-neutral-500 hover:text-neutral-200 pl-4 hover:bg-[#1c1a00] transition-colors rounded-lg py-2 mt-auto" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Account Settings</span>
+</a>
+</nav>
+</aside>
+<div class="flex-grow flex flex-col min-w-0">
+<!-- TopAppBar (Mobile & Base Header) -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#100f00]/80 backdrop-blur-2xl text-[#d3f734] font-['Space_Grotesk'] font-bold tracking-tight shadow-[0px_10px_30px_rgba(211,247,52,0.05)] md:hidden">
+<button class="text-neutral-400 hover:text-[#d3f734] transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">menu</span>
+</button>
+<div class="text-2xl font-black text-[#d3f734] tracking-tighter uppercase">Bhook</div>
+<button class="text-neutral-400 hover:text-[#d3f734] transition-all duration-300 active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">shopping_bag</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow px-6 pt-24 pb-32 md:pt-12 md:px-12 max-w-7xl mx-auto w-full">
+<header class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h1 class="font-headline text-5xl md:text-6xl font-bold tracking-tighter text-white mb-2">PULSE <span class="text-primary">DASHBOARD</span></h1>
+<p class="font-body text-on-surface-variant text-lg max-w-md">Real-time telemetry on snack consumption and inventory velocity.</p>
+</div>
+<div class="flex gap-4">
+<button class="bg-surface-container-highest text-primary font-body font-bold text-sm px-6 py-3 rounded-md hover:bg-surface-variant transition-colors">EXPORT DATA</button>
+<button class="bg-primary text-on-primary font-body font-bold text-sm px-6 py-3 rounded-full hover:bg-primary-container transition-colors shadow-[0px_10px_20px_rgba(211,247,52,0.15)]">NEW LISTING</button>
+</div>
+</header>
+<!-- Bento Grid Metrics -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<!-- Metric 1: Revenue -->
+<div class="bg-surface-container-low rounded-lg p-8 flex flex-col justify-between min-h-[200px] relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+<div class="flex justify-between items-start relative z-10">
+<span class="font-label text-xs uppercase tracking-[0.1em] text-on-surface-variant">Gross Pulse</span>
+<span class="material-symbols-outlined text-primary/50">bolt</span>
+</div>
+<div class="relative z-10">
+<div class="font-headline text-5xl font-black text-white tracking-tighter mb-1">$24,089</div>
+<div class="font-body text-sm text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">arrow_upward</span>
+                            12.4% vs last cycle
+                        </div>
+</div>
+</div>
+<!-- Metric 2: Inventory -->
+<div class="bg-surface-container-low rounded-lg p-8 flex flex-col justify-between min-h-[200px] relative">
+<div class="flex justify-between items-start">
+<span class="font-label text-xs uppercase tracking-[0.1em] text-on-surface-variant">Active Stock</span>
+<span class="material-symbols-outlined text-on-surface-variant">inventory_2</span>
+</div>
+<div>
+<div class="font-headline text-5xl font-black text-white tracking-tighter mb-1">1,402</div>
+<div class="font-body text-sm text-on-surface-variant">Units across 42 SKUs</div>
+</div>
+</div>
+<!-- Metric 3: Alerts -->
+<div class="bg-[#1a0500] rounded-lg p-8 flex flex-col justify-between min-h-[200px] relative border border-error/20">
+<div class="flex justify-between items-start">
+<span class="font-label text-xs uppercase tracking-[0.1em] text-error">Critical Depletion</span>
+<span class="material-symbols-outlined text-error">warning</span>
+</div>
+<div>
+<div class="font-headline text-5xl font-black text-error tracking-tighter mb-1">03</div>
+<div class="font-body text-sm text-error/80">Items require immediate restock</div>
+</div>
+</div>
+</section>
+<!-- Chart & List Layout -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Chart Area -->
+<div class="lg:col-span-2 bg-surface-container-low rounded-lg p-8">
+<div class="flex justify-between items-center mb-10">
+<h2 class="font-headline text-xl font-bold text-white">Velocity Trend</h2>
+<span class="font-label text-xs uppercase tracking-widest text-on-surface-variant bg-surface-container px-3 py-1 rounded-full">Last 7 Days</span>
+</div>
+<!-- Abstract Bar Chart using Flex -->
+<div class="h-48 flex items-end justify-between gap-2 md:gap-4 w-full border-b border-surface-container-high pb-4 relative">
+<!-- Y-axis labels (fake) -->
+<div class="absolute left-0 top-0 h-full flex flex-col justify-between text-[10px] text-on-surface-variant font-label opacity-50 pb-4">
+<span>4k</span>
+<span>2k</span>
+<span>0</span>
+</div>
+<!-- Bars -->
+<div class="w-full flex justify-between items-end h-full pl-8 gap-2">
+<div class="w-1/7 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-t-sm h-[30%] flex flex-col justify-end group">
+<span class="opacity-0 group-hover:opacity-100 text-center text-[10px] mb-2 font-label text-primary transition-opacity">-</span>
+</div>
+<div class="w-1/7 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-t-sm h-[45%] flex flex-col justify-end group">
+<span class="opacity-0 group-hover:opacity-100 text-center text-[10px] mb-2 font-label text-primary transition-opacity">-</span>
+</div>
+<div class="w-1/7 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-t-sm h-[20%] flex flex-col justify-end group">
+<span class="opacity-0 group-hover:opacity-100 text-center text-[10px] mb-2 font-label text-primary transition-opacity">-</span>
+</div>
+<div class="w-1/7 bg-primary rounded-t-sm h-[85%] flex flex-col justify-end group shadow-[0px_0px_20px_rgba(211,247,52,0.15)] relative">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-surface-container px-2 py-1 rounded text-[10px] font-label text-white opacity-0 group-hover:opacity-100 transition-opacity">PEAK</div>
+</div>
+<div class="w-1/7 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-t-sm h-[60%] flex flex-col justify-end group">
+<span class="opacity-0 group-hover:opacity-100 text-center text-[10px] mb-2 font-label text-primary transition-opacity">-</span>
+</div>
+<div class="w-1/7 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-t-sm h-[50%] flex flex-col justify-end group">
+<span class="opacity-0 group-hover:opacity-100 text-center text-[10px] mb-2 font-label text-primary transition-opacity">-</span>
+</div>
+<div class="w-1/7 bg-surface-container-high hover:bg-surface-container-highest transition-colors rounded-t-sm h-[70%] flex flex-col justify-end group">
+<span class="opacity-0 group-hover:opacity-100 text-center text-[10px] mb-2 font-label text-primary transition-opacity">-</span>
+</div>
+</div>
+</div>
+<div class="flex justify-between pl-8 pt-4 text-[10px] font-label uppercase tracking-widest text-on-surface-variant">
+<span>Mon</span>
+<span>Tue</span>
+<span>Wed</span>
+<span class="text-primary font-bold">Thu</span>
+<span>Fri</span>
+<span>Sat</span>
+<span>Sun</span>
+</div>
+</div>
+<!-- Listings Management (Minimalist) -->
+<div class="bg-surface-container-low rounded-lg p-8 flex flex-col">
+<div class="flex justify-between items-center mb-8">
+<h2 class="font-headline text-xl font-bold text-white">Active Catalog</h2>
+<button class="text-primary hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined">more_horiz</span>
+</button>
+</div>
+<div class="flex flex-col gap-6 flex-grow">
+<!-- Listing Item -->
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-md bg-surface-container-high overflow-hidden flex-shrink-0">
+<img alt="Neon Gummies" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="close up of neon colored gummy candies in a dark bowl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLpami4sfD4LBXm-wphgvMmosxpjlvj5VWpB3oUDZUjV9PLCIBUKuKca_e92C0GKgKgu0CvioaW2BK5Qv-cT0DMvrpXDHFtzbxP57UYoiEx91RYXQUsgJYLWkfiiZPWTxJspZtmCFwQNAhJp_7wcm3KOzTX70-fqMkO2KbwkLQTczYYobE5UDyPVsZtavbBdVmf9QU2dkz8FF-ryvHpIEJJN7RIarO2OckMO-XiS5UeWKbuy-ZK-CophtqebB8eB3OfRucPY1wtTbc"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline text-sm font-bold text-white group-hover:text-primary transition-colors">Neon Gummies</h3>
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mt-1">Stock: 420</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-white transition-all">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+<!-- Listing Item -->
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-md bg-surface-container-high overflow-hidden flex-shrink-0">
+<img alt="Magma Chips" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="spicy dusted corn chips on a dark slate background with dramatic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA80rr3SyZWkcER3sD9VwQxDcImibQ3YTTTYVllnGDzJkcgws27_E0LGuJFUWRPpia83omclNmuMNpnifqUHYxc1_9_Og8ESFFTcKe_ZUw116jabW4KZoQ10HU_xZu4JgInYPOTF-Ld18njiRJxEMj20Y1m3wBQc0P638g3Klo4BeXBr2Re-NOhHsWJI2ICXMaBkHwwte4ODg5Z9f-QsYMwAe3bbzzcSwOjRApThBG4XlJBnWltkXluT5P70vmIt3z8PrraU1lSIFOn"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline text-sm font-bold text-white group-hover:text-primary transition-colors">Magma Chips</h3>
+<p class="font-label text-[10px] uppercase tracking-widest text-on-surface-variant mt-1">Stock: 18</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-white transition-all">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+<!-- Listing Item (Low Stock) -->
+<div class="flex items-center gap-4 group cursor-pointer">
+<div class="w-12 h-12 rounded-md bg-surface-container-high overflow-hidden flex-shrink-0 relative">
+<div class="absolute inset-0 bg-error/20 z-10 mix-blend-overlay"></div>
+<img alt="Void Chocolate" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="dark chocolate bar pieces resting on a reflective black surface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrZZ3LI99_YimbBjU5H_kZq07KkI7Yf2THvooxfFBTayds7su0UBGHIywJjSoMKDPOuQANbGjZ4mPaMRE0H6LQVbkKbzB-dCrkGmCKIv9EmXSOpATINeG40OINy0vdBPkUQzZUY7zrAWESC9wu6culWn9kxnHWlQC28p9piFgeq27xxiZ2OohaEfO-XAkXTkXtuYyP5y8ohQu3DkHhOkz4wiwRY6MIyWzxpTNCLmSqEPWBJi6PFw0m3FEwcnZK-0wemByLzRo2zooS"/>
+</div>
+<div class="flex-grow">
+<h3 class="font-headline text-sm font-bold text-white group-hover:text-primary transition-colors">Void Chocolate</h3>
+<p class="font-label text-[10px] uppercase tracking-widest text-error mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">warning</span> Stock: 02</p>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-white transition-all">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+</div>
+<button class="mt-8 w-full py-3 text-center font-label text-xs uppercase tracking-widest text-on-surface-variant hover:text-primary transition-colors border-t border-surface-container-high/50 pt-6">View Complete Catalog</button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full flex flex-col items-center gap-6 bg-[#161400] text-[#d3f734] font-['Plus_Jakarta_Sans'] text-[10px] uppercase tracking-[0.2em] pt-20 pb-10 mt-auto md:mb-0 mb-24">
+<div class="text-xl font-bold font-headline">Bhook</div>
+<div class="flex gap-6">
+<a class="text-neutral-600 hover:text-white transition-colors" href="#">Terms</a>
+<a class="text-neutral-600 hover:text-white transition-colors" href="#">Privacy</a>
+<a class="text-neutral-600 hover:text-white transition-colors" href="#">Support</a>
+</div>
+<div class="text-neutral-600">© 2024 BHOOK. THE NEON PULSE.</div>
+</footer>
+</div>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-[#1c1a00]/90 backdrop-blur-xl text-[#d3f734] font-['Plus_Jakarta_Sans'] text-[10px] font-bold uppercase tracking-widest rounded-t-[2.5rem] shadow-[0px_-10px_40px_rgba(0,0,0,0.5)] md:hidden">
+<a class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">bolt</span>
+            Feed
+        </a>
+<a class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">restaurant_menu</span>
+            Menu
+        </a>
+<a class="flex flex-col items-center justify-center text-neutral-500 opacity-60 hover:opacity-100 transition-opacity active:scale-90 duration-200" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">local_mall</span>
+            Cart
+        </a>
+<a class="flex flex-col items-center justify-center bg-[#d3f734] text-[#100f00] rounded-full px-6 py-2 scale-110 active:scale-90 duration-200 shadow-[0px_0px_20px_rgba(211,247,52,0.3)]" href="#">
+<span class="material-symbols-outlined mb-1 text-[24px]">dashboard</span>
+            Admin
+        </a>
+</nav>
+</body></html>
