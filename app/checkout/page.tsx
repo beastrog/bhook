@@ -52,7 +52,7 @@ export default function CheckoutPage() {
     return (
         <div className="min-h-dvh bg-black pb-32">
             <Navbar />
-            <div className="max-w-xl mx-auto px-6 pt-6">
+            <div className="max-w-4xl mx-auto px-8 md:px-16 pt-16 md:pt-32">
 
                 <h1 className="title-medium mb-1">Checkout.</h1>
                 <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>Provide your details for pickup.</p>

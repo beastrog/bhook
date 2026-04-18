@@ -33,7 +33,7 @@ export default function CartPage() {
     return (
         <div className="min-h-dvh bg-black pb-40">
             <Navbar />
-            <div className="max-w-xl mx-auto px-6 pt-6">
+            <div className="max-w-4xl mx-auto px-8 md:px-16 pt-16 md:pt-32">
 
                 <h1 className="title-medium mb-2">Cart.</h1>
                 <p className="text-sm mb-10" style={{ color: 'var(--text-secondary)' }}>{items.length} items</p>

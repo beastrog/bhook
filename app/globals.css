@@ -1,28 +1,25 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-/* ─── Ultra Premium Minimal Tokens ─── */
+/* ─── The Obsidian Monolith Design System ─── */
 :root {
-  --bg: #000000;
-  --bg-1: #0a0a0a;
-  --bg-2: #141414;
-  --bg-3: #1f1f1f;
+  --surface: #131313;
+  --surface-low: #1b1b1b;
+  --surface-container: #1f1f1f;
+  --surface-high: #2a2a2a;
+  --surface-highest: #353535;
+  --surface-bright: #393939;
 
-  --border: #222222;
-  --border-subtle: #111111;
+  --primary: #ffffff;
+  --primary-container: #d4d4d4;
+  --on-primary: #1a1c1c;
 
-  --text-primary: #ffffff;
-  --text-secondary: #999999;
-  --text-tertiary: #555555;
+  --text-primary: #e2e2e2;
+  --text-secondary: #c6c6c6;
+  --text-tertiary: #919191;
 
-  /* Sleek highlighter lime accent */
   --accent: #E2FE53;
-  --accent-fg: #000000;
-  --accent-dim: rgba(226, 254, 83, 0.1);
-
-  --green: #22c55e;
-  --red: #ef4444;
-  --amber: #f59e0b;
+  --error: #ffb4ab;
 }
 
 * {
@@ -37,8 +34,8 @@ html {
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-  background-color: var(--bg);
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--surface);
   color: var(--text-primary);
   min-height: 100dvh;
   overflow-x: hidden;
@@ -55,154 +52,141 @@ body {
   scrollbar-width: none;
 }
 
-/* ─── Architectural Elements ─── */
-.card-glass {
-  background: rgba(10, 10, 10, 0.4);
+/* ─── Architectural Elements (No borders!) ─── */
+.layer-base {
+  background: var(--surface);
+}
+
+.layer-1 {
+  background: var(--surface-low);
+}
+
+.layer-2 {
+  background: var(--surface-container);
+}
+
+.layer-3 {
+  background: var(--surface-high);
+}
+
+.layer-float {
+  background: var(--surface-highest);
+}
+
+.nav-glass {
+  background: rgba(57, 57, 57, 0.6);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  /* Ghost border allowed */
+  border-bottom: 2px solid rgba(71, 71, 71, 0.2);
 }
 
-.card-solid {
-  background: var(--bg-1);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-}
-
-/* ─── Buttons ─── */
+/* ─── Brutalist Components (0px radius) ─── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: inherit;
-  font-weight: 700;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  cursor: pointer;
+  font-weight: 800;
   border: none;
-  text-decoration: none;
+  border-radius: 0px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
 }
 
 .btn:active {
-  transform: scale(0.96);
+  transform: scale(0.98);
 }
 
 .btn:disabled {
-  opacity: 0.4;
+  opacity: 0.3;
   cursor: not-allowed;
+  transform: none;
 }
 
-.btn-accent {
-  background: var(--accent);
-  color: var(--accent-fg);
-  padding: 16px 32px;
-  border-radius: 100px;
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  padding: 24px 48px;
   font-size: 16px;
-  letter-spacing: -0.02em;
 }
 
-.btn-accent:hover:not(:disabled) {
-  box-shadow: 0 0 40px rgba(226, 254, 83, 0.2);
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-container);
 }
 
 .btn-secondary {
-  background: var(--bg-2);
+  background: var(--surface-highest);
   color: var(--text-primary);
   padding: 16px 32px;
-  border-radius: 100px;
-  border: 1px solid var(--border);
-  font-size: 16px;
+  font-size: 14px;
 }
 
-.btn-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: var(--text-primary);
-  flex-shrink: 0;
-}
-
-.btn-icon:hover {
-  background: rgba(255, 255, 255, 0.08);
+.btn-secondary:hover:not(:disabled) {
+  background: var(--surface-bright);
 }
 
 /* ─── Typography ─── */
-.title-huge {
-  font-size: clamp(48px, 14vw, 80px);
-  font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -0.05em;
-  color: var(--text-primary);
+.title-massive {
+  font-size: clamp(64px, 8vw, 140px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: var(--primary);
 }
 
-.title-medium {
-  font-size: 24px;
-  font-weight: 700;
+.title-section {
+  font-size: clamp(32px, 4vw, 64px);
+  font-weight: 800;
   letter-spacing: -0.03em;
+  line-height: 1;
 }
 
-.text-overline {
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+.text-body {
+  font-size: 1rem;
+  line-height: 1.6;
   color: var(--text-secondary);
 }
 
-/* ─── Inputs ─── */
+.text-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ─── Inputs (Ghost border only) ─── */
 .input {
   width: 100%;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 14px 18px;
-  font-size: 15px;
-  color: var(--text-primary);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(71, 71, 71, 0.2);
+  border-radius: 0px;
+  padding: 16px 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--primary);
   outline: none;
-  transition: all 0.2s;
+  transition: border-color 0.2s;
+  letter-spacing: -0.02em;
 }
 
 .input:focus {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: var(--text-secondary);
+  border-color: var(--primary);
 }
 
-/* ─── Nav ─── */
-.nav-blur {
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+.input::placeholder {
+  color: var(--surface-high);
 }
 
-.pb-safe {
-  padding-bottom: max(env(safe-area-inset-bottom), 16px);
+/* The Precision List Item */
+.list-item-hover {
+  transition: background 0.2s ease;
 }
 
-/* Custom Badge */
-.pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 100px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.pill-accent {
-  background: var(--accent-dim);
-  color: var(--accent);
-}
-
-.pill-grey {
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--text-secondary);
-}
-
-.pill-red {
-  background: rgba(239, 68, 68, 0.1);
-  color: var(--red);
+.list-item-hover:hover {
+  background: var(--surface-low);
 }

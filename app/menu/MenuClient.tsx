@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search } from 'lucide-react';
+import { Search, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/lib/types';
 import ProductCard from '@/components/ProductCard';
@@ -30,57 +30,61 @@ export default function MenuClient({ products }: { products: Product[] }) {
     const oos = filtered.filter((p) => p.stock_quantity === 0);
 
     return (
-        <div className="min-h-dvh bg-black pb-32">
+        <div className="min-h-dvh flex flex-col pb-48">
             <Navbar />
-            <div className="max-w-xl mx-auto px-6 pt-6">
 
-                {/* Header */}
-                <h1 className="title-medium mb-6">Tonight's Menu.</h1>
+            {/* Expansive Header */}
+            <div className="w-full max-w-[2560px] mx-auto px-8 md:px-16 xl:px-32 pt-16 md:pt-32">
+                <div className="flex flex-col lg:flex-row justify-between lg:items-end mb-16 md:mb-24 gap-12">
+                    <div>
+                        <p className="text-label mb-6 text-[var(--accent)] tracking-[0.2em]">DATABASE SEARCH</p>
+                        <h1 className="title-massive text-[80px] lg:text-[120px]">THE VAULT.</h1>
+                    </div>
 
-                {/* Minimal Search Line */}
-                <div className="relative mb-8">
-                    <Search size={18} className="absolute left-0 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]" />
-                    <input
-                        type="text"
-                        placeholder="Search items..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-transparent border-b-2 border-[var(--border-subtle)] py-3 pl-8 text-lg font-medium outline-none focus:border-[var(--text-primary)] transition-colors"
-                    />
+                    <div className="relative w-full lg:w-[500px]">
+                        <input
+                            type="text"
+                            placeholder="Query inventory..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="input pl-12 placeholder:opacity-50 font-mono text-xl"
+                        />
+                        <Search size={22} className="absolute left-2 top-[22px] text-[var(--text-tertiary)]" strokeWidth={2.5} />
+                    </div>
                 </div>
 
-                {/* Clean Pill filter */}
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 mb-8">
+                {/* Minimal text-based filters */}
+                <div className="flex gap-8 overflow-x-auto scrollbar-hide mb-16 pb-4 border-b-2 border-[rgba(71,71,71,0.2)]">
                     {CATS.map((c) => (
                         <button
                             key={c}
                             onClick={() => setCat(c)}
-                            className="flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold transition-all uppercase tracking-wider"
-                            style={{
-                                background: cat === c ? 'var(--text-primary)' : 'transparent',
-                                color: cat === c ? '#000' : 'var(--text-secondary)',
-                                border: `1px solid ${cat === c ? 'transparent' : 'var(--border)'}`
-                            }}
+                            className={`text-label transition-colors pb-4 -mb-[18px] ${cat === c ? 'text-[var(--primary)] border-b-2 border-[var(--primary)]' : 'text-[var(--text-tertiary)] hover:text-white'}`}
                         >
                             {c}
                         </button>
                     ))}
                 </div>
 
-                {/* List Grid */}
-                <div className="flex flex-col">
+                {/* True Grid Setup */}
+                <div className="w-full">
                     {available.length === 0 && oos.length === 0 ? (
-                        <div className="text-center py-20 opacity-50">
-                            <p className="text-lg font-bold">No items found.</p>
+                        <div className="h-[40vh] flex items-center justify-center">
+                            <p className="text-body font-mono opacity-50">0 RESULTS FOUND</p>
                         </div>
                     ) : (
                         <>
-                            {available.map((p) => <ProductCard key={p.id} product={p} />)}
+                            {/* Massive masonry-style grid gaps */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-[2px] bg-[rgba(71,71,71,0.2)]">
+                                {available.map((p) => <ProductCard key={p.id} product={p} />)}
+                            </div>
 
                             {oos.length > 0 && (
-                                <div className="mt-12">
-                                    <p className="text-overline mb-4 opacity-50">Sold Out</p>
-                                    {oos.map((p) => <ProductCard key={p.id} product={p} />)}
+                                <div className="mt-32">
+                                    <p className="text-label mb-8 tracking-[0.2em] text-[var(--error)]">DEPLETED INVENTORY</p>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-[2px] bg-[rgba(71,71,71,0.2)]">
+                                        {oos.map((p) => <ProductCard key={p.id} product={p} />)}
+                                    </div>
                                 </div>
                             )}
                         </>
@@ -88,23 +92,27 @@ export default function MenuClient({ products }: { products: Product[] }) {
                 </div>
             </div>
 
-            {/* Floating brutalist Cart bar */}
+            {/* Slide-out persistent brutalist cart module */}
             <AnimatePresence>
                 {totalItems > 0 && (
                     <motion.div
-                        initial={{ y: 100 }} animate={{ y: 0 }} exit={{ y: 100 }}
-                        transition={{ type: 'spring', damping: 20, stiffness: 180 }}
-                        className="fixed bottom-6 left-6 right-6 z-50 max-w-xl mx-auto"
+                        initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                        className="fixed bottom-0 lg:bottom-12 right-0 lg:right-12 z-50 w-full lg:w-[480px]"
                     >
-                        <Link href="/cart">
-                            <div className="bg-[var(--accent)] text-black rounded-full px-6 py-4 flex items-center justify-between shadow-[0_0_40px_rgba(226,254,83,0.15)]">
-                                <span className="font-bold tracking-tight">{totalItems} selected</span>
-                                <div className="flex items-center gap-3">
-                                    <span className="font-black text-lg">{formatCurrency(total)}</span>
-                                    <ArrowRight strokeWidth={2.5} size={20} />
+                        <div className="bg-[var(--surface-high)] lg:border-[2px] lg:border-[rgba(71,71,71,0.2)] p-1">
+                            <div className="bg-[var(--accent)] text-black p-6 pl-8 flex justify-between items-center group cursor-pointer hover:bg-white transition-colors">
+                                <Link href="/cart" className="absolute inset-0 z-10" />
+                                <div>
+                                    <p className="text-label text-black tracking-[0.1em] opacity-80 mb-1">RESERVATION STATUS</p>
+                                    <p className="font-black text-3xl font-mono tracking-tighter">{totalItems} UNITS</p>
+                                </div>
+                                <div className="flex items-center gap-6">
+                                    <p className="font-black text-2xl font-mono">{formatCurrency(total)}</p>
+                                    <ArrowRight strokeWidth={4} size={28} className="transform group-hover:translate-x-2 transition-transform" />
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>

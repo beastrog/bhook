@@ -1,14 +1,11 @@
-import { getProducts } from '@/app/actions';
 import LandingClient from './LandingClient';
 import Navbar from '@/components/Navbar';
 
-export default async function LandingPage() {
-  const { data: products } = await getProducts();
-  const featured = (products || []).slice(0, 8);
+export default function LandingPage() {
   return (
-    <div className="min-h-dvh" style={{ background: 'var(--bg)' }}>
+    <div className="min-h-dvh bg-black">
       <Navbar />
-      <LandingClient featuredProducts={featured} />
+      <LandingClient />
     </div>
   );
 }

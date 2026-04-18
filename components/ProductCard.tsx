@@ -23,7 +23,7 @@ export default function ProductCard({ product }: { product: Product }) {
         if (isOOS || qty >= product.stock_quantity) return;
         addItem(product);
         setJustAdded(true);
-        toast.success('Added to cart');
+        toast.success('System reserved: ' + product.name);
         setTimeout(() => setJustAdded(false), 800);
     };
 
@@ -32,60 +32,48 @@ export default function ProductCard({ product }: { product: Product }) {
             layout
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`relative flex flex-col p-4 ${isOOS ? 'opacity-30 grayscale' : ''}`}
-            style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
+            className={`relative flex flex-col p-8 md:p-12 transition-all duration-300 layer-1 hover:bg-[var(--surface-container)] w-full h-full justify-between group ${isOOS ? 'opacity-30 grayscale' : ''}`}
         >
-            <div className="flex items-start justify-between gap-4">
-                {/* Left: Info */}
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2">
-                        <span className="text-3xl bg-[var(--bg-2)] p-2 rounded-xl">{emoji(product.category)}</span>
-                        <div>
-                            <h3 className="font-bold text-lg leading-tight truncate" style={{ letterSpacing: '-0.02em' }}>{product.name}</h3>
-                            <p className="font-bold" style={{ color: 'var(--text-secondary)' }}>{formatCurrency(product.selling_price)}</p>
-                        </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 mt-3">
-                        <span className={`pill ${isOOS ? 'pill-red' : 'pill-grey'}`}>
-                            {isOOS ? 'Sold Out' : `${product.stock_quantity} left`}
-                        </span>
-                    </div>
+            <div>
+                <div className="flex justify-between items-start mb-16">
+                    <span className="text-4xl lg:text-5xl drop-shadow-2xl">{emoji(product.category)}</span>
+                    <span className="text-label" style={{ color: isOOS ? 'var(--error)' : 'var(--text-tertiary)' }}>
+                        {isOOS ? 'DEPLETED' : `QTY ${product.stock_quantity}`}
+                    </span>
                 </div>
 
-                {/* Right: Actions */}
-                <div className="flex flex-col items-end justify-center pt-2">
-                    {qty > 0 ? (
-                        <div className="flex items-center gap-3 bg-[var(--bg-2)] py-1.5 px-1.5 rounded-full border border-[rgba(255,255,255,0.05)]">
-                            <button
-                                onClick={() => updateQuantity(product.id, qty - 1)}
-                                className="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--bg-3)] hover:bg-[rgba(255,255,255,0.2)] transition-colors"
-                            >
-                                <Minus size={14} />
-                            </button>
-                            <span className="font-bold text-sm w-4 text-center">{qty}</span>
-                            <button
-                                onClick={handleAdd}
-                                disabled={qty >= product.stock_quantity}
-                                className="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--text-primary)] text-black disabled:opacity-30 transition-colors"
-                            >
-                                <Plus size={14} />
-                            </button>
-                        </div>
-                    ) : (
+                <h3 className="title-section text-2xl lg:text-3xl mb-4 truncate group-hover:text-[var(--primary)] transition-colors">{product.name}</h3>
+                <p className="font-bold text-xl text-[var(--accent)] tracking-tight font-mono">{formatCurrency(product.selling_price)}</p>
+            </div>
+
+            <div className="mt-16 w-full opacity-100 lg:opacity-0 lg:translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                {qty > 0 ? (
+                    <div className="flex items-center justify-between w-full layer-float border-[2px] border-[rgba(71,71,71,0.2)] p-2">
+                        <button
+                            onClick={() => updateQuantity(product.id, qty - 1)}
+                            className="w-12 h-12 flex items-center justify-center hover:bg-[var(--surface-high)] transition-colors"
+                        >
+                            <Minus size={18} color="white" />
+                        </button>
+                        <span className="font-bold text-lg font-mono">{qty}</span>
                         <button
                             onClick={handleAdd}
-                            disabled={isOOS}
-                            className="px-5 py-3 rounded-full font-bold text-sm transition-all disabled:opacity-30 flex items-center gap-2"
-                            style={{
-                                background: justAdded ? 'var(--accent)' : 'var(--text-primary)',
-                                color: 'var(--bg)',
-                            }}
+                            disabled={qty >= product.stock_quantity}
+                            className="w-12 h-12 flex items-center justify-center hover:bg-[var(--surface-high)] disabled:opacity-30 transition-colors"
                         >
-                            <Plus size={16} strokeWidth={2.5} /> {justAdded ? 'Added' : 'Add'}
+                            <Plus size={18} color="white" />
                         </button>
-                    )}
-                </div>
+                    </div>
+                ) : (
+                    <button
+                        onClick={handleAdd}
+                        disabled={isOOS}
+                        className="w-full btn btn-primary flex justify-between items-center bg-[var(--primary)] text-black"
+                    >
+                        <span>{justAdded ? 'LOCKED' : 'ACQUIRE'}</span>
+                        <Plus size={18} strokeWidth={3} />
+                    </button>
+                )}
             </div>
         </motion.div>
     );
