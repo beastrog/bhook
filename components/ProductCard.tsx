@@ -1,7 +1,7 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Check, Minus } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Plus, Minus } from 'lucide-react';
 import { useState } from 'react';
 import { Product } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils';
@@ -18,83 +18,71 @@ export default function ProductCard({ product }: { product: Product }) {
     const cartItem = items.find((i) => i.product.id === product.id);
     const qty = cartItem?.quantity ?? 0;
     const isOOS = product.stock_quantity === 0;
-    const isLow = product.stock_quantity > 0 && product.stock_quantity <= 5;
 
     const handleAdd = () => {
         if (isOOS || qty >= product.stock_quantity) return;
         addItem(product);
         setJustAdded(true);
-        toast.success(`${product.name} added`);
-        setTimeout(() => setJustAdded(false), 1200);
+        toast.success('Added to cart');
+        setTimeout(() => setJustAdded(false), 800);
     };
 
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            className={`card hover-lift flex flex-col overflow-hidden ${isOOS ? 'opacity-40' : ''}`}
-            style={{ borderRadius: '14px' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className={`relative flex flex-col p-4 ${isOOS ? 'opacity-30 grayscale' : ''}`}
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}
         >
-            {/* Emoji area */}
-            <div
-                className="flex items-center justify-center text-4xl"
-                style={{ height: 100, background: 'var(--bg-2)' }}
-            >
-                {emoji(product.category)}
-            </div>
+            <div className="flex items-start justify-between gap-4">
+                {/* Left: Info */}
+                <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-2">
+                        <span className="text-3xl bg-[var(--bg-2)] p-2 rounded-xl">{emoji(product.category)}</span>
+                        <div>
+                            <h3 className="font-bold text-lg leading-tight truncate" style={{ letterSpacing: '-0.02em' }}>{product.name}</h3>
+                            <p className="font-bold" style={{ color: 'var(--text-secondary)' }}>{formatCurrency(product.selling_price)}</p>
+                        </div>
+                    </div>
 
-            <div className="flex flex-col flex-1 p-3 gap-2">
-                {/* Stock indicator */}
-                {isOOS ? (
-                    <span className="badge badge-red" style={{ width: 'fit-content' }}>Out of stock</span>
-                ) : isLow ? (
-                    <span className="badge badge-amber" style={{ width: 'fit-content' }}>{product.stock_quantity} left</span>
-                ) : (
-                    <span className="badge badge-grey" style={{ width: 'fit-content' }}>{product.stock_quantity} left</span>
-                )}
+                    <div className="flex items-center gap-2 mt-3">
+                        <span className={`pill ${isOOS ? 'pill-red' : 'pill-grey'}`}>
+                            {isOOS ? 'Sold Out' : `${product.stock_quantity} left`}
+                        </span>
+                    </div>
+                </div>
 
-                <p className="text-sm font-semibold leading-tight" style={{ color: 'var(--text-primary)' }}>
-                    {product.name}
-                </p>
-
-                <div className="flex items-center justify-between mt-auto">
-                    <span className="font-bold text-sm" style={{ color: 'var(--accent)' }}>
-                        {formatCurrency(product.selling_price)}
-                    </span>
-
-                    {/* Qty controls or Add */}
+                {/* Right: Actions */}
+                <div className="flex flex-col items-end justify-center pt-2">
                     {qty > 0 ? (
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3 bg-[var(--bg-2)] py-1.5 px-1.5 rounded-full border border-[rgba(255,255,255,0.05)]">
                             <button
                                 onClick={() => updateQuantity(product.id, qty - 1)}
-                                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors"
-                                style={{ background: 'var(--bg-3)', color: 'var(--text-primary)' }}
+                                className="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--bg-3)] hover:bg-[rgba(255,255,255,0.2)] transition-colors"
                             >
-                                <Minus size={11} />
+                                <Minus size={14} />
                             </button>
-                            <span className="text-sm font-bold w-4 text-center" style={{ color: 'var(--text-primary)' }}>{qty}</span>
+                            <span className="font-bold text-sm w-4 text-center">{qty}</span>
                             <button
                                 onClick={handleAdd}
                                 disabled={qty >= product.stock_quantity}
-                                className="w-7 h-7 rounded-lg flex items-center justify-center transition-colors disabled:opacity-30"
-                                style={{ background: 'var(--accent)', color: '#fff' }}
+                                className="w-8 h-8 rounded-full flex items-center justify-center bg-[var(--text-primary)] text-black disabled:opacity-30 transition-colors"
                             >
-                                <Plus size={11} />
+                                <Plus size={14} />
                             </button>
                         </div>
                     ) : (
                         <button
                             onClick={handleAdd}
                             disabled={isOOS}
-                            className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all disabled:opacity-30"
+                            className="px-5 py-3 rounded-full font-bold text-sm transition-all disabled:opacity-30 flex items-center gap-2"
                             style={{
-                                background: justAdded ? 'rgba(34,197,94,0.15)' : 'var(--accent-bg)',
-                                color: justAdded ? 'var(--green)' : 'var(--accent)',
-                                border: `1px solid ${justAdded ? 'rgba(34,197,94,0.3)' : 'var(--accent-border)'}`,
+                                background: justAdded ? 'var(--accent)' : 'var(--text-primary)',
+                                color: 'var(--bg)',
                             }}
                         >
-                            {justAdded ? <><Check size={11} /> Added</> : <><Plus size={11} /> Add</>}
+                            <Plus size={16} strokeWidth={2.5} /> {justAdded ? 'Added' : 'Add'}
                         </button>
                     )}
                 </div>

@@ -10,15 +10,15 @@ export default function Navbar() {
 
     return (
         <nav className="nav-blur sticky top-0 z-50">
-            <div className="flex items-center justify-between px-5 h-14 max-w-lg mx-auto">
-                <Link href="/" className="flex items-center gap-2">
-                    <span className="text-base font-black tracking-tight" style={{ color: 'var(--text-primary)', letterSpacing: '-0.03em' }}>
+            <div className="flex items-center justify-between px-6 h-16 max-w-xl mx-auto">
+                <Link href="/" className="flex items-center gap-2 outline-none">
+                    <span className="text-xl font-black tracking-tighter" style={{ color: 'var(--text-primary)' }}>
                         bhook<span style={{ color: 'var(--accent)' }}>.</span>
                     </span>
                 </Link>
 
-                <Link href="/cart" className="relative btn btn-icon">
-                    <ShoppingCart size={17} />
+                <Link href="/cart" className="relative btn btn-icon outline-none">
+                    <ShoppingCart size={18} strokeWidth={2} />
                     <AnimatePresence>
                         {totalItems > 0 && (
                             <motion.div
@@ -26,8 +26,8 @@ export default function Navbar() {
                                 initial={{ scale: 0, opacity: 0 }}
                                 animate={{ scale: 1, opacity: 1 }}
                                 exit={{ scale: 0, opacity: 0 }}
-                                className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
-                                style={{ background: 'var(--accent)', color: '#fff', fontSize: '9px', fontWeight: 800 }}
+                                className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full flex items-center justify-center font-bold"
+                                style={{ background: 'var(--accent)', color: 'var(--accent-fg)', fontSize: '10px' }}
                             >
                                 {totalItems > 9 ? '9+' : totalItems}
                             </motion.div>

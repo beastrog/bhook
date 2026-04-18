@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { Minus, Plus, Trash2, ArrowLeft } from 'lucide-react';
+import { Minus, Plus, X } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/lib/store/cart';
 import { formatCurrency } from '@/lib/utils';
@@ -17,109 +17,93 @@ export default function CartPage() {
 
     if (items.length === 0) {
         return (
-            <div className="min-h-dvh" style={{ background: 'var(--bg)' }}>
+            <div className="min-h-dvh bg-black">
                 <Navbar />
-                <div className="flex flex-col items-center justify-center min-h-[65vh] px-5">
-                    <p className="text-5xl mb-5">🛒</p>
-                    <p className="font-bold text-lg mb-1.5" style={{ color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>Cart is empty</p>
-                    <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>Add some snacks from the menu</p>
-                    <Link href="/menu" className="btn btn-orange-pill">Browse Menu →</Link>
+                <div className="flex flex-col items-center justify-center min-h-[70vh] px-6">
+                    <p className="text-overline mb-4 opacity-50">Cart</p>
+                    <p className="title-medium mb-8 text-center" style={{ color: 'var(--text-secondary)' }}>You haven't added<br />anything yet.</p>
+                    <Link href="/menu" className="btn btn-secondary uppercase" style={{ fontSize: '13px', letterSpacing: '0.05em' }}>
+                        Return to Menu
+                    </Link>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-dvh pb-36" style={{ background: 'var(--bg)' }}>
+        <div className="min-h-dvh bg-black pb-40">
             <Navbar />
-            <div className="max-w-lg mx-auto px-5 pt-5">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-6">
-                    <Link href="/menu" className="btn btn-icon">
-                        <ArrowLeft size={16} />
-                    </Link>
-                    <div>
-                        <h1 className="font-black text-xl" style={{ letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Cart</h1>
-                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>{items.length} item type{items.length !== 1 ? 's' : ''}</p>
-                    </div>
-                </div>
+            <div className="max-w-xl mx-auto px-6 pt-6">
 
-                {/* Items */}
-                <div className="space-y-2 mb-5">
+                <h1 className="title-medium mb-2">Cart.</h1>
+                <p className="text-sm mb-10" style={{ color: 'var(--text-secondary)' }}>{items.length} items</p>
+
+                {/* Minimal Item List */}
+                <div className="flex flex-col border-t border-[var(--border-subtle)]">
                     <AnimatePresence>
                         {items.map((item) => (
                             <motion.div
                                 key={item.product.id}
                                 layout
-                                initial={{ opacity: 0, x: -12 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: 12, height: 0 }}
-                                className="card flex items-center gap-3 p-3"
-                                style={{ borderRadius: '14px' }}
+                                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, height: 0 }}
+                                className="py-5 border-b border-[var(--border-subtle)] flex items-center gap-4"
                             >
-                                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl flex-shrink-0"
-                                    style={{ background: 'var(--bg-2)' }}>
+                                <div className="text-3xl p-2 bg-[var(--bg-2)] rounded-xl flex-shrink-0">
                                     {emoji(item.product.category)}
                                 </div>
+
                                 <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold truncate" style={{ color: 'var(--text-primary)' }}>{item.product.name}</p>
-                                    <p className="text-sm font-bold" style={{ color: 'var(--accent)' }}>
+                                    <p className="font-bold text-lg leading-tight truncate mb-1">{item.product.name}</p>
+                                    <p className="font-semibold" style={{ color: 'var(--text-secondary)' }}>
                                         {formatCurrency(item.product.selling_price * item.quantity)}
                                     </p>
                                 </div>
-                                <div className="flex items-center gap-2 flex-shrink-0">
-                                    <button onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                                        className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'var(--bg-2)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}>
-                                        <Minus size={11} />
+
+                                <div className="flex flex-col items-end gap-3">
+                                    <button onClick={() => removeItem(item.product.id)} className="text-[var(--text-tertiary)] hover:text-white transition-colors">
+                                        <X size={18} />
                                     </button>
-                                    <span className="text-sm font-bold w-4 text-center" style={{ color: 'var(--text-primary)' }}>{item.quantity}</span>
-                                    <button
-                                        onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                                        disabled={item.quantity >= item.product.stock_quantity}
-                                        className="w-7 h-7 rounded-lg flex items-center justify-center disabled:opacity-30"
-                                        style={{ background: 'var(--accent)', color: '#fff' }}>
-                                        <Plus size={11} />
-                                    </button>
-                                    <button onClick={() => removeItem(item.product.id)}
-                                        className="w-7 h-7 rounded-lg flex items-center justify-center ml-0.5"
-                                        style={{ background: 'var(--red-bg)', color: 'var(--red)', border: '1px solid rgba(239,68,68,0.15)' }}>
-                                        <Trash2 size={11} />
-                                    </button>
+
+                                    <div className="flex items-center gap-2">
+                                        <button onClick={() => updateQuantity(item.product.id, item.quantity - 1)} className="btn-icon w-7 h-7">
+                                            <Minus size={12} />
+                                        </button>
+                                        <span className="font-bold text-sm w-4 text-center">{item.quantity}</span>
+                                        <button
+                                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                                            disabled={item.quantity >= item.product.stock_quantity}
+                                            className="btn-icon w-7 h-7 disabled:opacity-30 disabled:bg-transparent"
+                                            style={item.quantity < item.product.stock_quantity ? { background: 'white', color: 'black', border: 'none' } : {}}
+                                        >
+                                            <Plus size={12} strokeWidth={2.5} />
+                                        </button>
+                                    </div>
                                 </div>
                             </motion.div>
                         ))}
                     </AnimatePresence>
                 </div>
 
-                {/* Summary */}
-                <div className="card p-4 mb-4" style={{ borderRadius: '14px' }}>
-                    <p className="text-xs font-bold mb-3" style={{ color: 'var(--text-secondary)', letterSpacing: '-0.01em' }}>Order Summary</p>
-                    <div className="space-y-2">
-                        {items.map((item) => (
-                            <div key={item.product.id} className="flex justify-between text-sm">
-                                <span style={{ color: 'var(--text-secondary)' }}>{item.product.name} × {item.quantity}</span>
-                                <span style={{ color: 'var(--text-primary)' }}>{formatCurrency(item.product.selling_price * item.quantity)}</span>
-                            </div>
-                        ))}
+                {/* Clean Summary */}
+                <div className="mt-10">
+                    <div className="flex justify-between items-end">
+                        <span className="text-overline">Total due at pickup</span>
+                        <span className="title-medium" style={{ fontSize: '32px' }}>{formatCurrency(total)}</span>
                     </div>
-                    <div className="sep my-3" />
-                    <div className="flex justify-between">
-                        <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Total</span>
-                        <span className="font-black text-base" style={{ color: 'var(--accent)' }}>{formatCurrency(total)}</span>
+                    <div className="mt-4 p-4 rounded-xl bg-[var(--bg-1)] border border-[var(--border-subtle)] text-sm text-[var(--text-secondary)]">
+                        Payment is <strong>cash only</strong>. Hand it to the admin when collecting your order.
                     </div>
                 </div>
 
-                {/* Offline notice */}
-                <div className="p-3 rounded-xl text-center text-xs mb-4" style={{ background: 'var(--bg-1)', border: '1px solid var(--border-subtle)', color: 'var(--text-tertiary)' }}>
-                    💵 Pay <strong style={{ color: 'var(--text-secondary)' }}>{formatCurrency(total)} cash</strong> at pickup · No online payment
-                </div>
             </div>
 
-            {/* Fixed bottom */}
-            <div className="fixed bottom-0 left-0 right-0 pb-safe px-5 py-4"
-                style={{ background: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}>
-                <Link href="/checkout" className="btn btn-orange-pill w-full flex justify-center py-4">
-                    Reserve · {formatCurrency(total)} →
+            {/* Floating Checkout Bar */}
+            <div className="fixed bottom-6 left-6 right-6 z-50 max-w-xl mx-auto">
+                <Link href="/checkout" className="btn btn-accent w-full flex justify-between shadow-[0_0_40px_rgba(226,254,83,0.15)] tracking-tight">
+                    <span>Checkout</span>
+                    <span className="font-black bg-black text-[var(--accent)] px-3 py-1 rounded-full text-sm">
+                        {formatCurrency(total)}
+                    </span>
                 </Link>
             </div>
         </div>

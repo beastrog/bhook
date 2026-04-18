@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Loader2, Lock, Mail } from 'lucide-react';
 import { adminLogin } from '@/app/admin/actions';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
@@ -23,36 +22,35 @@ export default function AdminLoginPage() {
     };
 
     return (
-        <div className="min-h-dvh flex items-center justify-center px-5" style={{ background: 'var(--bg)' }}>
-            <div className="w-full max-w-xs">
-                {/* Brand */}
-                <div className="mb-8">
-                    <p className="font-black text-2xl mb-1" style={{ letterSpacing: '-0.04em', color: 'var(--text-primary)' }}>
-                        bhook<span style={{ color: 'var(--accent)' }}>.</span>
-                    </p>
-                    <p className="text-sm" style={{ color: 'var(--text-secondary)' }}>Admin access</p>
-                </div>
+        <div className="min-h-dvh bg-black flex flex-col items-center justify-center px-6">
+            <div className="w-full max-w-sm">
 
-                <form onSubmit={handleLogin} className="card p-5 space-y-3" style={{ borderRadius: '16px' }}>
-                    <div>
-                        <label className="text-label mb-2 block flex items-center gap-1.5"><Mail size={10} /> Email</label>
-                        <input className="input" type="email" placeholder="admin@bhook.in"
-                            value={email} onChange={(e) => setEmail(e.target.value)} />
+                <h1 className="title-medium mb-1">bhook<span className="text-[var(--accent)]">.</span></h1>
+                <p className="text-sm text-[var(--text-secondary)] mb-12">Authorized Personnel Only</p>
+
+                <form onSubmit={handleLogin} className="space-y-6">
+                    <div className="space-y-4">
+                        <div>
+                            <p className="text-overline mb-2">Email</p>
+                            <input
+                                className="input" type="email" placeholder="admin@example.com"
+                                value={email} onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                        <div>
+                            <p className="text-overline mb-2">Password</p>
+                            <input
+                                className="input" type="password" placeholder="••••••••"
+                                value={password} onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </div>
                     </div>
-                    <div>
-                        <label className="text-label mb-2 block flex items-center gap-1.5"><Lock size={10} /> Password</label>
-                        <input className="input" type="password" placeholder="••••••••"
-                            value={password} onChange={(e) => setPassword(e.target.value)} />
-                    </div>
-                    <button type="submit" disabled={loading}
-                        className="btn btn-orange w-full py-3 mt-1" style={{ borderRadius: '10px', width: '100%', justifyContent: 'center' }}>
-                        {loading ? <><Loader2 size={15} className="animate-spin" /> Signing in…</> : 'Sign In →'}
+
+                    <button type="submit" disabled={loading} className="btn btn-secondary w-full mt-4 bg-white text-black font-black uppercase text-sm tracking-wider">
+                        {loading ? 'Authenticating...' : 'Sign In'}
                     </button>
                 </form>
 
-                <p className="text-xs text-center mt-4" style={{ color: 'var(--text-tertiary)' }}>
-                    <a href="/" style={{ color: 'var(--text-secondary)' }}>← Back to store</a>
-                </p>
             </div>
         </div>
     );

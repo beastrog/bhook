@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Loader2, ArrowLeft, User, DoorOpen, Phone } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/store/cart';
@@ -45,102 +45,72 @@ export default function CheckoutPage() {
         finally { setLoading(false); }
     };
 
-    if (!items.length) return (
-        <div className="min-h-dvh flex items-center justify-center" style={{ background: 'var(--bg)' }}>
-            <div className="text-center px-5">
-                <p className="text-4xl mb-4">🛒</p>
-                <p className="font-semibold mb-4" style={{ color: 'var(--text-primary)' }}>Cart is empty</p>
-                <Link href="/menu" className="btn btn-orange-pill">Browse Menu</Link>
-            </div>
-        </div>
-    );
+    if (!items.length) {
+        return <div className="min-h-dvh bg-black"><Navbar /></div>;
+    }
 
     return (
-        <div className="min-h-dvh pb-36" style={{ background: 'var(--bg)' }}>
+        <div className="min-h-dvh bg-black pb-32">
             <Navbar />
-            <div className="max-w-lg mx-auto px-5 pt-5">
-                {/* Header */}
-                <div className="flex items-center gap-3 mb-6">
-                    <Link href="/cart" className="btn btn-icon"><ArrowLeft size={16} /></Link>
-                    <div>
-                        <h1 className="font-black text-xl" style={{ letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>Reserve</h1>
-                        <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Tell us who you are</p>
-                    </div>
-                </div>
+            <div className="max-w-xl mx-auto px-6 pt-6">
 
-                {/* How it works note */}
-                <div className="p-4 rounded-xl mb-6" style={{ background: 'var(--accent-bg)', border: '1px solid var(--accent-border)' }}>
-                    <p className="text-xs font-semibold mb-1" style={{ color: 'var(--accent)' }}>How pickup works</p>
-                    <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
-                        Reserve now → come to our room → pay <strong style={{ color: 'var(--text-primary)' }}>{formatCurrency(total)} cash</strong> → collect snacks
-                    </p>
-                </div>
+                <h1 className="title-medium mb-1">Checkout.</h1>
+                <p className="text-sm mb-8" style={{ color: 'var(--text-secondary)' }}>Provide your details for pickup.</p>
 
-                {/* Form */}
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="text-label mb-2 block flex items-center gap-1.5">
-                            <User size={11} /> Your Name *
-                        </label>
-                        <input
-                            className={`input ${errors.customer_name ? 'input-error' : ''}`}
-                            placeholder="e.g. Rahul Sharma"
-                            value={form.customer_name}
-                            onChange={(e) => { setForm({ ...form, customer_name: e.target.value }); setErrors({ ...errors, customer_name: '' }); }}
-                        />
-                        {errors.customer_name && <p className="text-xs mt-1" style={{ color: 'var(--red)' }}>{errors.customer_name}</p>}
-                    </div>
+                {/* Minimal strict forms */}
+                <form onSubmit={handleSubmit} className="space-y-6">
 
-                    <div>
-                        <label className="text-label mb-2 block flex items-center gap-1.5">
-                            <DoorOpen size={11} /> Room Number *
-                        </label>
-                        <input
-                            className={`input ${errors.room_number ? 'input-error' : ''}`}
-                            placeholder="e.g. G-204"
-                            value={form.room_number}
-                            onChange={(e) => { setForm({ ...form, room_number: e.target.value }); setErrors({ ...errors, room_number: '' }); }}
-                        />
-                        {errors.room_number && <p className="text-xs mt-1" style={{ color: 'var(--red)' }}>{errors.room_number}</p>}
-                    </div>
+                    <div className="space-y-6 pt-2 pb-6 border-y border-[var(--border-subtle)]">
+                        <div>
+                            <label className="text-overline mb-2 block">Name</label>
+                            <input
+                                className="input focus:border-[var(--text-primary)]"
+                                placeholder="Full name"
+                                value={form.customer_name}
+                                autoFocus
+                                onChange={(e) => { setForm({ ...form, customer_name: e.target.value }); setErrors({ ...errors, customer_name: '' }); }}
+                            />
+                            {errors.customer_name && <p className="text-xs mt-2 text-[var(--red)] font-bold">{errors.customer_name}</p>}
+                        </div>
 
-                    <div>
-                        <label className="text-label mb-2 block flex items-center gap-1.5">
-                            <Phone size={11} /> Phone <span style={{ fontWeight: 400, textTransform: 'none', letterSpacing: 'normal', fontSize: '11px' }}>(optional)</span>
-                        </label>
-                        <input
-                            className="input"
-                            type="tel"
-                            placeholder="9876543210"
-                            value={form.phone_number}
-                            onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
-                        />
-                    </div>
+                        <div>
+                            <label className="text-overline mb-2 block">Room</label>
+                            <input
+                                className="input focus:border-[var(--text-primary)]"
+                                placeholder="e.g. G-204"
+                                value={form.room_number}
+                                onChange={(e) => { setForm({ ...form, room_number: e.target.value }); setErrors({ ...errors, room_number: '' }); }}
+                            />
+                            {errors.room_number && <p className="text-xs mt-2 text-[var(--red)] font-bold">{errors.room_number}</p>}
+                        </div>
 
-                    {/* Summary */}
-                    <div className="card p-4" style={{ borderRadius: '14px' }}>
-                        <p className="text-label mb-3">Order</p>
-                        {items.map((item) => (
-                            <div key={item.product.id} className="flex justify-between text-sm mb-1.5">
-                                <span style={{ color: 'var(--text-secondary)' }}>{item.product.name} × {item.quantity}</span>
-                                <span style={{ color: 'var(--text-primary)' }}>{formatCurrency(item.product.selling_price * item.quantity)}</span>
-                            </div>
-                        ))}
-                        <div className="sep mt-2 mb-2" />
-                        <div className="flex justify-between">
-                            <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Total to pay</span>
-                            <span className="font-black text-base" style={{ color: 'var(--accent)' }}>{formatCurrency(total)}</span>
+                        <div>
+                            <label className="text-overline mb-2 flex items-center justify-between">
+                                <span>Phone Number</span>
+                                <span className="text-[var(--text-tertiary)] lowercase">optional</span>
+                            </label>
+                            <input
+                                className="input focus:border-[var(--text-primary)]"
+                                type="tel"
+                                placeholder="98765 43210"
+                                value={form.phone_number}
+                                onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
+                            />
                         </div>
                     </div>
+
+                    <div className="flex justify-between items-center py-4">
+                        <span className="font-bold">Total to pay (Cash)</span>
+                        <span className="title-medium">{formatCurrency(total)}</span>
+                    </div>
+
                 </form>
             </div>
 
-            {/* Fixed bottom */}
-            <div className="fixed bottom-0 left-0 right-0 pb-safe px-5 py-4"
-                style={{ background: 'var(--bg)', borderTop: '1px solid var(--border-subtle)' }}>
+            <div className="fixed bottom-6 left-6 right-6 z-50 max-w-xl mx-auto">
                 <button onClick={handleSubmit} disabled={loading}
-                    className="btn btn-orange-pill w-full flex justify-center py-4">
-                    {loading ? <><Loader2 size={16} className="animate-spin" /> Placing…</> : `Place Reservation →`}
+                    className="btn btn-accent w-full text-center shadow-[0_0_40px_rgba(226,254,83,0.15)] font-black uppercase tracking-wider text-sm">
+                    {loading ? <><Loader2 size={16} className="animate-spin mr-2" /> Processing...</> : `Confirm Reservation`}
                 </button>
             </div>
         </div>
