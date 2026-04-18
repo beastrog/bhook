@@ -2,9 +2,9 @@
 
 import { useState, useTransition } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Check, X } from 'lucide-react';
+import { Check, X, Trash2 } from 'lucide-react';
 import { Order } from '@/lib/types';
-import { updateOrderStatus } from '@/app/admin/actions';
+import { updateOrderStatus, deleteOrder } from '@/app/admin/actions';
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
@@ -27,6 +27,16 @@ export default function OrdersClient({ initialOrders, defaultDate }: { initialOr
             if (error) { toast.error(error); return; }
             setOrders(prev => prev.map(o => o.id === id ? { ...o, status: status as any } : o));
             toast.success(`Marked as ${getStatusLabel(status)}`);
+        });
+    };
+
+    const handleDelete = async (id: string) => {
+        if (!confirm('Are you sure you want to permanently delete this order?')) return;
+        startTransition(async () => {
+            const { error } = await deleteOrder(id);
+            if (error) { toast.error(error); return; }
+            setOrders(prev => prev.filter(o => o.id !== id));
+            toast.success('Order deleted');
         });
     };
 
@@ -97,18 +107,27 @@ export default function OrdersClient({ initialOrders, defaultDate }: { initialOr
                                                 </div>
                                             ))}
                                             {order.phone_number && <p className="text-[11px] text-t3 mt-2">📱 {order.phone_number}</p>}
-                                            {order.status !== 'completed' && order.status !== 'cancelled' && (
-                                                <div className="flex gap-2 mt-3">
-                                                    <button onClick={() => handleStatus(order.id, 'completed')} disabled={isPending}
-                                                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-bold bg-ok/10 text-ok hover:bg-ok/15 transition-colors disabled:opacity-40">
-                                                        <Check size={13} /> Done
+
+                                            <div className="flex gap-2 mt-3">
+                                                {order.status !== 'completed' && order.status !== 'cancelled' && (
+                                                    <>
+                                                        <button onClick={() => handleStatus(order.id, 'completed')} disabled={isPending}
+                                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-bold bg-ok/10 text-ok hover:bg-ok/15 transition-colors disabled:opacity-40">
+                                                            <Check size={13} /> Done
+                                                        </button>
+                                                        <button onClick={() => handleStatus(order.id, 'cancelled')} disabled={isPending}
+                                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-bold bg-err/8 text-err hover:bg-err/15 transition-colors disabled:opacity-40">
+                                                            <X size={13} /> Cancel
+                                                        </button>
+                                                    </>
+                                                )}
+                                                {order.status === 'cancelled' && (
+                                                    <button onClick={() => handleDelete(order.id)} disabled={isPending}
+                                                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-bold bg-err text-white hover:opacity-90 transition-opacity disabled:opacity-40">
+                                                        <Trash2 size={13} /> Delete Permanently
                                                     </button>
-                                                    <button onClick={() => handleStatus(order.id, 'cancelled')} disabled={isPending}
-                                                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-sm font-bold bg-err/8 text-err hover:bg-err/15 transition-colors disabled:opacity-40">
-                                                        <X size={13} /> Cancel
-                                                    </button>
-                                                </div>
-                                            )}
+                                                )}
+                                            </div>
                                         </div>
                                     </motion.div>
                                 )}
@@ -116,7 +135,8 @@ export default function OrdersClient({ initialOrders, defaultDate }: { initialOr
                         </motion.div>
                     ))}
                 </div>
-            )}
+            )
+            }
         </div>
     );
 }

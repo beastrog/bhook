@@ -17,6 +17,7 @@ export async function placeOrder(formData: {
     const headersList = await headers();
     const forwarded = headersList.get('x-forwarded-for');
     const ip = forwarded ? forwarded.split(',')[0] : '127.0.0.1';
+    const ua = headersList.get('user-agent') || 'unknown';
 
     const { data, error } = await supabase.rpc('place_order', {
         p_customer_name: formData.customer_name,
@@ -24,6 +25,7 @@ export async function placeOrder(formData: {
         p_phone_number: formData.phone_number || null,
         p_items: formData.items,
         p_ip_address: ip,
+        p_user_agent: ua,
     });
 
     if (error) {

@@ -150,13 +150,14 @@ begin
 end;
 $$ language plpgsql;
 
--- Reserve stock with concurrency protection, IP checking, and rate limiting
+-- Reserve stock with concurrency protection, IP checking, and aggressive rate limiting/spam filtering
 create or replace function place_order(
   p_customer_name text,
   p_room_number text,
   p_phone_number text,
   p_items jsonb, -- [{product_id, quantity}]
-  p_ip_address text -- New parameter for rate limiting
+  p_ip_address text, -- Parameter for rate limiting
+  p_user_agent text default 'unknown' -- Added for spam fingerprints
 )
 returns jsonb as $$
 declare
@@ -168,6 +169,9 @@ declare
   v_item jsonb;
   v_product products%rowtype;
   v_recent_order_count integer;
+  v_rapid_order_count integer;
+  v_room_clash_count integer;
+  v_total_quantity integer := 0;
   v_line_total numeric;
   v_line_cost numeric;
   v_line_profit numeric;
@@ -177,23 +181,60 @@ begin
     raise exception 'Your IP address (%) has been banned for suspicious activity.', p_ip_address;
   end if;
 
-  -- 2. Rate limiting (max 3 orders per 5 minutes per IP)
+  -- 2. Aggressive Rate Limiting
+  -- Rule A: Max 1 order per 2 minutes (prevents rapid script spam)
+  select count(*) into v_rapid_order_count 
+  from orders 
+  where notes like 'IP:%' 
+  and substr(notes, 4) = p_ip_address 
+  and created_at > now() - interval '2 minutes';
+
+  if v_rapid_order_count >= 1 then
+    raise exception 'You are ordering too fast. Please wait 2 minutes before your next order.';
+  end if;
+
+  -- Rule B: Max 2 orders per 15 minutes (Rigorous limit)
   select count(*) into v_recent_order_count 
   from orders 
   where notes like 'IP:%' 
   and substr(notes, 4) = p_ip_address 
-  and created_at > now() - interval '5 minutes';
+  and created_at > now() - interval '15 minutes';
 
-  if v_recent_order_count >= 3 then
-    -- Auto-ban the IP
+  if v_recent_order_count >= 2 then
     insert into banned_ips (ip_address, reason) 
-    values (p_ip_address, 'Automated ban: Order spamming (>3 orders/5m)')
+    values (p_ip_address, 'Automated ban: Aggressive order limit exceeded (>2 orders/15m)')
     on conflict (ip_address) do nothing;
-    
-    raise exception 'Rate limit exceeded. Your IP has been banned due to spamming.';
+    raise exception 'Order limit exceeded. Your IP has been banned due to suspected spamming.';
   end if;
 
-  -- 3. Lock and validate each product
+  -- Rule C: Room Number consistency (Same room, multiple different names in 10m is suspicious)
+  select count(distinct customer_name) into v_room_clash_count
+  from orders
+  where room_number = p_room_number
+  and created_at > now() - interval '10 minutes';
+
+  if v_room_clash_count >= 2 then
+    insert into banned_ips (ip_address, reason) 
+    values (p_ip_address, 'Automated ban: Room spoofing suspected (multiple names for same room)')
+    on conflict (ip_address) do nothing;
+    raise exception 'Security alert: Possible room number spoofing. Access denied.';
+  end if;
+
+  -- 3. Spam Filtering / Order Content Check
+  -- Rule D: Maximum total items (prevent stock clearing spikes)
+  for v_item in select * from jsonb_array_elements(p_items) loop
+    v_total_quantity := v_total_quantity + (v_item->>'quantity')::integer;
+  end loop;
+
+  if v_total_quantity > 12 then
+    raise exception 'Order too large. Maximum 12 items allowed per order to prevent hoarding.';
+  end if;
+
+  if v_total_quantity <= 0 then
+    raise exception 'Invalid order. Items required.';
+  end if;
+
+  -- 4. Product Validation & Stock Lock
   for v_item in select * from jsonb_array_elements(p_items) loop
     select * into v_product from products 
     where id = (v_item->>'product_id')::uuid
@@ -204,11 +245,11 @@ begin
     end if;
     
     if not v_product.active then
-      raise exception 'Product is not available: %', v_product.name;
+      raise exception '% is currently unavailable.', v_product.name;
     end if;
     
     if v_product.stock_quantity < (v_item->>'quantity')::integer then
-      raise exception 'Insufficient stock for: %. Only % left.', v_product.name, v_product.stock_quantity;
+      raise exception 'Only % of % left in stock.', v_product.stock_quantity, v_product.name;
     end if;
     
     v_line_total := v_product.selling_price * (v_item->>'quantity')::integer;
@@ -219,20 +260,17 @@ begin
     v_total_cost := v_total_cost + v_line_cost;
     v_total_profit := v_total_profit + v_line_profit;
     
-    -- Decrement stock
     update products set stock_quantity = stock_quantity - (v_item->>'quantity')::integer
     where id = v_product.id;
   end loop;
   
-  -- Generate order number
   v_order_number := generate_order_number();
   
-  -- Create order (note we store IP in 'notes' for simple rate limiting)
+  -- Store IP and basic footprint in notes
   insert into orders (order_number, customer_name, room_number, phone_number, total_amount, total_cost, total_profit, status, notes)
-  values (v_order_number, p_customer_name, p_room_number, p_phone_number, v_total_amount, v_total_cost, v_total_profit, 'reserved', 'IP:' || p_ip_address)
+  values (v_order_number, p_customer_name, p_room_number, p_phone_number, v_total_amount, v_total_cost, v_total_profit, 'reserved', 'IP:' || p_ip_address || ' | UA:' || left(p_user_agent, 100))
   returning id into v_order_id;
   
-  -- Create order items
   for v_item in select * from jsonb_array_elements(p_items) loop
     select * into v_product from products where id = (v_item->>'product_id')::uuid;
     
@@ -248,6 +286,7 @@ begin
   );
 end;
 $$ language plpgsql security definer;
+
 
 -- ============================================================
 -- ROW LEVEL SECURITY (RLS)

@@ -137,6 +137,18 @@ export async function updateOrderStatus(orderId: string, status: string) {
     } catch (e: any) { return { error: e.message }; }
 }
 
+export async function deleteOrder(orderId: string) {
+    try {
+        const adminClient = await verifyAdmin();
+        const { error } = await adminClient.from('orders').delete().eq('id', orderId);
+        if (!error) {
+            revalidatePath('/admin/orders');
+            revalidatePath('/admin/dashboard');
+        }
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
+}
+
 // ─── Analytics ────────────────────────────────────────────────────────────────
 export async function getDashboardStats() {
     const adminClient = await verifyAdmin();
