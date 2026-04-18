@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from 'sonner';
 import { StoreStatusProvider } from '@/components/StoreStatusProvider';
 import { getSettings } from '@/app/actions';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: 'BHOOKH – Midnight Snack Store',
@@ -49,6 +50,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             },
           }}
         />
+        <Analytics />
       </body>
     </html>
   );
