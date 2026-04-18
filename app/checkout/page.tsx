@@ -119,7 +119,7 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
                             <button onClick={() => handleSubmit()} disabled={loading}
-                                className="w-full flex items-center justify-center gap-2 bg-lime text-black font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40">
+                                className="w-full flex items-center justify-center gap-2 bg-lime text-[#000000] font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40">
                                 {loading ? <><Loader2 size={15} className="animate-spin" /> Placing...</>
                                     : <>Confirm Order <ArrowRight size={15} /></>}
                             </button>

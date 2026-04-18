@@ -37,7 +37,7 @@ export default function SettingsClient({ settings }: { settings: Record<string, 
                             <input className="flex-1 bg-deep border border-bdr rounded-xl px-4 py-2.5 text-sm outline-none placeholder:text-t3 focus:border-lime/40 transition-colors"
                                 placeholder={placeholder} value={form[key] || ''} onChange={(e) => setForm({ ...form, [key]: e.target.value })} />
                             <button onClick={() => handleSave(key)} disabled={isPending}
-                                className="w-10 h-10 flex items-center justify-center bg-lime text-black rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40 flex-shrink-0">
+                                className="w-10 h-10 flex items-center justify-center bg-lime text-[#000000] rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40 flex-shrink-0">
                                 {isPending ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
                             </button>
                         </div>

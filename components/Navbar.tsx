@@ -26,7 +26,7 @@ export default function Navbar() {
                     <AnimatePresence>
                         {totalItems > 0 && (
                             <motion.span key="b" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}
-                                className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center rounded-full bg-lime text-black text-[10px] font-black">
+                                className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center rounded-full bg-lime text-[#000000] text-[10px] font-black">
                                 {totalItems > 9 ? '9+' : totalItems}
                             </motion.span>
                         )}

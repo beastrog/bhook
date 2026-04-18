@@ -47,7 +47,7 @@ export default function CartPage() {
                     </div>
                     <h2 className="font-display font-bold text-2xl mb-2">Your Stash is Empty</h2>
                     <p className="text-sm text-t2 mb-8 max-w-xs mx-auto">Add some midnight fuel from the menu.</p>
-                    <Link href="/menu" className="bg-lime text-black font-extrabold px-8 py-3 rounded-full hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] mb-12">
+                    <Link href="/menu" className="bg-lime text-[#000000] font-extrabold px-8 py-3 rounded-full hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] mb-12">
                         Browse Menu
                     </Link>
 
@@ -94,7 +94,7 @@ export default function CartPage() {
                                             <span className="font-bold text-xs w-5 text-center">{item.quantity}</span>
                                             <button onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                                                 disabled={item.quantity >= item.product.stock_quantity}
-                                                className="w-7 h-7 flex items-center justify-center bg-lime text-black rounded-r-lg disabled:opacity-30">
+                                                className="w-7 h-7 flex items-center justify-center bg-lime text-[#000000] rounded-r-lg disabled:opacity-30">
                                                 <Plus size={12} strokeWidth={2.5} /></button>
                                         </div>
                                         <button onClick={() => removeItem(item.product.id)} className="w-7 h-7 flex items-center justify-center text-t3 hover:text-err transition-colors">
@@ -125,7 +125,7 @@ export default function CartPage() {
                                 <span className="font-display font-bold text-2xl text-lime">{formatCurrency(total)}</span>
                             </div>
                             <Link href="/checkout"
-                                className="mt-4 w-full flex items-center justify-center gap-2 bg-lime text-black font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
+                                className="mt-4 w-full flex items-center justify-center gap-2 bg-lime text-[#000000] font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
                                 Checkout <ArrowRight size={16} strokeWidth={2.5} />
                             </Link>
                         </div>
