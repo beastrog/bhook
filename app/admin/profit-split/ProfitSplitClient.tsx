@@ -92,7 +92,7 @@ export default function ProfitSplitClient({ splits: initSplits, todayProfit }: {
                             onChange={(e) => setPct(+e.target.value)}
                             className="w-20 bg-deep border border-bdr rounded-xl px-3 py-2.5 text-sm outline-none focus:border-lime/40 transition-colors" />
                         <button onClick={handleAdd} disabled={isPending}
-                            className="flex items-center gap-1.5 bg-lime text-deep font-bold px-5 py-2.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40">
+                            className="flex items-center gap-1.5 bg-lime text-black font-bold px-5 py-2.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40">
                             {isPending ? <Loader2 size={13} className="animate-spin" /> : <Plus size={13} />} Add
                         </button>
                     </div>

@@ -24,7 +24,7 @@ export default function BottomNav() {
                         <Link key={href} href={href}
                             className={`relative flex flex-col items-center gap-0.5 px-4 py-1 rounded-xl transition-colors ${active ? 'text-lime' : 'text-t3'}`}>
                             {isCart && totalItems > 0 && (
-                                <span className="absolute -top-1 right-2 w-4 h-4 flex items-center justify-center rounded-full bg-lime text-deep text-[8px] font-black">
+                                <span className="absolute -top-1 right-2 w-4 h-4 flex items-center justify-center rounded-full bg-lime text-black text-[8px] font-black">
                                     {totalItems > 9 ? '9+' : totalItems}
                                 </span>
                             )}

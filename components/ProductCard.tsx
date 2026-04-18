@@ -65,15 +65,15 @@ export default function ProductCard({ product }: { product: Product }) {
                             </button>
                             <span className="font-bold text-xs w-5 text-center">{qty}</span>
                             <button onClick={handleAdd} disabled={qty >= product.stock_quantity}
-                                className="w-7 h-7 flex items-center justify-center bg-lime text-deep rounded-r-lg disabled:opacity-30">
+                                className="w-7 h-7 flex items-center justify-center bg-lime text-black rounded-r-lg disabled:opacity-30">
                                 <Plus size={12} strokeWidth={2.5} />
                             </button>
                         </div>
                     ) : (
                         <button onClick={handleAdd} disabled={isOOS}
                             className={`h-7 px-3 rounded-lg text-[11px] font-bold flex items-center gap-1 transition-all ${justAdded
-                                    ? 'bg-ok/10 text-ok'
-                                    : 'border border-bdr text-t2 hover:bg-lime hover:text-deep hover:border-lime'
+                                ? 'bg-ok/10 text-ok'
+                                : 'border border-bdr text-t2 hover:bg-lime hover:text-black hover:border-lime'
                                 }`}>
                             {justAdded ? <><Check size={11} /> Added</> : <><Plus size={11} /> Add</>}
                         </button>

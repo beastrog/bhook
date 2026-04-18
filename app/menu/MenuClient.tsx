@@ -53,8 +53,8 @@ export default function MenuClient({ products }: { products: Product[] }) {
                     {CATS.map((c) => (
                         <button key={c} onClick={() => setCat(c)}
                             className={`flex-shrink-0 px-4 py-1.5 rounded-full text-[11px] font-bold tracking-wide uppercase border transition-all ${cat === c
-                                    ? 'bg-lime text-deep border-lime'
-                                    : 'bg-transparent text-t3 border-bdr hover:border-bdr-hi'
+                                ? 'bg-lime text-black border-lime'
+                                : 'bg-transparent text-t3 border-bdr hover:border-bdr-hi'
                                 }`}>
                             {c}
                         </button>
@@ -92,7 +92,7 @@ export default function MenuClient({ products }: { products: Product[] }) {
                         transition={{ type: 'spring', damping: 25, stiffness: 250 }}
                         className="fixed bottom-16 md:bottom-6 left-3 right-3 sm:left-1/2 sm:-translate-x-1/2 sm:max-w-sm z-40">
                         <Link href="/cart"
-                            className="flex items-center justify-between bg-lime text-deep rounded-2xl px-5 py-3 shadow-[0_8px_32px_rgba(200,255,0,0.25)]">
+                            className="flex items-center justify-between bg-lime text-black rounded-2xl px-5 py-3 shadow-[0_8px_32px_rgba(200,255,0,0.25)]">
                             <div className="flex items-center gap-2.5">
                                 <span className="bg-deep/15 w-6 h-6 rounded-md flex items-center justify-center font-extrabold text-[11px]">{totalItems}</span>
                                 <span className="font-bold text-sm hidden sm:inline">items in cart</span>

@@ -29,7 +29,7 @@ export default function LandingClient() {
           </p>
 
           <Link href="/menu"
-            className="inline-flex items-center gap-3 bg-lime text-deep font-extrabold text-[15px] px-8 py-4 rounded-full hover:shadow-[0_4px_20px_rgba(200,255,0,0.25)] transition-all active:scale-[0.97]">
+            className="inline-flex items-center gap-3 bg-lime text-black font-extrabold text-[15px] px-8 py-4 rounded-full hover:shadow-[0_4px_20px_rgba(200,255,0,0.25)] transition-all active:scale-[0.97]">
             Shop Now <ArrowRight size={18} strokeWidth={2.5} />
           </Link>
         </motion.div>
@@ -58,8 +58,9 @@ export default function LandingClient() {
       </section>
 
       {/* Footer */}
-      <footer className="mt-24 pt-8 border-t border-bdr text-center">
-        <p className="font-display font-bold text-lg text-lime tracking-tight mb-1.5">BHOOK</p>
+      <footer className="mt-24 pt-8 border-t border-bdr text-center flex flex-col items-center">
+        <img src="/logo.png" alt="BHOOK Logo" className="w-12 h-12 rounded-xl mb-3 object-cover" />
+        <p className="font-display font-bold text-lg text-lime tracking-tight mb-2">BHOOK</p>
         <div className="flex justify-center gap-4 text-[11px] text-t3 mb-3">
           <Link href="/menu" className="hover:text-t2 transition-colors">Menu</Link>
         </div>

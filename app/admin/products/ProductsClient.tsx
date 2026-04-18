@@ -82,7 +82,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                     <p className="text-[11px] text-t3">{products.length} items</p>
                 </div>
                 <button onClick={openAdd}
-                    className="flex items-center gap-1.5 bg-lime text-deep font-bold text-sm px-5 py-2.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
+                    className="flex items-center gap-1.5 bg-lime text-black font-bold text-sm px-5 py-2.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97]">
                     <Plus size={15} /> Add
                 </button>
             </div>
@@ -115,7 +115,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                                     <span className={`font-bold text-xs min-w-[2rem] text-center ${p.stock_quantity <= 3 ? 'text-err' : p.stock_quantity <= 10 ? 'text-warn' : 'text-t1'}`}>
                                         {p.stock_quantity}
                                     </span>
-                                    <button onClick={() => handleStock(p.id, 1)} className="w-6 h-6 rounded-md flex items-center justify-center bg-lime text-deep">
+                                    <button onClick={() => handleStock(p.id, 1)} className="w-6 h-6 rounded-md flex items-center justify-center bg-lime text-black">
                                         <ChevronUp size={12} />
                                     </button>
                                 </div>
@@ -195,8 +195,8 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                                         {CATEGORIES.map(c => (
                                             <button key={c} onClick={() => setForm({ ...form, category: c })}
                                                 className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all ${form.category === c
-                                                        ? 'bg-lime text-deep border-lime'
-                                                        : 'bg-transparent text-t3 border-bdr hover:border-bdr-hi'
+                                                    ? 'bg-lime text-black border-lime'
+                                                    : 'bg-transparent text-t3 border-bdr hover:border-bdr-hi'
                                                     }`}>{c}</button>
                                         ))}
                                     </div>
@@ -213,7 +213,7 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                                     </p>
                                 )}
                                 <button onClick={handleSave} disabled={isPending}
-                                    className="w-full bg-lime text-deep font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40">
+                                    className="w-full bg-lime text-black font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40">
                                     {isPending ? 'Saving...' : editProduct ? 'Update' : 'Add Product'}
                                 </button>
                             </div>

@@ -39,6 +39,17 @@ export default function CheckoutPage() {
                 items: items.map((i) => ({ product_id: i.product.id, quantity: i.quantity })),
             });
             if (error) { toast.error(error); return; }
+
+            // Save to recent
+            useCartStore.getState().addOrder({
+                id: data!.order_id,
+                number: data!.order_number,
+                total: data!.total_amount,
+                date: new Date().toISOString(),
+                status: 'reserved',
+                items_count: items.reduce((acc, curr) => acc + curr.quantity, 0)
+            });
+
             clearCart();
             router.push(`/order-success?id=${data!.order_id}&num=${data!.order_number}&total=${data!.total_amount}`);
         } catch { toast.error('Something went wrong'); }
@@ -108,7 +119,7 @@ export default function CheckoutPage() {
                                 </div>
                             </div>
                             <button onClick={() => handleSubmit()} disabled={loading}
-                                className="w-full flex items-center justify-center gap-2 bg-lime text-deep font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40">
+                                className="w-full flex items-center justify-center gap-2 bg-lime text-black font-extrabold py-3.5 rounded-xl hover:shadow-[0_4px_20px_rgba(200,255,0,0.2)] transition-all active:scale-[0.97] disabled:opacity-40">
                                 {loading ? <><Loader2 size={15} className="animate-spin" /> Placing...</>
                                     : <>Confirm Order <ArrowRight size={15} /></>}
                             </button>

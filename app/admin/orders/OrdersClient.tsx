@@ -50,7 +50,7 @@ export default function OrdersClient({ initialOrders, defaultDate }: { initialOr
                 <div className="flex gap-1.5">
                     {STATUS_TABS.map(s => (
                         <button key={s} onClick={() => setStatusFilter(s)}
-                            className={`px-3 py-1.5 rounded-full text-[11px] font-bold capitalize border transition-all ${statusFilter === s ? 'bg-lime text-deep border-lime' : 'text-t3 border-bdr hover:border-bdr-hi'
+                            className={`px-3 py-1.5 rounded-full text-[11px] font-bold capitalize border transition-all ${statusFilter === s ? 'bg-lime text-black border-lime' : 'text-t3 border-bdr hover:border-bdr-hi'
                                 }`}>{s}</button>
                     ))}
                 </div>

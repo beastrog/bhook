@@ -2,12 +2,23 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CartItem, Product } from '@/lib/types';
 
+interface OrderRecord {
+    id: string;
+    number: string;
+    total: number;
+    date: string;
+    status: string;
+    items_count: number;
+}
+
 interface CartStore {
     items: CartItem[];
+    recentOrders: OrderRecord[];
     addItem: (product: Product, quantity?: number) => void;
     removeItem: (productId: string) => void;
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
+    addOrder: (order: OrderRecord) => void;
     getTotal: () => number;
     getTotalItems: () => number;
 }
@@ -16,6 +27,9 @@ export const useCartStore = create<CartStore>()(
     persist(
         (set, get) => ({
             items: [],
+            recentOrders: [],
+
+            addOrder: (order) => set((state) => ({ recentOrders: [order, ...state.recentOrders] })),
 
             addItem: (product: Product, quantity = 1) => {
                 set((state) => {

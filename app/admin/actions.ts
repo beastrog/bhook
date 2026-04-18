@@ -3,43 +3,38 @@
 import { createClient, createServiceClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 
 // Helper to verify admin
 async function verifyAdmin() {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error('Unauthorized');
+    const cookieStore = await cookies();
+    const isAdmin = cookieStore.get('bhook_admin_auth')?.value === 'true';
+    if (!isAdmin) throw new Error('Unauthorized');
     // Using service client because we haven't defined RLS policies for admin writes.
-    // The service client bypasses RLS, but we protected the Server Action with the user check above.
     return createServiceClient();
 }
 
 // ─── Auth ─────────────────────────────────────────────────────────────────────
-export async function adminLoginOTP(email: string, redirectUrl: string) {
+export async function adminLoginEmail(email: string) {
     const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
     if (adminEmails.length > 0 && !adminEmails.includes(email.trim())) {
         return { error: 'Unauthorized email address' };
     }
 
-    const supabase = await createClient();
-    const { error } = await supabase.auth.signInWithOtp({
-        email,
-        options: { emailRedirectTo: redirectUrl }
+    const cookieStore = await cookies();
+    cookieStore.set('bhook_admin_auth', 'true', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        path: '/',
+        maxAge: 60 * 60 * 24 * 30 // 30 days
     });
-    if (error) return { error: error.message };
-    return { error: null };
-}
 
-export async function adminVerifyOTP(email: string, token: string) {
-    const supabase = await createClient();
-    const { error } = await supabase.auth.verifyOtp({ email, token, type: 'email' });
-    if (error) return { error: error.message };
     return { error: null };
 }
 
 export async function adminLogout() {
-    const supabase = await createClient();
-    await supabase.auth.signOut();
+    const cookieStore = await cookies();
+    cookieStore.delete('bhook_admin_auth');
     redirect('/admin/login');
 }
 
