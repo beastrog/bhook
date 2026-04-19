@@ -21,6 +21,7 @@ export function formatDate(dateStr: string | null | undefined): string {
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
+        timeZone: 'Asia/Kolkata',
     });
 }
 
@@ -31,6 +32,7 @@ export function formatDateShort(dateStr: string | null | undefined): string {
     return d.toLocaleDateString('en-IN', {
         day: 'numeric',
         month: 'short',
+        timeZone: 'Asia/Kolkata',
     });
 }
 

@@ -4,6 +4,7 @@ import { formatCurrency } from '@/lib/utils';
 import { adminLogout } from '@/app/admin/actions';
 import Link from 'next/link';
 import { LogOut, AlertTriangle, RefreshCw, TrendingUp, Calendar } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 function Stat({ label, value, color, note }: { label: string; value: string; color: string; note?: string }) {
     return (
@@ -16,8 +17,13 @@ function Stat({ label, value, color, note }: { label: string; value: string; col
 }
 
 export default function DashboardClient({ stats, splits }: { stats: any; splits: any[] }) {
-    const today = new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' });
+    // Defer date to client only — server renders UTC, client is IST → text mismatch = React #418
+    const [today, setToday] = useState('');
+    useEffect(() => {
+        setToday(new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }));
+    }, []);
     const totalPct = splits.reduce((s: number, p: any) => s + Number(p.percentage), 0);
+
 
     return (
         <div className="max-w-5xl mx-auto px-5 pt-5 pb-24">
