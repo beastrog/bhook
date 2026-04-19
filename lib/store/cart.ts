@@ -74,6 +74,6 @@ export const useCartStore = create<CartStore>()(
                 return get().items.reduce((sum, item) => sum + item.quantity, 0);
             },
         }),
-        { name: 'bhook-cart' }
+        { name: 'bhook-cart', skipHydration: true }
     )
 );

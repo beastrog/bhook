@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Plus, Minus, Check } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Product } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils';
 import { useCartStore } from '@/lib/store/cart';
@@ -16,10 +16,14 @@ const catEmoji: Record<string, string> = {
 export default function ProductCard({ product }: { product: Product }) {
     const { addItem, items, updateQuantity } = useCartStore();
     const [justAdded, setJustAdded] = useState(false);
-    const cartItem = items.find((i) => i.product.id === product.id);
+    // Defer Zustand (localStorage) reads to client only — prevents React #418 hydration errors
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => { setMounted(true); }, []);
+    const cartItem = mounted ? items.find((i) => i.product.id === product.id) : undefined;
     const qty = cartItem?.quantity ?? 0;
     const isClosed = useStoreStatus();
     const isOOS = isClosed || product.stock_quantity === 0;
+
 
     const handleAdd = () => {
         if (isOOS || qty >= product.stock_quantity) return;

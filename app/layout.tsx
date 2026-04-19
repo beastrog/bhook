@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { StoreStatusProvider } from '@/components/StoreStatusProvider';
+import HydrationProvider from '@/components/HydrationProvider';
 import { getSettings } from '@/app/actions';
 
 export const metadata: Metadata = {
@@ -30,12 +31,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" className="dark">
       <body className="antialiased">
         <StoreStatusProvider closed={isClosed}>
-          {isClosed && (
-            <div className="bg-err text-[#000000] text-center text-xs sm:text-sm font-extrabold tracking-tight py-2 px-4 sticky top-0 z-[100] shadow-[0_4px_20px_rgba(248,113,113,0.3)]">
-              Store will open at 9:30 PM. Stay Tuned!
-            </div>
-          )}
-          {children}
+          <HydrationProvider>
+            {isClosed && (
+              <div className="bg-err text-[#000000] text-center text-xs sm:text-sm font-extrabold tracking-tight py-2 px-4 sticky top-0 z-[100] shadow-[0_4px_20px_rgba(248,113,113,0.3)]">
+                Store will open at 9:30 PM. Stay Tuned!
+              </div>
+            )}
+            {children}
+          </HydrationProvider>
         </StoreStatusProvider>
         <Toaster
           theme="dark"
