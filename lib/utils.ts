@@ -5,12 +5,17 @@ export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number): string {
-    return `₹${amount.toFixed(0)}`;
+export function formatCurrency(amount: number | null | undefined): string {
+    const n = Number(amount);
+    if (!isFinite(n)) return '₹0';
+    return `₹${n.toFixed(0)}`;
 }
 
-export function formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('en-IN', {
+export function formatDate(dateStr: string | null | undefined): string {
+    if (!dateStr) return '—';
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('en-IN', {
         day: 'numeric',
         month: 'short',
         year: 'numeric',
@@ -19,8 +24,11 @@ export function formatDate(dateStr: string): string {
     });
 }
 
-export function formatDateShort(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('en-IN', {
+export function formatDateShort(dateStr: string | null | undefined): string {
+    if (!dateStr) return '—';
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '—';
+    return d.toLocaleDateString('en-IN', {
         day: 'numeric',
         month: 'short',
     });

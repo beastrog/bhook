@@ -3,7 +3,7 @@
 import { formatCurrency } from '@/lib/utils';
 import { adminLogout } from '@/app/admin/actions';
 import Link from 'next/link';
-import { LogOut, AlertTriangle, RefreshCw } from 'lucide-react';
+import { LogOut, AlertTriangle, RefreshCw, TrendingUp, Calendar } from 'lucide-react';
 
 function Stat({ label, value, color, note }: { label: string; value: string; color: string; note?: string }) {
     return (
@@ -40,36 +40,52 @@ export default function DashboardClient({ stats, splits }: { stats: any; splits:
                 </div>
             </div>
 
-            {/* Stats */}
+            {/* All-Time Stats */}
+            <div className="flex items-center gap-2 mb-3">
+                <TrendingUp size={13} className="text-lime" />
+                <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-lime">All-Time Totals</p>
+            </div>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-5">
-                <Stat label="Revenue" value={formatCurrency(stats.totalRevenue)} color="#c8ff00" note="Completed orders" />
+                <Stat label="Revenue" value={formatCurrency(stats.totalRevenue)} color="#c8ff00" note={`${stats.totalOrders} completed`} />
                 <Stat label="Net Profit" value={formatCurrency(stats.totalProfit)} color="#4ade80" note="After cost" />
-                <Stat label="Orders" value={String(stats.totalOrders)} color="#f0f0e8" note="Today" />
+                <Stat label="Total Cost" value={formatCurrency(stats.totalCost)} color="#a78bfa" note="Stock cost" />
+                <Stat label="All Orders" value={String(stats.totalOrders)} color="#f0f0e8" note="Completed ever" />
+            </div>
+
+            {/* Daily Stats */}
+            <div className="flex items-center gap-2 mb-3">
+                <Calendar size={13} className="text-warn" />
+                <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-warn">Today</p>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mb-6">
+                <Stat label="Today Revenue" value={formatCurrency(stats.dailyRevenue)} color="#c8ff00" note="Completed today" />
+                <Stat label="Today Profit" value={formatCurrency(stats.dailyProfit)} color="#4ade80" note="After cost" />
+                <Stat label="Today Orders" value={String(stats.dailyOrders)} color="#f0f0e8" note="All statuses" />
                 <Stat label="Pending" value={String(stats.pendingOrders)} color="#fbbf24" note="Need action" />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-5">
                 {/* Order breakdown */}
-                {stats.totalOrders > 0 && (
+                {stats.dailyOrders > 0 && (
                     <div className="bg-card border border-bdr rounded-2xl p-4">
-                        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-t3 mb-3">Order breakdown</p>
+                        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-t3 mb-3">Today's order breakdown</p>
                         <div className="flex rounded-lg overflow-hidden h-2 mb-3 gap-0.5">
-                            {stats.completedOrders > 0 && <div style={{ flex: stats.completedOrders, background: '#4ade80', minWidth: 4, borderRadius: 4 }} />}
+                            {stats.dailyCompleted > 0 && <div style={{ flex: stats.dailyCompleted, background: '#4ade80', minWidth: 4, borderRadius: 4 }} />}
                             {stats.pendingOrders > 0 && <div style={{ flex: stats.pendingOrders, background: '#fbbf24', minWidth: 4, borderRadius: 4 }} />}
-                            {stats.cancelledOrders > 0 && <div style={{ flex: stats.cancelledOrders, background: '#f87171', minWidth: 4, borderRadius: 4 }} />}
+                            {stats.dailyCancelled > 0 && <div style={{ flex: stats.dailyCancelled, background: '#f87171', minWidth: 4, borderRadius: 4 }} />}
                         </div>
                         <div className="flex gap-4 text-[11px] text-t2">
-                            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-ok" />{stats.completedOrders} done</span>
+                            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-ok" />{stats.dailyCompleted} done</span>
                             <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-warn" />{stats.pendingOrders} pending</span>
-                            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-err" />{stats.cancelledOrders} cancelled</span>
+                            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-err" />{stats.dailyCancelled} cancelled</span>
                         </div>
                     </div>
                 )}
 
-                {/* Top sellers */}
+                {/* Top sellers - all time */}
                 {stats.bestSellers?.length > 0 && (
                     <div className="bg-card border border-bdr rounded-2xl p-4">
-                        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-t3 mb-3">Top Sellers</p>
+                        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-t3 mb-3">Top Sellers (All Time)</p>
                         <div className="space-y-2.5">
                             {stats.bestSellers.map((item: any, i: number) => (
                                 <div key={i} className="flex items-center gap-3">
@@ -105,10 +121,11 @@ export default function DashboardClient({ stats, splits }: { stats: any; splits:
                 </div>
             )}
 
-            {/* Profit split */}
+            {/* Profit split - All Time */}
             {splits.length > 0 && stats.totalProfit > 0 && (
                 <div className="bg-card border border-bdr rounded-2xl p-4 mb-4">
-                    <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-t3 mb-3">Profit split today</p>
+                    <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-t3 mb-1">Profit split</p>
+                    <p className="text-[10px] text-t3 mb-3">Based on all-time profits</p>
                     <div className="space-y-2.5">
                         {splits.map((s: any) => {
                             const amt = (stats.totalProfit * s.percentage) / 100;

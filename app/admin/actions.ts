@@ -156,43 +156,63 @@ export async function getDashboardStats() {
     const start = new Date(today); start.setHours(0, 0, 0, 0);
     const end = new Date(today); end.setHours(23, 59, 59, 999);
 
+    // Fetch today's orders
     const { data: todayOrders } = await adminClient
-        .from('orders')
-        .select('*')
+        .from('orders').select('*')
         .gte('created_at', start.toISOString())
         .lte('created_at', end.toISOString());
+
+    // Fetch ALL-TIME orders (completed)
+    const { data: allOrders } = await adminClient
+        .from('orders').select('*')
+        .eq('status', 'completed');
 
     const { data: allProducts } = await adminClient.from('products').select('*').order('stock_quantity');
 
+    // All-time top sellers from order_items
     const { data: topItems } = await adminClient
-        .from('order_items')
-        .select('product_name, quantity, line_total')
-        .gte('created_at', start.toISOString())
-        .lte('created_at', end.toISOString());
+        .from('order_items').select('product_name, quantity, line_total');
 
     const completed = (todayOrders || []).filter((o) => o.status === 'completed');
     const pending = (todayOrders || []).filter((o) => ['reserved', 'pending_pickup'].includes(o.status));
 
-    const totalRevenue = completed.reduce((s, o) => s + Number(o.total_amount), 0);
-    const totalProfit = completed.reduce((s, o) => s + Number(o.total_profit), 0);
-    const totalCost = completed.reduce((s, o) => s + Number(o.total_cost), 0);
+    // Daily stats
+    const dailyRevenue = completed.reduce((s, o) => s + Number(o.total_amount || 0), 0);
+    const dailyProfit = completed.reduce((s, o) => s + Number(o.total_profit || 0), 0);
+    const dailyCost = completed.reduce((s, o) => s + Number(o.total_cost || 0), 0);
+
+    // All-time stats
+    const allCompleted = (allOrders || []);
+    const totalRevenue = allCompleted.reduce((s, o) => s + Number(o.total_amount || 0), 0);
+    const totalProfit = allCompleted.reduce((s, o) => s + Number(o.total_profit || 0), 0);
+    const totalCost = allCompleted.reduce((s, o) => s + Number(o.total_cost || 0), 0);
 
     const sellerMap: Record<string, { name: string; qty: number; revenue: number }> = {};
     (topItems || []).forEach((item) => {
         if (!sellerMap[item.product_name]) sellerMap[item.product_name] = { name: item.product_name, qty: 0, revenue: 0 };
         sellerMap[item.product_name].qty += item.quantity;
-        sellerMap[item.product_name].revenue += Number(item.line_total);
+        sellerMap[item.product_name].revenue += Number(item.line_total || 0);
     });
     const bestSellers = Object.values(sellerMap).sort((a, b) => b.qty - a.qty).slice(0, 5);
 
     return {
-        totalOrders: (todayOrders || []).length,
-        completedOrders: completed.length,
+        // Daily
+        dailyOrders: (todayOrders || []).length,
+        dailyCompleted: completed.length,
+        dailyPending: pending.length,
+        dailyCancelled: (todayOrders || []).filter((o) => o.status === 'cancelled').length,
+        dailyRevenue,
+        dailyCost,
+        dailyProfit,
+        // All-time
+        totalOrders: allCompleted.length,
+        completedOrders: allCompleted.length,
         pendingOrders: pending.length,
         cancelledOrders: (todayOrders || []).filter((o) => o.status === 'cancelled').length,
         totalRevenue,
         totalCost,
         totalProfit,
+        // Shared
         lowStockProducts: (allProducts || []).filter((p) => p.stock_quantity <= 5 && p.active),
         bestSellers,
     };

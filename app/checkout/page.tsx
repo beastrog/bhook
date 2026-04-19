@@ -40,18 +40,20 @@ export default function CheckoutPage() {
             });
             if (error) { toast.error(error); return; }
 
+            const orderedTotal = total; // Use cart total as source of truth (API may not always return it)
+
             // Save to recent
             useCartStore.getState().addOrder({
                 id: data!.order_id,
                 number: data!.order_number,
-                total: data!.total_amount,
+                total: orderedTotal,
                 date: new Date().toISOString(),
                 status: 'reserved',
                 items_count: items.reduce((acc, curr) => acc + curr.quantity, 0)
             });
 
             clearCart();
-            router.push(`/order-success?id=${data!.order_id}&num=${data!.order_number}&total=${data!.total_amount}`);
+            router.push(`/order-success?id=${data!.order_id}&num=${encodeURIComponent(data!.order_number)}&total=${orderedTotal}`);
         } catch { toast.error('Something went wrong'); }
         finally { setLoading(false); }
     };
