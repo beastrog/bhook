@@ -7,7 +7,7 @@ import { upsertProfitSplit, deleteProfitSplit } from '@/app/admin/actions';
 import { formatCurrency } from '@/lib/utils';
 import { toast } from 'sonner';
 
-export default function ProfitSplitClient({ splits: initSplits, todayProfit }: { splits: ProfitSplit[]; todayProfit: number }) {
+export default function ProfitSplitClient({ splits: initSplits, todayProfit, allTimeProfit }: { splits: ProfitSplit[]; todayProfit: number; allTimeProfit: number }) {
     const [splits, setSplits] = useState(initSplits);
     const [name, setName] = useState('');
     const [pct, setPct] = useState<number>(0);
@@ -62,7 +62,8 @@ export default function ProfitSplitClient({ splits: initSplits, todayProfit }: {
             {/* Partners */}
             <div className="space-y-2 mb-4">
                 {splits.map(s => {
-                    const amount = (todayProfit * Number(s.percentage)) / 100;
+                    const dailyAmt = (todayProfit * Number(s.percentage)) / 100;
+                    const allTimeAmt = (allTimeProfit * Number(s.percentage)) / 100;
                     return (
                         <div key={s.id} className="bg-card border border-bdr rounded-2xl p-3.5 flex items-center gap-3">
                             <div className="w-9 h-9 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 bg-lime/8 text-lime">
@@ -70,7 +71,11 @@ export default function ProfitSplitClient({ splits: initSplits, todayProfit }: {
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="font-semibold text-sm">{s.person_name}</p>
-                                <p className="text-[11px] text-t3">{s.percentage}% → <span className="text-lime">{formatCurrency(amount)} today</span></p>
+                                <p className="text-[11px] text-t3">{s.percentage}%</p>
+                                <div className="flex gap-3 mt-0.5 flex-wrap">
+                                    <span className="text-[11px] text-warn">Today: <span className="font-bold text-t1">{formatCurrency(dailyAmt)}</span></span>
+                                    <span className="text-[11px] text-t3">All-time: <span className="font-bold text-lime">{formatCurrency(allTimeAmt)}</span></span>
+                                </div>
                             </div>
                             <button onClick={() => handleDelete(s.id, s.person_name)}
                                 className="p-1.5 rounded-lg bg-err/8 text-err hover:bg-err/15 transition-colors">

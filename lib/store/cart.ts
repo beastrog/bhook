@@ -29,7 +29,7 @@ export const useCartStore = create<CartStore>()(
             items: [],
             recentOrders: [],
 
-            addOrder: (order) => set((state) => ({ recentOrders: [order, ...state.recentOrders] })),
+            addOrder: (order) => set((state) => ({ recentOrders: [order, ...state.recentOrders].slice(0, 10) })),
 
             addItem: (product: Product, quantity = 1) => {
                 set((state) => {

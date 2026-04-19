@@ -119,8 +119,8 @@ export interface ProductFormData {
 export interface PlaceOrderResponse {
   order_id: string;
   order_number: string;
-  total_amount: number;
-  total_profit: number;
+  total_amount?: number;   // may be absent in simplified SQL returns
+  total_profit?: number;
 }
 
 export interface ApiError {

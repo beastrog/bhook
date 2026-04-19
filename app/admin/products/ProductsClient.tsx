@@ -46,6 +46,10 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
 
     const handleSave = async () => {
         if (!form.name.trim()) { toast.error('Name is required'); return; }
+        if (form.selling_price <= 0) { toast.error('Selling price must be greater than 0'); return; }
+        if (form.cost_price < 0) { toast.error('Cost price cannot be negative'); return; }
+        if (form.selling_price < form.cost_price) { toast.error('Selling price cannot be less than cost price'); return; }
+        if (form.stock_quantity < 0) { toast.error('Stock cannot be negative'); return; }
         startTransition(async () => {
             const { error } = await upsertProduct({ ...(editProduct ? { id: editProduct.id } : {}), ...form });
             if (error) { toast.error(error); return; }

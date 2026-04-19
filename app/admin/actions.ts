@@ -77,12 +77,31 @@ export async function deleteProduct(id: string) {
 export async function resetAppData() {
     const supabase = await verifyAdmin();
 
-    // Delete all orders to reset profit and analytics
+    // Step 1: Fetch all non-cancelled orders with their items so we can restore stock
+    const { data: orders } = await supabase
+        .from('orders')
+        .select('id, status, order_items(product_id, quantity)')
+        .neq('status', 'cancelled'); // cancelled orders already had stock restored by trigger
+
+    // Step 2: Restore stock for all reserved/completed orders
+    if (orders && orders.length > 0) {
+        const stockMap: Record<string, number> = {};
+        for (const order of orders) {
+            for (const item of (order as any).order_items || []) {
+                stockMap[item.product_id] = (stockMap[item.product_id] || 0) + item.quantity;
+            }
+        }
+        for (const [productId, qty] of Object.entries(stockMap)) {
+            const { data: prod } = await supabase.from('products').select('stock_quantity').eq('id', productId).single();
+            if (prod) {
+                await supabase.from('products').update({ stock_quantity: prod.stock_quantity + qty }).eq('id', productId);
+            }
+        }
+    }
+
+    // Step 3: Delete all orders (CASCADE deletes order_items too)
     const { error } = await supabase.from('orders').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     if (error) return { error: error.message };
-
-    // Optionally also restore products to 0 or leave stock alone. Let's just delete orders.
-    // Deleting orders triggers CASCADE to order_items.
 
     revalidatePath('/admin/dashboard');
     revalidatePath('/admin/orders');
@@ -120,7 +139,7 @@ export async function getAllOrders(dateFilter?: string) {
         query = query.gte('created_at', start.toISOString()).lte('created_at', end.toISOString());
     }
 
-    const { data, error } = await query.limit(200);
+    const { data, error } = await query.limit(500);
     return { data, error };
 }
 
