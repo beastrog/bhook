@@ -6,13 +6,30 @@ import HydrationProvider from '@/components/HydrationProvider';
 import { getSettings } from '@/app/actions';
 
 export const metadata: Metadata = {
-  title: 'BHOOKH – Midnight Snack Store',
-  description: 'Browse, reserve, and collect snacks from your hostel. No app needed – just pay cash.',
-  keywords: ['hostel snacks', 'midnight munchies', 'bhookh', 'snack delivery hostel'],
+  title: 'BHOOKH 🔥 – Midnight Snack Store',
+  description: 'Hostel snacks on demand. Browse the menu, reserve your items, and collect from Room 405C — no app needed, just pay cash.',
+  keywords: ['hostel snacks', 'midnight snacks', 'bhookh', 'room 405', 'hostel store', 'snack delivery hostel', 'quick snacks'],
+  applicationName: 'BHOOKH',
+  authors: [{ name: 'BHOOKH Store' }],
+  creator: 'BHOOKH',
+  metadataBase: new URL('https://bhookh.vercel.app'),
   openGraph: {
-    title: 'BHOOKH 🔥',
-    description: "Tonight's hunger stops here.",
+    title: 'BHOOKH 🔥 – Midnight Snack Store',
+    description: 'Hostel snacks on demand. Reserve and collect from Room 405C.',
     type: 'website',
+    siteName: 'BHOOKH',
+    images: [{ url: '/logo.png', width: 512, height: 512, alt: 'BHOOKH Logo' }],
+  },
+  twitter: {
+    card: 'summary',
+    title: 'BHOOKH 🔥 – Midnight Snack Store',
+    description: 'Hostel snacks on demand. Reserve and collect from Room 405C.',
+    images: ['/logo.png'],
+  },
+  icons: {
+    icon: '/icon.png',
+    apple: '/apple-icon.png',
+    shortcut: '/icon.png',
   },
 };
 
