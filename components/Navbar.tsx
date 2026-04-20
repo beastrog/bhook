@@ -24,6 +24,7 @@ export default function Navbar() {
                 <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-t2">
                     <Link href="/" className="hover:text-t1 transition-colors">Home</Link>
                     <Link href="/menu" className="hover:text-t1 transition-colors">Menu</Link>
+                    <Link href="/maggi" className="hover:text-t1 transition-colors flex items-center gap-1.5"><span className="text-orange-400">🍜</span> Cooked</Link>
                 </div>
 
                 <Link href="/cart" className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-card border border-bdr hover:bg-card-hi transition-colors">

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
@@ -14,11 +14,17 @@ const CATS = ['All', 'Chips', 'Noodles', 'Drinks', 'Chocolates', 'Biscuits', 'Ot
 export default function MenuClient({ products }: { products: Product[] }) {
     const [search, setSearch] = useState('');
     const [cat, setCat] = useState('All');
+    const [mounted, setMounted] = useState(false);
     const totalItems = useCartStore((s) => s.getTotalItems());
     const total = useCartStore((s) => s.getTotal());
+    useEffect(() => { setMounted(true); }, []);
+    const displayCount = mounted ? totalItems : 0;
+    const displayTotal = mounted ? total : 0;
 
+    // Filter out Cooked entirely for the general menu
     const filtered = useMemo(() => {
         return products.filter((p) => {
+            if (p.category === 'Cooked') return false; // Exclude Cooked
             const mc = cat === 'All' || p.category === cat;
             const ms = p.name.toLowerCase().includes(search.toLowerCase());
             return mc && ms && p.active;
@@ -86,7 +92,7 @@ export default function MenuClient({ products }: { products: Product[] }) {
 
             {/* Floating cart bar */}
             <AnimatePresence>
-                {totalItems > 0 && (
+                {displayCount > 0 && (
                     <motion.div
                         initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 80, opacity: 0 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 250 }}
@@ -94,11 +100,11 @@ export default function MenuClient({ products }: { products: Product[] }) {
                         <Link href="/cart"
                             className="flex items-center justify-between bg-lime text-[#000000] rounded-2xl px-5 py-3 shadow-[0_8px_32px_rgba(200,255,0,0.25)]">
                             <div className="flex items-center gap-2.5">
-                                <span className="bg-deep/15 w-6 h-6 rounded-md flex items-center justify-center font-extrabold text-[11px]">{totalItems}</span>
+                                <span className="bg-deep/15 w-6 h-6 rounded-md flex items-center justify-center font-extrabold text-[11px]">{displayCount}</span>
                                 <span className="font-bold text-sm hidden sm:inline">items in cart</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="font-extrabold">{formatCurrency(total)}</span>
+                                <span className="font-extrabold">{formatCurrency(displayTotal)}</span>
                                 <ArrowRight size={15} strokeWidth={2.5} />
                             </div>
                         </Link>

@@ -2,7 +2,7 @@
 // Bhook - TypeScript Types
 // ============================================================
 
-export type ProductCategory = 'Chips' | 'Noodles' | 'Chocolates' | 'Drinks' | 'Biscuits' | 'Others';
+export type ProductCategory = 'Chips' | 'Noodles' | 'Chocolates' | 'Drinks' | 'Biscuits' | 'Cooked' | 'Others';
 
 export type OrderStatus = 'reserved' | 'pending_pickup' | 'completed' | 'cancelled';
 

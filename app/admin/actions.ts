@@ -321,3 +321,72 @@ export async function updateSetting(key: string, value: string) {
         return { error: error?.message || null };
     } catch (e: any) { return { error: e.message }; }
 }
+
+// ─── Cooked Profit Splits ─────────────────────────────────────────────────────
+export async function getCookedProfitSplits() {
+    const adminClient = await verifyAdmin();
+    const { data } = await adminClient.from('cooked_profit_splits').select('*').eq('active', true).order('percentage', { ascending: false });
+    return data || [];
+}
+
+export async function upsertCookedProfitSplit(split: any) {
+    try {
+        const adminClient = await verifyAdmin();
+        const { error } = split.id
+            ? await adminClient.from('cooked_profit_splits').update(split).eq('id', split.id)
+            : await adminClient.from('cooked_profit_splits').insert({ ...split, active: true });
+        if (!error) revalidatePath('/admin/profit-split');
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
+}
+
+export async function deleteCookedProfitSplit(id: string) {
+    try {
+        const adminClient = await verifyAdmin();
+        const { error } = await adminClient.from('cooked_profit_splits').delete().eq('id', id);
+        if (!error) revalidatePath('/admin/profit-split');
+        return { error: error?.message || null };
+    } catch (e: any) { return { error: e.message }; }
+}
+
+// Get cooked-item profits from order_items (items whose product category is 'Cooked')
+export async function getCookedStats() {
+    const adminClient = await verifyAdmin();
+    const today = new Date();
+    const startOfDay = new Date(today); startOfDay.setHours(0, 0, 0, 0);
+    const endOfDay = new Date(today); endOfDay.setHours(23, 59, 59, 999);
+
+    // Get all order_items for Cooked products (join products to check category)
+    const { data: allCookedItems } = await adminClient
+        .from('order_items')
+        .select('line_total, line_cost, line_profit, created_at, orders!inner(status)')
+        .eq('orders.status', 'completed');
+
+    // Filter cooked items by checking product names — we identify Cooked via product_name lookup
+    // Better: join through products table to check category
+    const { data: cookedProducts } = await adminClient
+        .from('products').select('id, name').eq('category', 'Cooked');
+    const cookedProductNames = new Set((cookedProducts || []).map(p => p.name));
+
+    const { data: allCookedOrderItems } = await adminClient
+        .from('order_items')
+        .select('line_total, line_cost, line_profit, created_at, orders!inner(status)')
+        .in('product_name', cookedProductNames.size > 0 ? [...cookedProductNames] : ['__none__'])
+        .eq('orders.status', 'completed');
+
+    const items = allCookedOrderItems || [];
+    const todayItems = items.filter(i => {
+        const d = new Date(i.created_at);
+        return d >= startOfDay && d <= endOfDay;
+    });
+
+    return {
+        allTimeRevenue: items.reduce((s, i) => s + Number(i.line_total || 0), 0),
+        allTimeProfit: items.reduce((s, i) => s + Number(i.line_profit || 0), 0),
+        allTimeCost: items.reduce((s, i) => s + Number(i.line_cost || 0), 0),
+        allTimeOrders: items.length,
+        todayRevenue: todayItems.reduce((s, i) => s + Number(i.line_total || 0), 0),
+        todayProfit: todayItems.reduce((s, i) => s + Number(i.line_profit || 0), 0),
+        todayCost: todayItems.reduce((s, i) => s + Number(i.line_cost || 0), 0),
+    };
+}

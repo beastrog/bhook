@@ -8,9 +8,9 @@ import { upsertProduct, deleteProduct, updateStock, uploadProductImage } from '@
 import { formatCurrency } from '@/lib/utils';
 import { toast } from 'sonner';
 
-const CATEGORIES = ['Chips', 'Noodles', 'Chocolates', 'Drinks', 'Biscuits', 'Others'];
+const CATEGORIES = ['Chips', 'Noodles', 'Chocolates', 'Drinks', 'Biscuits', 'Cooked', 'Others'];
 const EMPTY_FORM = { name: '', description: '', cost_price: 0, selling_price: 0, stock_quantity: 10, category: 'Chips', active: true, image_url: '' };
-const catEmoji: Record<string, string> = { Chips: '🍟', Noodles: '🍜', Chocolates: '🍫', Drinks: '🥤', Biscuits: '🍪' };
+const catEmoji: Record<string, string> = { Chips: '🍟', Noodles: '🍜', Chocolates: '🍫', Drinks: '🥤', Biscuits: '🍪', Cooked: '🥘' };
 
 export default function ProductsClient({ initialProducts }: { initialProducts: Product[] }) {
     const [products, setProducts] = useState(initialProducts);
@@ -196,13 +196,32 @@ export default function ProductsClient({ initialProducts }: { initialProducts: P
                                 <div>
                                     <label className="block text-[10px] font-bold tracking-[0.12em] uppercase text-t3 mb-2">Category</label>
                                     <div className="flex flex-wrap gap-1.5">
-                                        {CATEGORIES.map(c => (
-                                            <button key={c} onClick={() => setForm({ ...form, category: c })}
-                                                className={`px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all ${form.category === c
-                                                    ? 'bg-lime text-[#000000] border-lime'
-                                                    : 'bg-transparent text-t3 border-bdr hover:border-bdr-hi'
-                                                    }`}>{c}</button>
-                                        ))}
+                                        {CATEGORIES.map(c => {
+                                            const isCooked = c === 'Cooked';
+                                            const isActive = form.category === c;
+
+                                            let classes = 'px-3 py-1.5 rounded-full text-[11px] font-bold border transition-all ';
+
+                                            if (isCooked) {
+                                                if (isActive) {
+                                                    classes += 'bg-orange-500 text-[#000000] border-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.5)] scale-105';
+                                                } else {
+                                                    classes += 'bg-orange-500/10 text-orange-400 border-orange-500/30 hover:border-orange-500 hover:bg-orange-500/20';
+                                                }
+                                            } else {
+                                                if (isActive) {
+                                                    classes += 'bg-lime text-[#000000] border-lime';
+                                                } else {
+                                                    classes += 'bg-transparent text-t3 border-bdr hover:border-bdr-hi';
+                                                }
+                                            }
+
+                                            return (
+                                                <button key={c} onClick={() => setForm({ ...form, category: c })} className={classes}>
+                                                    {isCooked ? `🥘 ${c}` : c}
+                                                </button>
+                                            );
+                                        })}
                                     </div>
                                 </div>
                                 <label className="flex items-center gap-3 cursor-pointer" onClick={() => setForm({ ...form, active: !form.active })}>

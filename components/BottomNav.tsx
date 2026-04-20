@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, UtensilsCrossed, ShoppingBag } from 'lucide-react';
+import { Home, UtensilsCrossed, ShoppingBag, Flame } from 'lucide-react';
 import { useCartStore } from '@/lib/store/cart';
 import { useEffect, useState } from 'react';
 
 const TABS = [
     { href: '/', icon: Home, label: 'Feed' },
-    { href: '/menu', icon: UtensilsCrossed, label: 'Menu' },
+    { href: '/menu', icon: UtensilsCrossed, label: 'Snacks' },
+    { href: '/maggi', icon: Flame, label: 'Cooked' },
     { href: '/cart', icon: ShoppingBag, label: 'Cart', isCart: true },
 ];
 

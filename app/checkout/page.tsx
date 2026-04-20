@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Loader2, ShieldCheck, ArrowRight } from 'lucide-react';
+import { Loader2, ShieldCheck, ArrowRight, Phone, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/lib/store/cart';
 import { placeOrder } from '@/app/actions';
@@ -17,6 +17,11 @@ export default function CheckoutPage() {
     const [form, setForm] = useState({ customer_name: '', room_number: '', phone_number: '' });
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [loading, setLoading] = useState(false);
+    const [cookedPopup, setCookedPopup] = useState(false);
+    const [pendingRedirect, setPendingRedirect] = useState('');
+
+    const hasCookedItems = items.some(i => i.product.category === 'Cooked');
+    const cookedItems = items.filter(i => i.product.category === 'Cooked');
 
     const validate = () => {
         const e: Record<string, string> = {};
@@ -40,7 +45,7 @@ export default function CheckoutPage() {
             });
             if (error) { toast.error(error); return; }
 
-            const orderedTotal = total; // Use cart total as source of truth (API may not always return it)
+            const orderedTotal = total;
 
             // Save to recent
             useCartStore.getState().addOrder({
@@ -53,12 +58,20 @@ export default function CheckoutPage() {
             });
 
             clearCart();
-            router.push(`/order-success?id=${data!.order_id}&num=${encodeURIComponent(data!.order_number)}&total=${orderedTotal}`);
-        } catch { toast.error('Something went wrong'); }
+            const redirectUrl = `/order-success?id=${data!.order_id}&num=${encodeURIComponent(data!.order_number)}&total=${orderedTotal}`;
+
+            // If cooked items present, show call popup before redirecting
+            if (hasCookedItems) {
+                setPendingRedirect(redirectUrl);
+                setCookedPopup(true);
+            } else {
+                router.push(redirectUrl);
+            }
+        } catch { toast.error('Something went wrong. Please try again.'); }
         finally { setLoading(false); }
     };
 
-    if (!items.length) {
+    if (!items.length && !cookedPopup) {
         return (
             <div className="min-h-dvh bg-deep">
                 <Navbar />
@@ -74,6 +87,20 @@ export default function CheckoutPage() {
             <div className="max-w-5xl mx-auto px-5 pt-6 sm:pt-8 md:pt-10">
                 <h1 className="font-display font-bold text-2xl sm:text-3xl tracking-tight mb-1">Checkout</h1>
                 <p className="text-xs text-t3 mb-6">Fill your details and confirm your reservation.</p>
+
+                {/* Cooked items notice */}
+                {hasCookedItems && (
+                    <div className="mb-5 rounded-xl p-3.5 border-2 flex items-start gap-3"
+                        style={{ borderColor: 'rgba(251,146,60,0.4)', background: 'rgba(251,146,60,0.06)' }}>
+                        <span className="text-xl flex-shrink-0">🍜</span>
+                        <div>
+                            <p className="font-bold text-sm text-orange-400">Cooked Items in Cart</p>
+                            <p className="text-[11px] text-t3 mt-0.5">
+                                After placing order, <strong className="text-orange-400">call 8570809208</strong> to confirm your cooked items and arrange payment.
+                            </p>
+                        </div>
+                    </div>
+                )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
                     <form onSubmit={handleSubmit} className="lg:col-span-3 bg-card border border-bdr rounded-2xl p-5 space-y-4">
@@ -109,7 +136,9 @@ export default function CheckoutPage() {
                             <div className="space-y-2 mb-4">
                                 {items.map(i => (
                                     <div key={i.product.id} className="flex justify-between text-sm">
-                                        <span className="truncate mr-2 text-t2">{i.quantity}× {i.product.name}</span>
+                                        <span className={`truncate mr-2 ${i.product.category === 'Cooked' ? 'text-orange-400' : 'text-t2'}`}>
+                                            {i.product.category === 'Cooked' ? '🍜 ' : ''}{i.quantity}× {i.product.name}
+                                        </span>
                                         <span className="font-semibold flex-shrink-0">{formatCurrency(i.product.selling_price * i.quantity)}</span>
                                     </div>
                                 ))}
@@ -130,6 +159,57 @@ export default function CheckoutPage() {
                 </div>
             </div>
             <BottomNav />
+
+            {/* ── Cooked Items Call Popup ── */}
+            {cookedPopup && (
+                <div className="fixed inset-0 z-[200] flex items-center justify-center px-4"
+                    style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)' }}>
+                    <div className="w-full max-w-sm rounded-2xl p-6 border-2 relative"
+                        style={{ background: '#111110', borderColor: 'rgba(251,146,60,0.5)' }}>
+                        {/* Glow effect */}
+                        <div className="absolute inset-0 rounded-2xl pointer-events-none"
+                            style={{ boxShadow: '0 0 60px rgba(251,146,60,0.15) inset' }} />
+
+                        <div className="text-center mb-5">
+                            <div className="text-4xl mb-3">🍜</div>
+                            <h2 className="font-display font-bold text-xl tracking-tight text-orange-400 mb-2">Order Placed!</h2>
+                            <p className="text-sm text-t2 leading-relaxed">
+                                Your order is reserved. For the <strong className="text-orange-400">cooked items</strong>, please call to confirm and arrange payment:
+                            </p>
+                        </div>
+
+                        {/* Phone number highlight */}
+                        <a href="tel:8570809208"
+                            className="flex items-center justify-center gap-3 w-full py-4 rounded-xl mb-4 font-extrabold text-xl tracking-wide active:scale-[0.97] transition-all"
+                            style={{ background: 'rgba(251,146,60,0.15)', color: '#fb923c', border: '2px solid rgba(251,146,60,0.4)' }}>
+                            <Phone size={20} className="animate-pulse" />
+                            8570809208
+                        </a>
+
+                        {/* Cooked items list */}
+                        {cookedItems.length > 0 && (
+                            <div className="bg-card border border-bdr rounded-xl p-3 mb-4 space-y-1">
+                                <p className="text-[10px] font-bold tracking-widest uppercase text-t3 mb-2">Your cooked items</p>
+                                {cookedItems.map(i => (
+                                    <div key={i.product.id} className="flex justify-between text-sm">
+                                        <span className="text-t2">{i.quantity}× {i.product.name}</span>
+                                        <span className="font-bold text-orange-400">{formatCurrency(i.product.selling_price * i.quantity)}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+
+                        <p className="text-[11px] text-t3 text-center mb-4">
+                            🕐 Call within 5 minutes to ensure your order is prepared
+                        </p>
+
+                        <button onClick={() => { setCookedPopup(false); router.push(pendingRedirect); }}
+                            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-bold text-sm bg-card border border-bdr hover:bg-card-hi transition-colors">
+                            <X size={14} /> Got it, I&apos;ll call
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
