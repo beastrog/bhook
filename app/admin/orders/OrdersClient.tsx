@@ -8,6 +8,9 @@ import { updateOrderStatus, deleteOrder } from '@/app/admin/actions';
 import { formatCurrency, formatDate, getStatusColor, getStatusLabel } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
+import { useEffect, useRef } from 'react';
+import { getOrder } from '@/app/actions';
 
 const STATUS_TABS = ['all', 'reserved', 'completed', 'cancelled'] as const;
 
@@ -18,6 +21,37 @@ export default function OrdersClient({ initialOrders, defaultDate }: { initialOr
     const [isPending, startTransition] = useTransition();
     const [dateFilter, setDateFilter] = useState(defaultDate || '');
     const [statusFilter, setStatusFilter] = useState<string>('all');
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    useEffect(() => {
+        // Initialize audio for notification
+        audioRef.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+
+        const supabase = createClient();
+        const channel = supabase
+            .channel('orders-realtime')
+            .on(
+                'postgres_changes',
+                { event: 'INSERT', schema: 'public', table: 'orders' },
+                async (payload) => {
+                    console.log('New order received!', payload);
+                    // Fetch full order details including items
+                    const { data: fullOrder } = await getOrder(payload.new.id);
+                    if (fullOrder) {
+                        setOrders(prev => [fullOrder as Order, ...prev]);
+                        toast.success(`🔔 New Order! ${fullOrder.order_number}`, {
+                            description: `${fullOrder.customer_name} placed a new order.`
+                        });
+                        audioRef.current?.play().catch(() => { });
+                    }
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, []);
 
     const applyDate = (d: string) => { setDateFilter(d); router.push(`/admin/orders${d ? `?date=${d}` : ''}`); };
 

@@ -8,24 +8,47 @@ import { Product } from '@/lib/types';
 import CookedProductCard from '@/components/CookedProductCard';
 import { useCartStore } from '@/lib/store/cart';
 import { formatCurrency } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
 
 export default function MaggiClient({ products }: { products: Product[] }) {
     const [search, setSearch] = useState('');
     const [mounted, setMounted] = useState(false);
     const totalItems = useCartStore((s) => s.getTotalItems());
     const total = useCartStore((s) => s.getTotal());
+    const [displayProducts, setDisplayProducts] = useState(products);
     useEffect(() => { setMounted(true); }, []);
     const displayCount = mounted ? totalItems : 0;
     const displayTotal = mounted ? total : 0;
 
+    useEffect(() => {
+        const supabase = createClient();
+        const channel = supabase
+            .channel('maggi-products-realtime')
+            .on(
+                'postgres_changes',
+                { event: 'UPDATE', schema: 'public', table: 'products' },
+                (payload) => {
+                    const updated = payload.new as Product;
+                    setDisplayProducts(prev =>
+                        prev.map(p => p.id === updated.id ? { ...p, ...updated } : p)
+                    );
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, []);
+
     // Filter only cooked products
     const cookedProducts = useMemo(() => {
-        return products.filter((p) => {
+        return displayProducts.filter((p) => {
             const isCooked = p.category === 'Cooked';
             const matchesSearch = !search || p.name.toLowerCase().includes(search.toLowerCase());
             return isCooked && matchesSearch && p.active;
         });
-    }, [products, search]);
+    }, [displayProducts, search]);
 
     const available = cookedProducts.filter((p) => p.stock_quantity > 0);
     const oos = cookedProducts.filter((p) => p.stock_quantity === 0);

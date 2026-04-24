@@ -8,6 +8,7 @@ import { Product } from '@/lib/types';
 import ProductCard from '@/components/ProductCard';
 import { useCartStore } from '@/lib/store/cart';
 import { formatCurrency } from '@/lib/utils';
+import { createClient } from '@/lib/supabase/client';
 
 const CATS = ['All', 'Chips', 'Noodles', 'Drinks', 'Chocolates', 'Biscuits', 'Others'];
 
@@ -17,19 +18,41 @@ export default function MenuClient({ products }: { products: Product[] }) {
     const [mounted, setMounted] = useState(false);
     const totalItems = useCartStore((s) => s.getTotalItems());
     const total = useCartStore((s) => s.getTotal());
+    const [displayProducts, setDisplayProducts] = useState(products);
     useEffect(() => { setMounted(true); }, []);
     const displayCount = mounted ? totalItems : 0;
     const displayTotal = mounted ? total : 0;
 
+    useEffect(() => {
+        const supabase = createClient();
+        const channel = supabase
+            .channel('products-realtime')
+            .on(
+                'postgres_changes',
+                { event: 'UPDATE', schema: 'public', table: 'products' },
+                (payload) => {
+                    const updated = payload.new as Product;
+                    setDisplayProducts(prev =>
+                        prev.map(p => p.id === updated.id ? { ...p, ...updated } : p)
+                    );
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, []);
+
     // Filter out Cooked entirely for the general menu
     const filtered = useMemo(() => {
-        return products.filter((p) => {
+        return displayProducts.filter((p) => {
             if (p.category === 'Cooked') return false; // Exclude Cooked
             const mc = cat === 'All' || p.category === cat;
             const ms = p.name.toLowerCase().includes(search.toLowerCase());
             return mc && ms && p.active;
         });
-    }, [products, search, cat]);
+    }, [displayProducts, search, cat]);
 
     const available = filtered.filter((p) => p.stock_quantity > 0);
     const oos = filtered.filter((p) => p.stock_quantity === 0);

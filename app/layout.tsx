@@ -1,9 +1,23 @@
 import type { Metadata, Viewport } from 'next';
+import { Space_Grotesk, DM_Sans } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'sonner';
 import { StoreStatusProvider } from '@/components/StoreStatusProvider';
 import HydrationProvider from '@/components/HydrationProvider';
+import RealtimeBanner from '@/components/RealtimeBanner';
 import { getSettings } from '@/app/actions';
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ['latin'],
+  variable: '--font-grotesk',
+  display: 'swap',
+});
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  variable: '--font-dmsans',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'BHOOKH 🔥 – Midnight Snack Store',
@@ -45,15 +59,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const isClosed = settings?.store_status === 'closed';
 
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${spaceGrotesk.variable} ${dmSans.variable}`}>
       <body className="antialiased">
         <StoreStatusProvider closed={isClosed}>
           <HydrationProvider>
-            {isClosed && (
-              <div className="bg-err text-[#000000] text-center text-xs sm:text-sm font-extrabold tracking-tight py-2 px-4 sticky top-0 z-[100] shadow-[0_4px_20px_rgba(248,113,113,0.3)]">
-                Store will open at 9:30 PM. Stay Tuned!
-              </div>
-            )}
+            <RealtimeBanner />
             {children}
           </HydrationProvider>
         </StoreStatusProvider>

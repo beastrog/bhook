@@ -5,6 +5,8 @@ import { adminLogout } from '@/app/admin/actions';
 import Link from 'next/link';
 import { LogOut, AlertTriangle, RefreshCw, TrendingUp, Calendar } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 function Stat({ label, value, color, note }: { label: string; value: string; color: string; note?: string }) {
     return (
@@ -23,6 +25,26 @@ export default function DashboardClient({ stats, splits }: { stats: any; splits:
         setToday(new Date().toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }));
     }, []);
     const totalPct = splits.reduce((s: number, p: any) => s + Number(p.percentage), 0);
+    const router = useRouter();
+
+    useEffect(() => {
+        const supabase = createClient();
+        const channel = supabase
+            .channel('dashboard-realtime')
+            .on(
+                'postgres_changes',
+                { event: '*', schema: 'public', table: 'orders' },
+                () => {
+                    console.log('Dashboard update triggered by order change');
+                    router.refresh();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }, [router]);
 
 
     return (
