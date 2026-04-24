@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 import AdminNav from '@/components/AdminNav';
+import AdminHeader from '@/components/AdminHeader';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
     const cookieStore = await cookies();
@@ -7,6 +8,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
     return (
         <div className="min-h-dvh bg-deep pb-20">
+            {isAdmin && <AdminHeader />}
             {children}
             {isAdmin && <AdminNav />}
         </div>

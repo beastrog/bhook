@@ -3,8 +3,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { PlaceOrderResponse } from '@/lib/types';
-
 import { headers } from 'next/headers';
+import { sendAdminPushNotification } from './admin/actions';
 
 // ─── Place an order (calls DB stored procedure) ───────────────────────────────
 export async function placeOrder(formData: {
@@ -34,11 +34,33 @@ export async function placeOrder(formData: {
         return { data: null, error: msg };
     }
 
+    const orderResponse = data as PlaceOrderResponse;
+
+    // Background: Send Push Notification to Admins
+    try {
+        // Fetch item details to see if anything is "Cooked" for a special alert
+        const { data: productDetails } = await supabase
+            .from('products')
+            .select('name, category')
+            .in('id', formData.items.map(i => i.product_id));
+
+        const hasCooked = productDetails?.some(p => p.category === 'Cooked');
+        const itemsSummary = productDetails?.map(p => p.name).slice(0, 3).join(', ') + (productDetails && productDetails.length > 3 ? '...' : '');
+
+        const title = hasCooked ? '🔥 NEW COOKED ORDER!' : '🛍️ New Order Received';
+        const body = `${formData.customer_name} (Room ${formData.room_number}) ordered: ${itemsSummary}. Total: ₹${orderResponse.total_amount || '?'}`;
+
+        // This is async but we don't need to wait for it before returning
+        sendAdminPushNotification(title, body, `/admin/orders`);
+    } catch (pushErr) {
+        console.error('Failed to send admin push:', pushErr);
+    }
+
     revalidatePath('/menu');
     revalidatePath('/admin/dashboard');
     revalidatePath('/admin/orders');
 
-    return { data: data as PlaceOrderResponse, error: null };
+    return { data: orderResponse, error: null };
 }
 
 // ─── Get all active products ───────────────────────────────────────────────────

@@ -4,6 +4,22 @@ import { createClient, createServiceClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
+import webpush from 'web-push';
+
+// Configure web-push
+if (process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY && process.env.VAPID_EMAIL) {
+    webpush.setVapidDetails(
+        process.env.VAPID_EMAIL,
+        process.env.VAPID_PUBLIC_KEY,
+        process.env.VAPID_PRIVATE_KEY
+    );
+} else if (process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY && process.env.VAPID_EMAIL) {
+    webpush.setVapidDetails(
+        process.env.VAPID_EMAIL,
+        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY,
+        process.env.VAPID_PRIVATE_KEY
+    );
+}
 
 // Helper to verify admin
 async function verifyAdmin() {
@@ -389,4 +405,78 @@ export async function getCookedStats() {
         todayProfit: todayItems.reduce((s, i) => s + Number(i.line_profit || 0), 0),
         todayCost: todayItems.reduce((s, i) => s + Number(i.line_cost || 0), 0),
     };
+}
+
+// ─── Push Notifications ────────────────────────────────────────────────────────
+export async function subscribeAdmin(subscription: any) {
+    try {
+        const supabase = await createServiceClient(); // Shared across sessions for push
+        const { error } = await supabase
+            .from('admin_push_subscriptions')
+            .upsert({
+                admin_id: 'default_admin',
+                subscription,
+                endpoint: subscription.endpoint
+            }, { onConflict: 'endpoint' });
+
+        if (error) throw error;
+        return { success: true };
+    } catch (error: any) {
+        return { error: error.message };
+    }
+}
+
+export async function unsubscribeAdmin(endpoint: string) {
+    try {
+        const supabase = await createServiceClient();
+        const { error } = await supabase
+            .from('admin_push_subscriptions')
+            .delete()
+            .match({ 'subscription->>endpoint': endpoint });
+
+        if (error) throw error;
+        return { success: true };
+    } catch (error: any) {
+        return { error: error.message };
+    }
+}
+
+export async function checkSubscription(endpoint: string) {
+    try {
+        const supabase = await createServiceClient();
+        const { data } = await supabase
+            .from('admin_push_subscriptions')
+            .select('*')
+            .match({ 'subscription->>endpoint': endpoint })
+            .single();
+
+        return !!data;
+    } catch {
+        return false;
+    }
+}
+
+export async function sendAdminPushNotification(title: string, body: string, url: string = '/admin/orders') {
+    try {
+        const supabase = await createServiceClient();
+        const { data: subs } = await supabase.from('admin_push_subscriptions').select('subscription');
+
+        if (!subs || subs.length === 0) return;
+
+        const payload = JSON.stringify({ title, body, url });
+
+        const promises = subs.map((sub: any) =>
+            webpush.sendNotification(sub.subscription, payload)
+                .catch(err => {
+                    if (err.statusCode === 410 || err.statusCode === 404) {
+                        console.log('Push subscription expired, cleanup needed');
+                    }
+                    console.error('Push error:', err);
+                })
+        );
+
+        await Promise.all(promises);
+    } catch (error) {
+        console.error('Global push error:', error);
+    }
 }
