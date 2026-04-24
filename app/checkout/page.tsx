@@ -54,7 +54,8 @@ export default function CheckoutPage() {
                 total: orderedTotal,
                 date: new Date().toISOString(),
                 status: 'reserved',
-                items_count: items.reduce((acc, curr) => acc + curr.quantity, 0)
+                items_count: items.reduce((acc, curr) => acc + curr.quantity, 0),
+                productIds: items.map(i => i.product.id)
             });
 
             clearCart();

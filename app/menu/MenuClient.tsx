@@ -2,13 +2,15 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ArrowRight, Sparkles } from 'lucide-react';
+import { Search, ArrowRight, Sparkles, RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/lib/types';
 import ProductCard from '@/components/ProductCard';
 import { useCartStore } from '@/lib/store/cart';
 import { formatCurrency } from '@/lib/utils';
+import { toast } from 'sonner';
 import { createClient } from '@/lib/supabase/client';
+import { useStoreStatus } from '@/components/StoreStatusProvider';
 
 const CATS = ['All', 'Chips', 'Noodles', 'Drinks', 'Chocolates', 'Biscuits', 'Others'];
 
@@ -18,6 +20,9 @@ export default function MenuClient({ products }: { products: Product[] }) {
     const [mounted, setMounted] = useState(false);
     const totalItems = useCartStore((s) => s.getTotalItems());
     const total = useCartStore((s) => s.getTotal());
+    const recentOrders = useCartStore((s) => s.recentOrders);
+    const addItem = useCartStore((s) => s.addItem);
+    const isClosed = useStoreStatus();
     const [displayProducts, setDisplayProducts] = useState(products);
     useEffect(() => { setMounted(true); }, []);
     const displayCount = mounted ? totalItems : 0;
@@ -43,6 +48,23 @@ export default function MenuClient({ products }: { products: Product[] }) {
             supabase.removeChannel(channel);
         };
     }, []);
+
+    // Dynamic Tab Title
+    useEffect(() => {
+        const originalTitle = 'BHOOKH 🔥';
+        if (isClosed) {
+            document.title = 'Closed | BHOOKH';
+        } else {
+            document.title = '🔥 Open Now | BHOOKH';
+        }
+        return () => { document.title = originalTitle; };
+    }, [isClosed]);
+
+    const recentItems = useMemo(() => {
+        if (!mounted || !recentOrders.length) return [];
+        const lastOrder = recentOrders[0];
+        return displayProducts.filter(p => lastOrder.productIds.includes(p.id) && p.stock_quantity > 0);
+    }, [mounted, recentOrders, displayProducts]);
 
     // Filter out Cooked entirely for the general menu
     const filtered = useMemo(() => {
@@ -91,6 +113,44 @@ export default function MenuClient({ products }: { products: Product[] }) {
                 </div>
 
                 {/* Grid */}
+
+                {/* Quick Re-order Smart Feature */}
+                <AnimatePresence>
+                    {recentItems.length > 0 && (
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="bg-lime/5 border border-lime/10 rounded-2xl p-4 mb-6 relative overflow-hidden"
+                        >
+                            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+                                <RefreshCw size={64} className="text-lime animate-spin-slow" />
+                            </div>
+                            <div className="flex items-center justify-between mb-3">
+                                <div>
+                                    <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-lime mb-0.5">Quick re-order</p>
+                                    <h3 className="text-sm font-bold text-white">Your Favorites</h3>
+                                </div>
+                                <Sparkles size={16} className="text-lime animate-pulse" />
+                            </div>
+                            <div className="flex gap-2.5 overflow-x-auto pb-1 [scrollbar-width:none]">
+                                {recentItems.map(p => (
+                                    <button
+                                        key={p.id}
+                                        onClick={() => { addItem(p); toast.success(`Re-added ${p.name}`); }}
+                                        className="flex-shrink-0 bg-card border border-bdr rounded-xl px-3 py-2 flex items-center gap-2 hover:bg-card-hi transition-all active:scale-95"
+                                    >
+                                        <span className="text-base">🍿</span>
+                                        <div className="text-left">
+                                            <p className="text-[11px] font-bold text-t1 leading-none mb-1">{p.name}</p>
+                                            <p className="text-[9px] text-lime font-black">{formatCurrency(p.selling_price)}</p>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
                 {available.length === 0 && oos.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 text-center">
                         <div className="text-4xl mb-3">🔍</div>

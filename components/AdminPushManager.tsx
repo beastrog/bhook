@@ -16,6 +16,19 @@ export default function AdminPushManager() {
         if (typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window) {
             setPermission(Notification.permission);
             checkCurrentSubscription();
+
+            // Handle manual permission changes (e.g. user clicks URL bar icon)
+            const handleVisibility = () => {
+                if (document.visibilityState === 'visible') {
+                    const currentPermission = Notification.permission;
+                    setPermission(currentPermission);
+                    if (currentPermission === 'granted') {
+                        checkCurrentSubscription();
+                    }
+                }
+            };
+            document.addEventListener('visibilitychange', handleVisibility);
+            return () => document.removeEventListener('visibilitychange', handleVisibility);
         } else {
             setLoading(false);
         }
@@ -100,13 +113,18 @@ export default function AdminPushManager() {
 
     if (permission === 'denied') {
         return (
-            <div className="flex flex-col items-end gap-1">
-                <div className="flex items-center gap-2 text-err text-[10px] font-bold">
-                    <BellOff size={14} /> Alerts Blocked
-                </div>
-                <p className="text-[8px] text-t3 leading-tight text-right max-w-[120px]">
-                    Reset permission in your browser address bar to enable.
-                </p>
+            <div className="relative group">
+                <button
+                    onClick={() => toast.info('To enable alerts, click the lock/settings icon in your browser address bar and set Notifications to "Allow".')}
+                    className="flex flex-col items-end gap-1 cursor-pointer"
+                >
+                    <div className="flex items-center gap-2 text-err text-[10px] font-bold">
+                        <BellOff size={14} /> Alerts Blocked
+                    </div>
+                    <p className="text-[8px] text-t3 leading-tight text-right max-w-[120px] hover:text-err transition-colors">
+                        Click for instructions to unblock.
+                    </p>
+                </button>
             </div>
         );
     }
@@ -116,8 +134,8 @@ export default function AdminPushManager() {
             onClick={isSubscribed ? handleUnsubscribe : handleSubscribe}
             disabled={loading}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-bold transition-all active:scale-95 disabled:opacity-50 ${isSubscribed
-                    ? 'bg-ok/10 text-ok border border-ok/20 hover:bg-ok/20'
-                    : 'bg-lime text-black border border-lime hover:shadow-[0_0_12px_rgba(200,255,0,0.4)]'
+                ? 'bg-ok/10 text-ok border border-ok/20 hover:bg-ok/20'
+                : 'bg-lime text-black border border-lime hover:shadow-[0_0_12px_rgba(200,255,0,0.4)]'
                 }`}
         >
             {loading ? (

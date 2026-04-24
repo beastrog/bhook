@@ -5,6 +5,7 @@ import { Toaster } from 'sonner';
 import { StoreStatusProvider } from '@/components/StoreStatusProvider';
 import HydrationProvider from '@/components/HydrationProvider';
 import RealtimeBanner from '@/components/RealtimeBanner';
+import LoadingScreen from '@/components/LoadingScreen';
 import { getSettings } from '@/app/actions';
 
 const spaceGrotesk = Space_Grotesk({
@@ -61,6 +62,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`dark ${spaceGrotesk.variable} ${dmSans.variable}`}>
       <body className="antialiased">
+        <LoadingScreen />
         <StoreStatusProvider closed={isClosed}>
           <HydrationProvider>
             <RealtimeBanner />

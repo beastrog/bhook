@@ -9,6 +9,7 @@ interface OrderRecord {
     date: string;
     status: string;
     items_count: number;
+    productIds: string[];
 }
 
 interface CartStore {
