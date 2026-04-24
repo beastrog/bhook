@@ -7,6 +7,7 @@ import { LogOut, AlertTriangle, RefreshCw, TrendingUp, Calendar } from 'lucide-r
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
 function Stat({ label, value, color, note }: { label: string; value: string; color: string; note?: string }) {
     return (
@@ -18,7 +19,7 @@ function Stat({ label, value, color, note }: { label: string; value: string; col
     );
 }
 
-export default function DashboardClient({ stats, splits }: { stats: any; splits: any[] }) {
+export default function DashboardClient({ stats, splits, traffic }: { stats: any; splits: any[]; traffic: { hour: string; count: number }[] }) {
     // Defer date to client only — server renders UTC, client is IST → text mismatch = React #418
     const [today, setToday] = useState('');
     useEffect(() => {
@@ -128,6 +129,49 @@ export default function DashboardClient({ stats, splits }: { stats: any; splits:
                         </div>
                     </div>
                 )}
+            </div>
+
+            {/* Hourly Traffic - Smart Feature */}
+            <div className="bg-card border border-bdr rounded-2xl p-4 mb-5">
+                <div className="flex items-center justify-between mb-4">
+                    <div>
+                        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-t3 mb-0.5">Traffic Analysis</p>
+                        <h3 className="text-sm font-bold text-white">Hourly Volumetrics (30D)</h3>
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-lime/10 border border-lime/20">
+                        <TrendingUp size={12} className="text-lime" />
+                        <span className="text-[10px] font-bold text-lime uppercase">Peak Flow</span>
+                    </div>
+                </div>
+
+                <div className="h-48 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                        <BarChart data={traffic}>
+                            <XAxis
+                                dataKey="hour"
+                                fontSize={9}
+                                axisLine={false}
+                                tickLine={false}
+                                tick={{ fill: '#888' }}
+                                interval={3}
+                            />
+                            <Tooltip
+                                contentStyle={{ background: '#111', border: '1px solid #333', fontSize: '10px', borderRadius: '8px' }}
+                                itemStyle={{ color: '#c8ff00' }}
+                                cursor={{ fill: 'rgba(200,255,0,0.05)' }}
+                            />
+                            <Bar dataKey="count" radius={[4, 4, 0, 0]}>
+                                {traffic.map((entry, index) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={entry.count === Math.max(...traffic.map(t => t.count)) ? '#c8ff00' : '#444'}
+                                    />
+                                ))}
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+                <p className="text-[9px] text-t3 mt-3 text-center uppercase tracking-widest font-medium">Order Distribution by Hour of Day</p>
             </div>
 
             {/* Low stock */}

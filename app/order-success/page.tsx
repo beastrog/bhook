@@ -8,6 +8,7 @@ import { formatCurrency } from '@/lib/utils';
 import Navbar from '@/components/Navbar';
 import BottomNav from '@/components/BottomNav';
 import { CheckCircle2 } from 'lucide-react';
+import Confetti from '@/components/Confetti';
 
 function SuccessContent() {
     const params = useSearchParams();
@@ -16,6 +17,7 @@ function SuccessContent() {
 
     return (
         <div className="min-h-dvh flex flex-col bg-deep">
+            <Confetti />
             <Navbar />
             <div className="flex-1 flex flex-col items-center justify-center px-5 py-8">
                 <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}

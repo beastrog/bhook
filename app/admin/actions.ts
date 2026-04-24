@@ -269,6 +269,25 @@ export async function getAnalytics(days = 7) {
     return data || [];
 }
 
+export async function getHourlyTraffic() {
+    const adminClient = await verifyAdmin();
+    const { data } = await adminClient
+        .from('orders')
+        .select('created_at')
+        .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()); // Last 30 days
+
+    const hours = new Array(24).fill(0);
+    (data || []).forEach(o => {
+        const hour = new Date(o.created_at).getHours();
+        hours[hour]++;
+    });
+
+    return hours.map((count, hour) => ({
+        hour: `${hour}:00`,
+        count
+    }));
+}
+
 // ─── Profit splits ────────────────────────────────────────────────────────────
 export async function getProfitSplits() {
     const adminClient = await verifyAdmin();

@@ -14,13 +14,18 @@ export default function AdminPushManager() {
 
     useEffect(() => {
         if (typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window) {
-            setPermission(Notification.permission);
-            checkCurrentSubscription();
+            const hasNotification = 'Notification' in window;
+            if (hasNotification) {
+                setPermission(window.Notification.permission);
+                checkCurrentSubscription();
+            } else {
+                setLoading(false);
+            }
 
             // Handle manual permission changes (e.g. user clicks URL bar icon)
             const handleVisibility = () => {
-                if (document.visibilityState === 'visible') {
-                    const currentPermission = Notification.permission;
+                if (document.visibilityState === 'visible' && 'Notification' in window) {
+                    const currentPermission = window.Notification.permission;
                     setPermission(currentPermission);
                     if (currentPermission === 'granted') {
                         checkCurrentSubscription();
@@ -65,11 +70,21 @@ export default function AdminPushManager() {
 
         setLoading(true);
         try {
-            const result = await Notification.requestPermission();
-            setPermission(result);
+            if (!('Notification' in window)) {
+                throw new Error('Notifications not supported on this browser');
+            }
+
+            // timeout safety for permission request
+            const permissionPromise = window.Notification.requestPermission();
+            const timeoutPromise = new Promise<string>((_, reject) =>
+                setTimeout(() => reject(new Error('Permission request timed out')), 15000)
+            );
+
+            const result = await Promise.race([permissionPromise as Promise<string>, timeoutPromise]);
+            setPermission(result as NotificationPermission);
+
             if (result !== 'granted') {
                 toast.error('Notifications permission denied');
-                setLoading(false);
                 return;
             }
 

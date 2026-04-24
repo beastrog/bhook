@@ -13,7 +13,7 @@ const catEmoji: Record<string, string> = {
     Chips: '🍟', Noodles: '🍜', Chocolates: '🍫', Drinks: '🥤', Biscuits: '🍪',
 };
 
-export default function ProductCard({ product }: { product: Product }) {
+export default function ProductCard({ product, priority = false }: { product: Product, priority?: boolean }) {
     const { addItem, items, updateQuantity } = useCartStore();
     const [justAdded, setJustAdded] = useState(false);
     // Defer Zustand (localStorage) reads to client only — prevents React #418 hydration errors
@@ -43,7 +43,7 @@ export default function ProductCard({ product }: { product: Product }) {
             {/* Image area */}
             <div className="relative aspect-square flex items-center justify-center bg-card-hi">
                 {product.image_url ? (
-                    <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
+                    <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" loading={priority ? "eager" : "lazy"} />
                 ) : (
                     <span className="text-4xl sm:text-5xl select-none">{catEmoji[product.category] || '🍿'}</span>
                 )}

@@ -9,7 +9,7 @@ import { useCartStore } from '@/lib/store/cart';
 import { toast } from 'sonner';
 import { useStoreStatus } from '@/components/StoreStatusProvider';
 
-export default function CookedProductCard({ product }: { product: Product }) {
+export default function CookedProductCard({ product, priority = false }: { product: Product, priority?: boolean }) {
     const { addItem, items, updateQuantity } = useCartStore();
     const [justAdded, setJustAdded] = useState(false);
     const [mounted, setMounted] = useState(false);
@@ -36,24 +36,24 @@ export default function CookedProductCard({ product }: { product: Product }) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className={`rounded-2xl overflow-hidden flex flex-col border-2 transition-all ${product.stock_quantity === 0
-                    ? 'opacity-40 grayscale pointer-events-none border-bdr'
-                    : 'border-orange-400/30 hover:border-orange-400/60'
+                ? 'opacity-40 grayscale pointer-events-none border-bdr'
+                : 'border-orange-400/30 hover:border-orange-400/60'
                 }`}
             style={{ background: 'linear-gradient(135deg, rgba(251,146,60,0.06) 0%, rgba(239,68,68,0.03) 100%)' }}>
             {/* Image area */}
             <div className="relative aspect-square flex items-center justify-center"
                 style={{ background: 'rgba(251,146,60,0.08)' }}>
                 {product.image_url ? (
-                    <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" loading="lazy" />
+                    <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" loading={priority ? "eager" : "lazy"} />
                 ) : (
                     <span className="text-4xl sm:text-5xl select-none">🍜</span>
                 )}
                 {/* Stock badge */}
                 <div className="absolute top-2 right-2">
                     <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-md ${isClosed ? 'bg-err/10 text-err'
-                            : isOOS ? 'bg-err/10 text-err'
-                                : product.stock_quantity <= 5 ? 'bg-orange-400/20 text-orange-400'
-                                    : 'bg-orange-400/20 text-orange-400'
+                        : isOOS ? 'bg-err/10 text-err'
+                            : product.stock_quantity <= 5 ? 'bg-orange-400/20 text-orange-400'
+                                : 'bg-orange-400/20 text-orange-400'
                         }`}>
                         {isClosed ? 'CLOSED' : isOOS ? 'OUT' : `${product.stock_quantity}`}
                     </span>

@@ -22,3 +22,10 @@ self.addEventListener('notificationclick', function (event) {
         clients.openWindow(event.notification.data.url)
     );
 });
+
+// Handle messages from the client to prevent "message channel closed" errors
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
+});
