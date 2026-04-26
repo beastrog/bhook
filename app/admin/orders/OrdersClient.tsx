@@ -33,7 +33,7 @@ export default function OrdersClient({ initialOrders, defaultDate }: { initialOr
             .on(
                 'postgres_changes',
                 { event: 'INSERT', schema: 'public', table: 'orders' },
-                async (payload) => {
+                async (payload: { new: any }) => {
                     console.log('New order received!', payload);
                     // Fetch full order details including items
                     const { data: fullOrder } = await getOrder(payload.new.id);

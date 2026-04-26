@@ -15,7 +15,7 @@ export function StoreStatusProvider({ closed: initialClosed, children }: { close
             .on(
                 'postgres_changes',
                 { event: 'UPDATE', schema: 'public', table: 'settings', filter: 'key=eq.store_status' },
-                (payload) => {
+                (payload: { new: any }) => {
                     const newVal = payload.new as { key: string; value: string };
                     setIsClosed(newVal.value === 'closed');
                 }

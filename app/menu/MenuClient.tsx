@@ -35,7 +35,7 @@ export default function MenuClient({ products }: { products: Product[] }) {
             .on(
                 'postgres_changes',
                 { event: 'UPDATE', schema: 'public', table: 'products' },
-                (payload) => {
+                (payload: { new: any }) => {
                     const updated = payload.new as Product;
                     setDisplayProducts(prev =>
                         prev.map(p => p.id === updated.id ? { ...p, ...updated } : p)
@@ -63,7 +63,7 @@ export default function MenuClient({ products }: { products: Product[] }) {
     const recentItems = useMemo(() => {
         if (!mounted || !recentOrders.length) return [];
         const lastOrder = recentOrders[0];
-        return displayProducts.filter(p => lastOrder.productIds.includes(p.id) && p.stock_quantity > 0);
+        return displayProducts.filter(p => lastOrder.productIds?.includes(p.id) && p.stock_quantity > 0);
     }, [mounted, recentOrders, displayProducts]);
 
     // Filter out Cooked entirely for the general menu

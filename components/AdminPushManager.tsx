@@ -41,11 +41,17 @@ export default function AdminPushManager() {
 
     const checkCurrentSubscription = async () => {
         try {
+            console.log('Checking current subscription readiness...');
+            // timeout safety for serviceWorker.ready
+            const readyPromise = navigator.serviceWorker.ready;
+            const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error('SW Ready Timeout')), 10000));
+
+            await Promise.race([readyPromise, timeoutPromise]);
             const registration = await navigator.serviceWorker.ready;
             const subscription = await registration.pushManager.getSubscription();
             setIsSubscribed(!!subscription);
         } catch (error) {
-            console.error('Check subscription error:', error);
+            console.error('Check subscription error status:', error);
         } finally {
             setLoading(false);
         }
@@ -63,45 +69,67 @@ export default function AdminPushManager() {
     };
 
     const handleSubscribe = async () => {
+        console.log('Starting subscription flow...');
         if (!VAPID_PUBLIC_KEY) {
-            toast.error('VAPID Public Key not found');
+            console.error('VAPID Public Key missing from environment variables');
+            toast.error('Admin Error: VAPID Public Key not found in .env');
             return;
         }
 
         setLoading(true);
         try {
             if (!('Notification' in window)) {
-                throw new Error('Notifications not supported on this browser');
+                throw new Error('Notifications not supported on this device/browser');
+            }
+
+            console.log('Current permission:', window.Notification.permission);
+
+            // If already denied, the UI should show the instructions, but we check here too
+            if (window.Notification.permission === 'denied') {
+                throw new Error('Notifications blocked. Please enable them in browser settings.');
             }
 
             // timeout safety for permission request
-            const permissionPromise = window.Notification.requestPermission();
-            const timeoutPromise = new Promise<string>((_, reject) =>
-                setTimeout(() => reject(new Error('Permission request timed out')), 15000)
-            );
+            const requestPermissionWithTimeout = async () => {
+                if (window.Notification.permission === 'granted') return 'granted';
 
-            const result = await Promise.race([permissionPromise as Promise<string>, timeoutPromise]);
+                return new Promise<string>((resolve, reject) => {
+                    const timer = setTimeout(() => reject(new Error('Permission request timed out. Check if browser blocked the popup.')), 10000);
+                    window.Notification.requestPermission().then(res => {
+                        clearTimeout(timer);
+                        resolve(res);
+                    }).catch(reject);
+                });
+            };
+
+            const result = await requestPermissionWithTimeout();
+            console.log('Permission result:', result);
             setPermission(result as NotificationPermission);
 
             if (result !== 'granted') {
-                toast.error('Notifications permission denied');
-                return;
+                throw new Error('Notifications permission not granted');
             }
 
-            const registration = await navigator.serviceWorker.register('/sw.js');
+            console.log('Registering service worker...');
+            const registration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+            // Wait for service worker to be ready
+            await navigator.serviceWorker.ready;
+
+            console.log('Subscribing to push manager...');
             const subscription = await registration.pushManager.subscribe({
                 userVisibleOnly: true,
                 applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
             });
 
+            console.log('Sending subscription to server...');
             const { error } = await subscribeAdmin(JSON.parse(JSON.stringify(subscription)));
-            if (error) throw new Error(error);
+            if (error) throw new Error(`Server Error: ${error}`);
 
             setIsSubscribed(true);
-            toast.success('Subscribed to notifications!');
+            toast.success('System: Alerts Active! 🔔');
         } catch (error: any) {
-            console.error('Subscription error:', error);
-            toast.error(error.message || 'Failed to subscribe');
+            console.error('Push Hardening Error:', error);
+            toast.error(error.message || 'Failed to enable alerts');
         } finally {
             setLoading(false);
         }

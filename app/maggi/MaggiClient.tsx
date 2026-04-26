@@ -27,7 +27,7 @@ export default function MaggiClient({ products }: { products: Product[] }) {
             .on(
                 'postgres_changes',
                 { event: 'UPDATE', schema: 'public', table: 'products' },
-                (payload) => {
+                (payload: { new: any }) => {
                     const updated = payload.new as Product;
                     setDisplayProducts(prev =>
                         prev.map(p => p.id === updated.id ? { ...p, ...updated } : p)

@@ -144,7 +144,7 @@ export default function DashboardClient({ stats, splits, traffic }: { stats: any
                     </div>
                 </div>
 
-                <div className="h-48 w-full">
+                <div className="h-48 w-full min-h-[192px] min-w-0">
                     <ResponsiveContainer width="100%" height="100%">
                         <BarChart data={traffic}>
                             <XAxis
